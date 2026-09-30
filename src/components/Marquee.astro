@@ -1,0 +1,75 @@
+---
+// Bandeau défilant des expertises. S'arrête au survol et avec « réduire les animations ».
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {
+      [0, 1].map(() => (
+        <ul>
+          {items.map((item) => (
+            <li>
+              {item}
+              <span class="marquee__dot" />
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    padding-block: 1.5rem;
+    background: var(--rouge);
+    color: var(--creme);
+    border-block: 2px solid var(--noir);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee 40s linear infinite;
+  }
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+  .marquee ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .marquee li {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    padding-right: 2.5rem;
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+  .marquee__dot {
+    width: 0.4em;
+    height: 0.4em;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+    }
+  }
+</style>

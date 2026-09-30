@@ -1,0 +1,267 @@
+---
+import Base from '../layouts/Base.astro';
+import Rays from '../components/Rays.astro';
+import { site } from '../data/site';
+
+const projectTypes = [
+  'Stratégie de marque',
+  'Identité visuelle',
+  'Campagne',
+  'Film / photo',
+  'Réseaux sociaux',
+  'Autre',
+];
+---
+
+<Base
+  title="Contact et demande de devis | Mankan Communication, Bamako"
+  description="Parlons de votre projet. Contactez Mankan Communication, agence de communication à ACI 2000, Bamako : team@mankancommunication.com, +223 77 09 14 09."
+>
+  <section class="section contact-head">
+    <div class="container">
+      <p class="eyebrow" data-reveal>Contact</p>
+      <h1 data-reveal style="--i:1">Parlons de votre projet.</h1>
+      <p class="lead" data-reveal style="--i:2">
+        Dites-nous ce que vous souhaitez faire, pour qui et dans quel délai. Nous pourrons
+        construire une proposition adaptée.
+      </p>
+    </div>
+  </section>
+
+  <section class="section contact" id="devis" aria-labelledby="form-titre">
+    <div class="container contact__grid">
+      <div class="contact__form-wrap">
+        <h2 id="form-titre" class="visually-hidden">Formulaire de demande de devis</h2>
+
+        <div class="form-status form-status--ok" data-form-status="ok" tabindex="-1" role="status" hidden>
+          <strong>Merci, votre demande a bien été envoyée.</strong>
+          Notre équipe reviendra vers vous pour échanger sur votre projet.
+        </div>
+        <div class="form-status form-status--err" data-form-status="erreur" tabindex="-1" role="alert" hidden>
+          <strong>L’envoi n’a pas abouti.</strong> Vérifiez les champs obligatoires ou écrivez-nous
+          directement à <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </div>
+
+        <form class="form" action="/contact.php" method="post">
+          <div class="form__row">
+            <div class="field">
+              <label for="nom">Nom <span aria-hidden="true">*</span></label>
+              <input id="nom" name="nom" type="text" autocomplete="name" required maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="organisation">Organisation</label>
+              <input id="organisation" name="organisation" type="text" autocomplete="organization" maxlength="160" />
+            </div>
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label for="email">Email <span aria-hidden="true">*</span></label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="telephone">Téléphone <span class="opt">(facultatif)</span></label>
+              <input id="telephone" name="telephone" type="tel" autocomplete="tel" maxlength="40" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="type">Type de projet <span aria-hidden="true">*</span></label>
+            <select id="type" name="type" required>
+              <option value="">Choisir…</option>
+              {projectTypes.map((t) => <option>{t}</option>)}
+            </select>
+          </div>
+          <div class="field">
+            <label for="description">Votre projet <span aria-hidden="true">*</span></label>
+            <textarea
+              id="description"
+              name="description"
+              rows="6"
+              required
+              maxlength="5000"
+              aria-describedby="description-aide"></textarea>
+            <p class="field__help" id="description-aide">Objectifs, public visé, contexte…</p>
+          </div>
+          <div class="form__row">
+            <div class="field">
+              <label for="budget">Budget indicatif <span class="opt">(facultatif)</span></label>
+              <input id="budget" name="budget" type="text" maxlength="80" />
+            </div>
+            <div class="field">
+              <label for="echeance">Échéance souhaitée</label>
+              <input id="echeance" name="echeance" type="text" maxlength="80" placeholder="ex. mars 2027" />
+            </div>
+          </div>
+
+          <!-- Protection anti-robots : champ invisible pour les humains -->
+          <div class="hp" aria-hidden="true">
+            <label for="site_web">Ne pas remplir</label>
+            <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <p class="form__legal">
+            <span aria-hidden="true">*</span> Champs obligatoires. Vos informations servent uniquement
+            à répondre à votre demande.
+          </p>
+          <button class="btn" type="submit">Envoyer ma demande de devis <span class="arrow" aria-hidden="true">→</span></button>
+        </form>
+      </div>
+
+      <aside class="contact__info" aria-label="Coordonnées">
+        <Rays class="contact__rays" />
+        <h2>Coordonnées</h2>
+        <dl>
+          <dt>Email</dt>
+          <dd><a class="link" href={`mailto:${site.email}`}>{site.email}</a></dd>
+          <dt>Téléphone</dt>
+          <dd><a class="link" href={`tel:${site.phoneHref}`}>{site.phone}</a></dd>
+          <dt>Adresse</dt>
+          <dd>{site.locality}, {site.country}</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-head {
+    padding-bottom: 0;
+  }
+  .contact-head h1 {
+    color: var(--bleu);
+    margin-bottom: 1.5rem;
+  }
+  .contact {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .contact__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+  .form {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .field label {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .opt {
+    font-weight: 400;
+    color: var(--bleu-80);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.75rem 1rem;
+    border: 2px solid rgb(35 35 124 / 0.35);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--noir);
+    font: inherit;
+    font-size: 1.0625rem;
+    transition: border-color var(--t-fast) var(--ease);
+  }
+  .field textarea {
+    resize: vertical;
+  }
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--bleu);
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--bleu);
+    outline: 3px solid rgb(198 94 22 / 0.5);
+    outline-offset: 1px;
+  }
+  .field input:user-invalid,
+  .field select:user-invalid,
+  .field textarea:user-invalid {
+    border-color: var(--rouge);
+    border-style: dashed;
+  }
+  .field__help,
+  .form__legal {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: var(--bleu-80);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .form .btn {
+    justify-self: start;
+  }
+  .form-status {
+    margin-bottom: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid;
+    border-radius: var(--radius);
+    background: #fff;
+  }
+  .form-status strong {
+    display: block;
+  }
+  .form-status--ok {
+    border-color: var(--bleu);
+  }
+  .form-status--err {
+    border-color: var(--rouge);
+  }
+  .contact__info {
+    position: relative;
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    background: var(--bleu);
+    color: var(--creme);
+  }
+  .contact__info h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .contact__info :global(.contact__rays) {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 3rem;
+  }
+  .contact__info dl {
+    margin: 0;
+  }
+  .contact__info dt {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .contact__info dd {
+    margin: 0.25rem 0 1.5rem;
+    font-size: 1.125rem;
+  }
+  @media (max-width: 860px) {
+    .contact__grid,
+    .form__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

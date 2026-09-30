@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mankancommunication.com/sitemap-index.xml

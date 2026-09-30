@@ -1,0 +1,209 @@
+---
+import { nav } from '../data/site';
+
+interface Props {
+  tone?: 'creme' | 'bleu';
+}
+const { tone = 'creme' } = Astro.props;
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="site-header" data-tone={tone} data-header>
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo" aria-label="Mankan Communication — Accueil">
+      <img
+        class="logo logo--bleu"
+        src="/images/logo/mankan-logo-bleu.png"
+        alt=""
+        width="160"
+        height="82"
+      />
+      <img
+        class="logo logo--creme"
+        src="/images/logo/mankan-logo-creme.png"
+        alt=""
+        width="160"
+        height="82"
+      />
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+      data-menu-toggle
+    >
+      <span class="visually-hidden">Menu</span>
+      <span class="menu-toggle__bars" aria-hidden="true"></span>
+    </button>
+
+    <nav class="site-nav" id="menu-principal" aria-label="Menu principal" data-menu>
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                class="link"
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn" href="/contact/#devis">Demander un devis</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    color: var(--bleu);
+    background: var(--creme);
+    transition:
+      transform var(--t) var(--ease),
+      background var(--t) var(--ease),
+      box-shadow var(--t) var(--ease);
+  }
+  .site-header[data-tone='bleu']:not(.is-scrolled) {
+    background: var(--bleu);
+    color: var(--creme);
+  }
+  .site-header.is-scrolled {
+    box-shadow: 0 1px 0 rgb(35 35 124 / 0.12);
+  }
+  .site-header.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 76px;
+  }
+
+  .site-header__logo {
+    display: block;
+    flex-shrink: 0;
+  }
+  .logo {
+    width: clamp(112px, 12vw, 148px);
+    height: auto;
+  }
+  .logo--creme,
+  .site-header[data-tone='bleu']:not(.is-scrolled) .logo--bleu {
+    display: none;
+  }
+  .site-header[data-tone='bleu']:not(.is-scrolled) .logo--creme {
+    display: block;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+  .site-nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    font-size: 1.0625rem;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .menu-toggle {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border: 0;
+      background: none;
+      color: inherit;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+    }
+    .menu-toggle__bars,
+    .menu-toggle__bars::before,
+    .menu-toggle__bars::after {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: currentColor;
+      transition: transform var(--t) var(--ease), opacity var(--t-fast);
+    }
+    .menu-toggle__bars {
+      position: relative;
+    }
+    .menu-toggle__bars::before,
+    .menu-toggle__bars::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+    .menu-toggle__bars::before {
+      top: -8px;
+    }
+    .menu-toggle__bars::after {
+      top: 8px;
+    }
+    .menu-toggle[aria-expanded='true'] .menu-toggle__bars {
+      background: transparent;
+    }
+    .menu-toggle[aria-expanded='true'] .menu-toggle__bars::before {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .menu-toggle[aria-expanded='true'] .menu-toggle__bars::after {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .site-nav {
+      position: fixed;
+      inset: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 3rem;
+      padding: 6rem var(--gutter) 3rem;
+      background: var(--bleu);
+      color: var(--creme);
+      visibility: hidden;
+      opacity: 0;
+      transition:
+        opacity var(--t) var(--ease),
+        visibility 0s linear var(--t);
+    }
+    .site-nav.is-open {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity var(--t) var(--ease);
+    }
+    .site-nav ul {
+      flex-direction: column;
+      gap: 1rem;
+      font-family: var(--font-title);
+      font-weight: 800;
+      font-size: clamp(2.25rem, 10vw, 3.5rem);
+      line-height: 1.1;
+    }
+    .menu-toggle[aria-expanded='true'] {
+      color: var(--creme);
+    }
+  }
+</style>

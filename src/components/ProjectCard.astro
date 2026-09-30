@@ -1,0 +1,157 @@
+---
+import type { Project } from '../data/projects';
+import { categories } from '../data/projects';
+import Rays from './Rays.astro';
+
+interface Props {
+  project: Project;
+  index?: number;
+  size?: 'large' | 'normal';
+}
+const { project, index = 0, size = 'normal' } = Astro.props;
+const categoryLabel = categories.find((c) => c.id === project.category)?.label;
+const dialogId = `projet-${project.slug}`;
+---
+
+<article class={`card card--${size}`} data-category={project.category} data-reveal style={`--i:${index % 3}`}>
+  <a
+    class="card__link"
+    href={`/projets/#${project.slug}`}
+    data-open-dialog={dialogId}
+    aria-haspopup="dialog"
+  >
+    <div class="card__media">
+      <div class="card__placeholder" aria-hidden="true">
+        <span>{project.title}</span>
+        <Rays class="card__rays" />
+      </div>
+      {
+        project.cover ? (
+          <img src={project.cover} alt="" loading="lazy" decoding="async" />
+        ) : (
+          project.vimeoId && (
+            <img data-vimeo-thumb={project.vimeoId} alt="" loading="lazy" decoding="async" hidden />
+          )
+        )
+      }
+      <span class="card__cta" aria-hidden="true">
+        {project.vimeoId ? '▶ Voir le film' : 'Voir le projet'}
+      </span>
+    </div>
+    <div class="card__meta">
+      <h3>{project.title}</h3>
+      <p>
+        {project.client}
+        {categoryLabel && <span> · {categoryLabel}</span>}
+      </p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--bleu);
+  }
+  .card--large .card__media {
+    aspect-ratio: 4 / 3;
+  }
+  .card__media img,
+  .card__placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 700ms var(--ease);
+  }
+  .card__placeholder {
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+    color: var(--creme);
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+    line-height: 1.05;
+    text-transform: uppercase;
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(198 94 22 / 0.35), transparent 60%),
+      var(--bleu);
+  }
+  .card:nth-child(3n + 2) .card__placeholder {
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(198 94 22 / 0.4), transparent 60%),
+      var(--rouge);
+  }
+  .card__placeholder span {
+    max-width: 12ch;
+  }
+  .card__placeholder :global(.card__rays) {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    font-size: 3.5rem;
+  }
+  .has-thumb .card__placeholder {
+    display: none;
+  }
+  .card__cta {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    padding: 0.55rem 1rem 0.45rem;
+    border-radius: 999px;
+    background: var(--creme);
+    color: var(--noir);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity var(--t) var(--ease),
+      transform var(--t) var(--ease);
+  }
+  .card__link:hover .card__media img,
+  .card__link:hover .card__placeholder,
+  .card__link:focus-visible .card__media img {
+    transform: scale(1.04);
+  }
+  .card__link:hover .card__cta,
+  .card__link:focus-visible .card__cta {
+    opacity: 1;
+    transform: none;
+  }
+  .card:not(.has-thumb) .card__link:hover .card__cta {
+    left: auto;
+    right: 1rem;
+  }
+  .card__meta {
+    padding-top: 1rem;
+  }
+  .card__meta h3 {
+    margin-bottom: 0.25rem;
+  }
+  .card__meta p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--bleu-80);
+  }
+  @media (hover: none) {
+    .card__cta {
+      opacity: 1;
+      transform: none;
+    }
+    .card:not(.has-thumb) .card__cta {
+      display: none;
+    }
+  }
+</style>

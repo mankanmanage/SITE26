@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ProjectDialog from '../components/ProjectDialog.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { projects, categories } from '../data/projects';
+
+// N'affiche que les filtres qui ont au moins un projet.
+const usedCategories = categories.filter((c) => projects.some((p) => p.category === c.id));
+---
+
+<Base
+  title="Projets : identités, campagnes et films | Mankan Communication"
+  description="Identités visuelles, campagnes et films réalisés par Mankan Communication, agence de communication et de production audiovisuelle à Bamako."
+>
+  <section class="section page-head">
+    <div class="container">
+      <p class="eyebrow" data-reveal>Projets</p>
+      <h1 data-reveal style="--i:1">Nos idées en images.</h1>
+      <div class="page-head__intro" data-reveal style="--i:2">
+        <p class="lead">Des projets qui racontent les marques, leurs publics et leur univers.</p>
+        <p>
+          Chaque projet commence par une question : qu’avons-nous à raconter, et à qui ? Découvrez
+          les réponses que nous avons mises en images.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section projects" aria-label="Liste des projets">
+    <div class="container">
+      {
+        usedCategories.length > 1 && (
+          <div class="filters" role="group" aria-label="Filtrer les projets" data-filters>
+            <button type="button" data-filter="all" aria-pressed="true">Tous</button>
+            {usedCategories.map((c) => (
+              <button type="button" data-filter={c.id} aria-pressed="false">
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )
+      }
+      <div class="projects__grid">
+        {projects.map((p, i) => <ProjectCard project={p} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  {projects.map((p) => <ProjectDialog project={p} />)}
+
+  <CtaBand />
+</Base>
+
+<style>
+  .page-head {
+    padding-bottom: 0;
+  }
+  .page-head h1 {
+    color: var(--bleu);
+    max-width: 14ch;
+  }
+  .page-head__intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2.5rem;
+  }
+  .projects {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .filters button {
+    min-height: 44px;
+    padding: 0.55rem 1.25rem 0.45rem;
+    border: 2px solid var(--bleu);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--bleu);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background var(--t) var(--ease),
+      color var(--t) var(--ease);
+  }
+  .filters button:hover,
+  .filters button[aria-pressed='true'] {
+    background: var(--bleu);
+    color: var(--creme);
+  }
+  .projects__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: clamp(2rem, 3vw, 3rem) clamp(1.5rem, 2.5vw, 2.5rem);
+  }
+  .projects__grid > :global([hidden]) {
+    display: none;
+  }
+  @media (max-width: 760px) {
+    .page-head__intro {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,425 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Marquee from '../components/Marquee.astro';
+import Rays from '../components/Rays.astro';
+import { site, expertises } from '../data/site';
+import { featuredProjects } from '../data/projects';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: site.name,
+  url: site.url,
+  email: site.email,
+  telephone: site.phone,
+  slogan: site.signature,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Bamako',
+    addressCountry: 'ML',
+  },
+};
+
+const steps = [
+  { n: '01', title: 'Échanger', text: 'Nous partons de vos objectifs, de votre public et de votre histoire.' },
+  { n: '02', title: 'Orienter', text: 'Nous construisons une direction créative claire et partagée.' },
+  { n: '03', title: 'Produire', text: 'Identités, films, photos et contenus prennent forme.' },
+  { n: '04', title: 'Affiner', text: 'Nous ajustons les livrables avec vous jusqu’au bon résultat.' },
+];
+---
+
+<Base
+  title="Agence de communication à Bamako | Mankan Communication"
+  description="Mankan Communication, agence de communication à Bamako : stratégie de marque, identité visuelle, films et contenus créatifs nourris par la culture malienne."
+  headerTone="bleu"
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- Introduction -->
+  <section class="hero">
+    <div class="hero__video" data-hero-video={site.heroVimeoId || undefined} aria-hidden="true"></div>
+    <div class="container hero__inner">
+      <h1 class="hero__title">
+        <span class="line"><span>Agence de communication</span></span>
+        <span class="line"><span>à Bamako,</span></span>
+        <span class="line"><span class="accent">créative par culture.</span></span>
+      </h1>
+      <div class="hero__bottom">
+        <p class="lead">
+          Nous aidons les marques à trouver leur voix et à la faire résonner. Stratégie, identité
+          visuelle et contenus : chez Mankan, la culture nourrit chaque idée.
+        </p>
+        <div class="hero__actions">
+          <a class="btn" href="/contact/#devis">Demander un devis <span class="arrow" aria-hidden="true">→</span></a>
+          <a class="btn btn--secondary" href="/projets/">Voir nos projets</a>
+        </div>
+      </div>
+      <Rays class="hero__rays" />
+    </div>
+  </section>
+
+  <section class="section intro">
+    <div class="container intro__grid">
+      <p class="eyebrow" data-reveal>Mankan Communication</p>
+      <p class="intro__text" data-reveal style="--i:1">
+        Nous racontons les marques avec ce qui nous ressemble : des histoires, des images et des
+        références qui parlent à nos publics. Depuis Bamako, nous transformons cette matière
+        culturelle en idées de communication adaptées à votre projet.
+      </p>
+    </div>
+  </section>
+
+  <!-- Réalisations -->
+  <section class="section section--creme-2 work" aria-labelledby="work-titre">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>Réalisations</p>
+          <h2 id="work-titre" data-reveal style="--i:1">Des idées qui prennent vie.</h2>
+        </div>
+        <p data-reveal style="--i:2">
+          Découvrez une sélection de nos identités, campagnes et productions.
+        </p>
+      </div>
+      <div class="work__grid">
+        {featuredProjects.map((p, i) => <ProjectCard project={p} index={i} size={i === 0 ? 'large' : 'normal'} />)}
+      </div>
+      <div class="work__more" data-reveal>
+        <a class="btn btn--secondary" href="/projets/">Tous les projets <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <Marquee items={expertises.map((e) => e.title)} />
+
+  <!-- Expertises -->
+  <section class="section" aria-labelledby="expertises-titre">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>Expertises</p>
+          <h2 id="expertises-titre" data-reveal style="--i:1">De la réflexion à la production.</h2>
+        </div>
+        <p data-reveal style="--i:2">
+          De la première réflexion à la production, nous vous accompagnons pour donner une
+          direction claire à votre communication et une forme forte à vos messages.
+        </p>
+      </div>
+      <ol class="expertises">
+        {
+          expertises.map((e, i) => (
+            <li data-reveal style={`--i:${i % 3}`}>
+              <span class="expertises__n">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{e.title}</h3>
+              <p>{e.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Signature culturelle -->
+  <section class="section section--bleu signature" aria-labelledby="signature-titre">
+    <div class="container signature__grid">
+      <div>
+        <p class="eyebrow" data-reveal>Signature culturelle</p>
+        <h2 id="signature-titre" data-reveal style="--i:1">Notre patrimoine est une source de création.</h2>
+      </div>
+      <div data-reveal style="--i:2">
+        <p class="lead">
+          Nous puisons dans les gestes, les récits et les codes de notre quotidien pour donner aux
+          marques une expression qui leur appartient.
+        </p>
+        <p class="signature__quote quote">
+          « {site.signature} »<br /><span>{site.signatureTranslation}</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Méthode -->
+  <section class="section" aria-labelledby="methode-titre">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>Méthode</p>
+          <h2 id="methode-titre" data-reveal style="--i:1">Comment nous travaillons.</h2>
+        </div>
+        <p data-reveal style="--i:2">
+          Nous échangeons sur vos objectifs, construisons une direction créative, produisons les
+          contenus et affinons les livrables avec vous.
+        </p>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li data-reveal style={`--i:${i}`}>
+              <span class="steps__n">{s.n}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  /* Introduction plein écran */
+  .hero {
+    position: relative;
+    min-height: calc(100svh - 76px);
+    display: flex;
+    background: var(--bleu);
+    color: var(--creme);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 800ms var(--ease);
+  }
+  .hero__video.is-playing {
+    opacity: 1;
+  }
+  .hero__video::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(35 35 124 / 0.35), rgb(0 0 12 / 0.7));
+  }
+  .hero__video :global(iframe) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 56.25vw;
+    min-height: 100%;
+    min-width: 177.78vh;
+    transform: translate(-50%, -50%);
+    border: 0;
+    pointer-events: none;
+  }
+  .hero__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3rem;
+    padding-block: clamp(3rem, 8vh, 6rem) clamp(2rem, 6vh, 4rem);
+  }
+  .hero__title {
+    font-size: clamp(2.5rem, 7.5vw, 7rem);
+    line-height: 0.98;
+    text-transform: uppercase;
+  }
+  .hero__title .line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+  }
+  .hero__title .line > span {
+    display: inline-block;
+    animation: line-up 900ms var(--ease) both;
+  }
+  .hero__title .line:nth-child(2) > span {
+    animation-delay: 120ms;
+  }
+  .hero__title .line:nth-child(3) > span {
+    animation-delay: 240ms;
+  }
+  .hero__title .accent {
+    color: var(--orange);
+  }
+  @keyframes line-up {
+    from {
+      transform: translateY(105%);
+    }
+  }
+  .hero__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    animation: fade-in 800ms var(--ease) 500ms both;
+  }
+  .hero__bottom .lead {
+    margin: 0;
+    max-width: 44ch;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .hero .btn--secondary {
+    color: var(--creme);
+    border-color: var(--creme);
+  }
+  .hero .btn--secondary:hover {
+    background: var(--creme);
+    color: var(--bleu);
+  }
+  .hero .btn:not(.btn--secondary):hover {
+    border-color: var(--creme);
+  }
+  .hero :global(.hero__rays) {
+    position: absolute;
+    top: clamp(1.5rem, 6vh, 4rem);
+    right: var(--gutter);
+    font-size: clamp(4rem, 10vw, 9rem);
+    animation: fade-in 800ms var(--ease) 700ms both;
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  /* Intro */
+  .intro__grid {
+    display: grid;
+    grid-template-columns: 1fr 2.2fr;
+    gap: 2rem;
+  }
+  .intro__text {
+    margin: 0;
+    max-width: 34ch;
+    font-size: clamp(1.5rem, 1.8vw + 1rem, 2.5rem);
+    line-height: 1.3;
+    font-weight: 500;
+    color: var(--bleu);
+  }
+
+  /* En-têtes de section */
+  .section-head {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: end;
+    gap: 2rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .section-head > p {
+    margin: 0;
+  }
+  .section-head h2 {
+    color: var(--bleu);
+  }
+
+  /* Réalisations */
+  .work__grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .work__grid > :global(.card--large) {
+    grid-row: span 2;
+  }
+  .work__more {
+    margin-top: 3rem;
+  }
+
+  /* Expertises */
+  .expertises {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    border-top: 2px solid var(--bleu);
+  }
+  .expertises li {
+    padding: 2rem 2rem 2rem 0;
+    border-bottom: 1px solid rgb(35 35 124 / 0.2);
+  }
+  .expertises__n,
+  .steps__n {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--rouge);
+  }
+  .expertises h3 {
+    margin-bottom: 0.75rem;
+    color: var(--bleu);
+  }
+  .expertises p {
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  /* Signature */
+  .signature__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+  }
+  .signature__quote {
+    margin-top: 2rem;
+    font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+    line-height: 1.2;
+    color: var(--creme);
+  }
+  .signature__quote span {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+
+  /* Méthode */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    counter-reset: step;
+  }
+  .steps li {
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--orange);
+  }
+  .steps h3 {
+    margin-bottom: 0.75rem;
+  }
+  .steps p {
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  @media (max-width: 860px) {
+    .intro__grid,
+    .section-head,
+    .signature__grid,
+    .work__grid {
+      grid-template-columns: 1fr;
+    }
+    .work__grid > :global(.card--large) {
+      grid-row: auto;
+    }
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
