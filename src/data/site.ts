@@ -16,6 +16,7 @@ export const site = {
   ],
 };
 
+// `photo` : chemin d'un portrait dans /public/images/equipe/ (facultatif, rien n'est affiché sinon).
 export const team = [
   { name: 'Aïssa Sidibé', role: 'Directrice de la stratégie créative & co-gérante', photo: '' },
   { name: 'Assitan Sidibé', role: 'Co-gérante, directrice de la stratégie opérationnelle', photo: '' },
