@@ -1,0 +1,234 @@
+---
+// Menu « 3 traits » en haut à gauche, sur toutes les pages, qui ouvre un menu plein écran
+// (repris de l'artboard « Menu plein écran » de la maquette).
+import { site } from '../data/site';
+
+const links = [
+  { n: '01', label: 'Accueil', href: '/' },
+  { n: '02', label: 'Films', href: '/films/' },
+  { n: '03', label: 'À propos', href: '/a-propos/' },
+  { n: '04', label: 'Contact', href: '/contact/' },
+];
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<button type="button" class="burger" aria-expanded="false" aria-controls="menu" data-menu-toggle>
+  <span class="burger__lines" aria-hidden="true"><span></span><span></span><span></span></span>
+  <span class="visually-hidden">Menu</span>
+</button>
+
+<div class="menu" id="menu" data-menu hidden>
+  <span class="menu__sun" aria-hidden="true"></span>
+  <img class="menu__img" src="/images/films/portrait-gele-dore.jpg" alt="" aria-hidden="true" loading="lazy" />
+
+  <div class="menu__top label">
+    <img src="/images/logo/mankan-logo-creme.png" alt="MANKAN communication" width="160" height="82" />
+    <span class="menu__city">( Bamako — Mali )</span>
+  </div>
+
+  <nav aria-label="Menu principal">
+    <ol class="menu__links">
+      {
+        links.map((l, i) => (
+          <li style={`--i:${i}`}>
+            <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
+              <span class="menu__n">{l.n}</span>
+              <span class="display">{l.label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+
+  <div class="menu__foot">
+    <ul class="label">
+      {site.social.map((s) => <li><a href={s.url} rel="noopener" target="_blank">( {s.label} )</a></li>)}
+    </ul>
+    <span class="italic">{site.signature}.</span>
+  </div>
+</div>
+
+<style>
+  .burger {
+    position: fixed;
+    left: var(--pad-top);
+    top: 24px;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(0 0 12 / 0.55);
+    color: var(--creme);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: background 250ms var(--ease);
+  }
+  .burger:hover {
+    background: var(--rouge);
+  }
+  .burger__lines {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 24px;
+  }
+  .burger__lines span {
+    display: block;
+    height: 2px;
+    background: currentColor;
+    transition:
+      transform 300ms var(--ease),
+      opacity 200ms;
+  }
+  .burger__lines span:nth-child(2) {
+    width: 70%;
+  }
+  .burger[aria-expanded='true'] .burger__lines span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .burger[aria-expanded='true'] .burger__lines span:nth-child(2) {
+    opacity: 0;
+  }
+  .burger[aria-expanded='true'] .burger__lines span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 65;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px var(--pad) 40px;
+    overflow: hidden auto;
+    background: var(--noir);
+    color: var(--creme);
+    animation: menu-in 450ms var(--ease-io);
+  }
+  .menu[hidden] {
+    display: none;
+  }
+  @keyframes menu-in {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  .menu__sun {
+    position: absolute;
+    right: -12%;
+    top: 20%;
+    width: min(820px, 60vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--rouge);
+  }
+  .menu__img {
+    position: absolute;
+    right: 8%;
+    top: 28%;
+    width: min(360px, 26vw);
+    aspect-ratio: 360 / 460;
+    object-fit: cover;
+    border: 8px solid var(--creme);
+  }
+  .menu__top {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-left: 72px;
+    min-height: 52px;
+  }
+  .menu__top img {
+    height: 44px;
+    width: auto;
+  }
+  .menu__city {
+    color: var(--gris);
+  }
+  .menu__links {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .menu__links li {
+    animation: link-in 500ms var(--ease) both;
+    animation-delay: calc(150ms + var(--i) * 70ms);
+  }
+  @keyframes link-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  .menu__links a {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    font-size: clamp(56px, 7.5vw, 108px);
+    line-height: 1.08;
+  }
+  .menu__links a:hover,
+  .menu__links a[aria-current='page'] {
+    color: var(--orange);
+  }
+  .menu__n {
+    font-size: 16px;
+    color: #e08a4e;
+  }
+  .menu__foot {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px 28px;
+  }
+  .menu__foot ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .menu__foot a {
+    display: inline-block;
+    padding: 12px 0;
+  }
+  .menu__foot .italic {
+    font-size: 26px;
+  }
+  @media (max-width: 760px) {
+    .burger {
+      top: 16px;
+      width: 48px;
+      height: 48px;
+    }
+    .menu__img,
+    .menu__city {
+      display: none;
+    }
+    .menu__sun {
+      width: 110vw;
+      right: -60%;
+      top: 45%;
+    }
+    .menu__top {
+      padding-left: 64px;
+    }
+  }
+</style>

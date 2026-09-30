@@ -2,8 +2,8 @@
 import Base from '../layouts/Base.astro';
 import Footer from '../components/Footer.astro';
 import LogoMark from '../components/LogoMark.astro';
-import { site, clients, verbs, team } from '../data/site';
-import { films, featuredFilms, filmTypes, usedTypes, pad } from '../data/films';
+import { site, clients, verbs } from '../data/site';
+import { films, featuredFilms, pad } from '../data/films';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -17,8 +17,9 @@ const jsonLd = {
   sameAs: site.social.map((s) => s.url),
 };
 
-const heroFilms = films.map((f, i) => ({ ...f, num: pad(i + 1), typeLabel: filmTypes[f.type].label }));
-const hasPreview = films.some((f) => f.preview);
+// Accueil : uniquement les images / vidéos des films, sans titres.
+const heroFilms = films.filter((f) => f.preview || f.cover || f.vimeoId);
+const hasPreview = heroFilms.some((f) => f.preview);
 ---
 
 <Base
@@ -35,8 +36,9 @@ const hasPreview = films.some((f) => f.preview);
   </script>
 
   <main id="contenu">
-    <!-- ============ HERO : index des films ============ -->
+    <!-- ============ HERO : les films en plein écran ============ -->
     <section class="hero" id="top" data-hero>
+      <h1 class="visually-hidden">MANKAN, agence de communication culturelle et de production à Bamako</h1>
       <div class="hero__media" aria-hidden="true">
         {
           heroFilms.map((f, i) => (
@@ -45,12 +47,8 @@ const hasPreview = films.some((f) => f.preview);
                 <video muted loop playsinline preload="none" poster={f.cover} data-src={f.preview} />
               ) : f.cover ? (
                 <img class="zoom" src={f.cover} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
-              ) : f.vimeoId ? (
-                <img class="zoom" data-vimeo-thumb={f.vimeoId} alt="" hidden />
               ) : (
-                <div class="hero__blank">
-                  <span class="display">{f.client}</span>
-                </div>
+                <img class="zoom" data-vimeo-thumb={f.vimeoId} alt="" hidden />
               )}
             </div>
           ))
@@ -58,90 +56,17 @@ const hasPreview = films.some((f) => f.preview);
         <div class="hero__veil"></div>
       </div>
 
-      <header class="hero__info">
-        <div>
-          <span class="hero__brand">MANKAN</span>
-          <h1>Agence culturelle<br />&amp; production</h1>
-        </div>
-        <div class="hide-sm">
-          <span>Bamako, Mali</span>
-          <span class="muted">{team.map((m) => m.name).join(' · ')}</span>
-        </div>
-        <ul class="hide-md muted">
-          <li>Films &amp; spots</li>
-          <li>Campagnes 360°</li>
-          <li>Branding</li>
-          <li>Photographie</li>
-        </ul>
-      </header>
-
       <a class="hero__logo" href="#top" aria-label="MANKAN — accueil">
         <LogoMark beat />
       </a>
 
-      <nav class="hero__nav" aria-label="Navigation principale">
-        <ul class="hide-md">
-          {usedTypes.map((t) => <li><a href={`/films/?type=${t}`}>{filmTypes[t].plural}</a></li>)}
-        </ul>
-        <ul class="hero__nav-main">
-          <li><a href="/a-propos/">À propos</a></li>
-          <li><a href="/contact/">Contact</a></li>
-          <li class="hide-sm"><a href={site.social[0].url} rel="noopener" target="_blank">Instagram</a></li>
-        </ul>
-      </nav>
-
-      <div class="hero__center">
-        <a class="italic" href="/a-propos/">Qui sont les griots derrière ces images&nbsp;? →</a>
-        <a class="hero__mail" href={`mailto:${site.email}`}>{site.email}</a>
-      </div>
-
-      <div class="hero__index">
-        {
-          usedTypes.length > 1 && (
-            <div class="hero__filters" role="group" aria-label="Filtrer les projets">
-              <button type="button" data-filter="all" aria-pressed="true">
-                Tout <span>{pad(films.length)}</span>
-              </button>
-              {usedTypes.map((t) => (
-                <button type="button" data-filter={t} aria-pressed="false">
-                  {filmTypes[t].plural} <span>{pad(films.filter((f) => f.type === t).length)}</span>
-                </button>
-              ))}
-            </div>
-          )
-        }
-        <ol class="hero__rows">
-          {
-            heroFilms.map((f, i) => (
-              <li data-row={i} data-type={f.type} class={i === 0 ? 'is-active' : ''}>
-                <a href={`/films/${f.slug}/`}>
-                  <span class="row__num">{f.num}</span>
-                  <span class="row__client">{f.client}</span>
-                  <span class="row__title italic">{f.title}</span>
-                  <span class="row__cta">Voir →</span>
-                  <span class="row__track" aria-hidden="true"><span class="row__bar" /></span>
-                </a>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-
-      <div class="hero__now">
-        <div class="hero__now-meta">
-          <span data-now-type>{heroFilms[0].typeLabel}</span>
-          {hasPreview && (
-            <button type="button" data-sound aria-pressed="false">( Son coupé )</button>
-          )}
-        </div>
-        <span class="hero__timecode display" data-timecode aria-hidden="true">00:00:00</span>
-        <a class="hero__play" href={`/films/${heroFilms[0].slug}/`} data-now-link>
-          <span class="play-dot" style="width:40px;height:40px">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
-          </span>
-          Voir le film
-        </a>
-      </div>
+      {
+        hasPreview && (
+          <button type="button" class="hero__sound" data-sound aria-pressed="false">
+            ( Son coupé )
+          </button>
+        )
+      }
 
       <a class="hero__scroll" href="#decouvrir">( Défiler )<span class="bob"></span></a>
 
@@ -166,9 +91,9 @@ const hasPreview = films.some((f) => f.preview);
       <img class="m-img m-img--3" src="/images/films/mariee-voile-blanc.jpg" alt="" loading="lazy" data-parallax="-0.04" />
       <img class="m-img m-img--4" src="/images/films/serie-orange.jpg" alt="" loading="lazy" data-parallax="0.04" />
       <h2 class="manifeste__title display" data-reveal>
-        ON DONNE<br /><span class="c-rouge">DU MANKAN*</span><br />À VOS MARQUES
+        ON FAIT<br /><span class="c-rouge">DU BRUIT</span><br />POUR VOUS
       </h2>
-      <p class="manifeste__note italic">* mankan&nbsp;: la voix, le son, en bamanankan.</p>
+      <p class="manifeste__note italic">Mankan&nbsp;: la voix, le son, en bamanankan.</p>
     </section>
 
     <!-- ============ 2. À PROPOS ============ -->
@@ -297,13 +222,9 @@ const hasPreview = films.some((f) => f.preview);
   .hero {
     position: relative;
     height: 100svh;
-    min-height: 640px;
+    min-height: 560px;
     overflow: hidden;
     background: var(--noir);
-    font-size: 13px;
-    line-height: 1.55;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
   .hero__media,
   .hero__slide,
@@ -313,7 +234,7 @@ const hasPreview = films.some((f) => f.preview);
   }
   .hero__slide {
     opacity: 0;
-    transition: opacity 900ms ease;
+    transition: opacity 1200ms ease;
   }
   .hero__slide.is-active {
     opacity: 1;
@@ -324,231 +245,25 @@ const hasPreview = films.some((f) => f.preview);
     height: 100%;
     object-fit: cover;
   }
-  .hero__blank {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background:
-      radial-gradient(60% 60% at 70% 40%, rgb(142 23 23 / 0.55), transparent 70%),
-      radial-gradient(50% 50% at 20% 80%, rgb(35 35 124 / 0.6), transparent 70%),
-      var(--noir);
-  }
-  .hero__blank span {
-    font-size: clamp(64px, 14vw, 220px);
-    color: rgb(255 247 243 / 0.08);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
   .hero__veil {
-    background: rgb(0 0 12 / 0.38);
+    background: linear-gradient(180deg, rgb(0 0 12 / 0.35), transparent 30%, transparent 70%, rgb(0 0 12 / 0.45));
   }
-
-  .hero__info,
-  .hero__nav,
   .hero__logo,
-  .hero__index,
-  .hero__now,
-  .hero__center,
+  .hero__sound,
   .hero__scroll {
     position: absolute;
     z-index: 3;
   }
-  .hero ul,
-  .hero ol {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .hero__info {
-    left: var(--pad-top);
-    top: 36px;
-    display: grid;
-    grid-template-columns: 180px 190px 150px;
-    gap: 28px;
-  }
-  .hero__info > div {
-    display: flex;
-    flex-direction: column;
-  }
-  .hero__brand {
-    font-weight: 600;
-  }
-  .hero__info h1 {
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.08em;
-    line-height: 1.55;
-  }
-  .muted {
-    color: var(--gris);
-  }
   .hero__logo {
     left: 50%;
-    top: 30px;
+    top: 26px;
     width: 120px;
     transform: translateX(-50%);
   }
-  .hero__nav {
+  .hero__sound {
     right: var(--pad-top);
-    top: 36px;
-    display: grid;
-    grid-template-columns: 150px 130px;
-    gap: 28px;
-  }
-  .hero__nav-main {
-    text-align: right;
-  }
-  .hero__center {
-    left: 0;
-    right: 0;
-    top: 108px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    pointer-events: none;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-  .hero__center a {
-    pointer-events: auto;
-  }
-  .hero__center .italic {
-    padding: 6px 0;
-    font-size: 22px;
-  }
-  .hero__mail {
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    color: var(--gris);
-  }
-
-  .hero__index {
-    left: var(--pad-top);
-    bottom: 40px;
-    width: min(620px, calc(100% - 2 * var(--pad-top)));
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .hero__filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 18px;
-  }
-  .hero__filters button {
-    height: 32px;
-    padding: 0;
-    border: 0;
-    border-bottom: 1px solid transparent;
-    background: none;
-    color: var(--gris-2);
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .hero__filters button span {
-    color: var(--jaune);
-  }
-  .hero__filters button[aria-pressed='true'] {
-    color: var(--creme);
-    border-bottom-color: var(--jaune);
-  }
-  .hero__rows li[hidden] {
-    display: none;
-  }
-  .hero__rows a {
-    position: relative;
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    padding: 4px 0 6px;
-    opacity: 0.45;
-    transition: opacity 300ms ease;
-  }
-  .hero__rows a:hover {
-    color: inherit;
-  }
-  .hero__rows .is-active a,
-  .hero__rows a:focus-visible {
-    opacity: 1;
-  }
-  .row__num {
-    width: 22px;
-    flex-shrink: 0;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--jaune);
-  }
-  .row__client {
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-  }
-  .row__title {
-    overflow: hidden;
-    font-size: 24px;
-    letter-spacing: 0;
-    text-transform: none;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .row__cta {
-    margin-left: auto;
-    flex-shrink: 0;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    color: var(--jaune);
-    opacity: 0;
-    transition: opacity 300ms ease;
-  }
-  .is-active .row__cta {
-    opacity: 1;
-  }
-  .row__track {
-    position: absolute;
-    left: 36px;
-    right: 0;
-    bottom: 0;
-    height: 2px;
-  }
-  .is-active .row__track {
-    background: rgb(255 247 243 / 0.25);
-  }
-  .row__bar {
-    display: block;
-    width: 0;
-    height: 2px;
-    background: var(--jaune);
-  }
-  .is-active .row__bar {
-    width: var(--progress, 0%);
-    transition: width 1s linear;
-  }
-
-  .hero__now {
-    right: var(--pad-top);
-    bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 14px;
-  }
-  .hero__now-meta {
-    display: flex;
-    align-items: center;
-    gap: 22px;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    color: var(--gris);
-  }
-  .hero__now-meta button {
-    height: 32px;
+    bottom: 36px;
+    height: 44px;
     padding: 0;
     border: 0;
     background: none;
@@ -557,30 +272,6 @@ const hasPreview = films.some((f) => f.preview);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     cursor: pointer;
-  }
-  .hero__timecode {
-    font-size: 64px;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0;
-  }
-  .hero__play {
-    display: flex;
-    white-space: nowrap;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 20px 8px 8px;
-    border: 1px solid rgb(255 247 243 / 0.6);
-    border-radius: 999px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    transition:
-      background 250ms var(--ease),
-      color 250ms var(--ease);
-  }
-  .hero__play:hover {
-    background: var(--creme);
-    color: var(--noir);
   }
   .hero__scroll {
     left: 50%;
@@ -592,6 +283,7 @@ const hasPreview = films.some((f) => f.preview);
     transform: translateX(-50%);
     font-size: 11px;
     letter-spacing: 0.18em;
+    text-transform: uppercase;
   }
   .bob {
     display: block;
@@ -1054,15 +746,6 @@ const hasPreview = films.some((f) => f.preview);
 
   /* ---------- RESPONSIVE ---------- */
   @media (max-width: 1180px) {
-    .hero .hide-md {
-      display: none;
-    }
-    .hero__info {
-      grid-template-columns: 180px 200px;
-    }
-    .hero__nav {
-      grid-template-columns: auto;
-    }
     .verbes__list a {
       grid-template-columns: 40px 1fr 1fr 32px;
       padding-block: 20px;
@@ -1077,59 +760,10 @@ const hasPreview = films.some((f) => f.preview);
     }
   }
   @media (max-width: 760px) {
-    .hero .hide-sm {
-      display: none;
-    }
-    .hero {
-      min-height: 700px;
-    }
-    .hero__info {
-      top: 24px;
-      grid-template-columns: auto;
-    }
-    .hero__nav {
-      top: 24px;
-    }
     .hero__logo {
-      top: 88px;
-      left: var(--pad-top);
-      width: 110px;
-      transform: none;
+      width: 96px;
+      top: 20px;
     }
-    .hero__center {
-      display: none;
-    }
-    .hero__index {
-      bottom: 150px;
-    }
-    .row__title {
-      font-size: 19px;
-    }
-    .row__cta {
-      display: none;
-    }
-    .hero__now {
-      left: var(--pad-top);
-      right: var(--pad-top);
-      bottom: 28px;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .hero__timecode {
-      font-size: 28px;
-    }
-    .hero__play {
-      padding-right: 16px;
-      font-size: 12px;
-    }
-    .hero__now-meta {
-      display: none;
-    }
-    .hero__scroll {
-      display: none;
-    }
-
     .manifeste {
       min-height: 0;
       padding: 150px var(--pad) 120px;

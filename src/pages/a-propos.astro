@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import TopBar from '../components/TopBar.astro';
 import Footer from '../components/Footer.astro';
-import { site, team, clients, expertises, manifestoAudio } from '../data/site';
+import { site, expertises, manifestoAudio } from '../data/site';
 import { films, pad } from '../data/films';
 
 const hasAudio = Boolean(manifestoAudio.bm || manifestoAudio.fr);
@@ -20,7 +20,7 @@ const values = [
   <main id="contenu">
     <!-- 1. AN KA KO LA -->
     <section class="histoire">
-      <TopBar left={{ label: 'Accueil', href: '/' }} right={{ label: 'Contact', href: '/contact/' }} />
+      <TopBar />
       <div class="histoire__title">
         <span class="label c-jaune">( À propos de nous )</span>
         <h1 class="display shadow-noir" data-reveal>AN KA<br />KO LA*</h1>
@@ -151,38 +151,6 @@ const values = [
           ))
         }
       </ol>
-    </section>
-
-    <!-- 7. ÉQUIPE -->
-    <section class="equipe">
-      <div class="equipe__intro">
-        <span class="label c-jaune">( L’équipe )</span>
-        <h2 class="display">Les griots</h2>
-        <p>
-          Un noyau dur à Bamako, entouré du Creative Hub&nbsp;: vidéastes, photographes, motion
-          designers, artistes 3D, stylistes, beatmakers.
-        </p>
-      </div>
-      {
-        team.map((m, i) => (
-          <div class="equipe__membre" data-reveal style={`--i:${i + 1}`}>
-            {m.photo && <img src={m.photo} alt={`Portrait de ${m.name}`} loading="lazy" />}
-            <div>
-              <h3 class="display">{m.name}</h3>
-              <span>{m.role}</span>
-            </div>
-          </div>
-        ))
-      }
-    </section>
-
-    <!-- 8. COLLABORATIONS -->
-    <section class="collab">
-      <h2 class="label c-rouge collab__label">( Ils nous font confiance )</h2>
-      <ul class="collab__grid">
-        {clients.map((c) => <li>{c}</li>)}
-        <li class="collab__you"><a href="/contact/">Et vous&nbsp;? →</a></li>
-      </ul>
     </section>
 
     <!-- 8a. LA SUITE -->
@@ -494,109 +462,6 @@ const values = [
     font-size: 13px;
   }
 
-  /* 7. Équipe */
-  .equipe {
-    display: grid;
-    grid-template-columns: 420px 1fr 1fr;
-    gap: 56px;
-    align-items: start;
-    padding: 100px var(--pad);
-    background: var(--bleu);
-  }
-  .equipe__intro {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .equipe__intro h2 {
-    font-size: clamp(56px, 6.1vw, 88px);
-  }
-  .equipe__intro p {
-    margin-top: 8px;
-    font-size: 17px;
-    line-height: 1.6;
-  }
-  .equipe__membre {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding-top: 22px;
-    border-top: 1px solid rgb(255 247 243 / 0.4);
-  }
-  .equipe__membre img {
-    width: 150px;
-    height: 190px;
-    object-fit: cover;
-  }
-  .equipe__membre > div {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .equipe__membre h3 {
-    font-size: clamp(34px, 3.2vw, 46px);
-  }
-  .equipe__membre span {
-    max-width: 30ch;
-    font-size: 16px;
-    line-height: 1.5;
-  }
-
-  /* 8. Collaborations */
-  .collab {
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
-    padding: 90px var(--pad);
-    background: var(--creme);
-    color: var(--bleu);
-  }
-  .collab__label {
-    font-weight: 400;
-  }
-  .collab__grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: 1px solid var(--noir);
-    border-left: 1px solid var(--noir);
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .collab__grid li {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100px;
-    padding: 12px;
-    border-right: 1px solid var(--noir);
-    border-bottom: 1px solid var(--noir);
-    text-align: center;
-    transition:
-      background 250ms var(--ease),
-      color 250ms var(--ease);
-  }
-  .collab__grid li:hover {
-    background: var(--bleu);
-    color: var(--creme);
-  }
-  .collab__you {
-    background: var(--rouge);
-    color: var(--jaune);
-    padding: 0 !important;
-  }
-  .collab__you a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-  }
-
   /* 8a. Suite */
   .suite {
     position: relative;
@@ -686,15 +551,11 @@ const values = [
 
   @media (max-width: 1180px) {
     .histoire,
-    .artisan,
-    .equipe {
+    .artisan {
       grid-template-columns: 1fr;
     }
     .artisan__col {
       padding-top: 0;
-    }
-    .collab__grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
   @media (max-width: 760px) {
@@ -712,19 +573,10 @@ const values = [
     .expertises__grid li:last-child {
       border-bottom: 1px solid var(--noir);
     }
-    .collab__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      font-size: 14px;
-    }
-    .equipe__membre img {
-      width: 110px;
-      height: 140px;
-    }
     .valeurs,
     .expertises,
     .artisan,
-    .mission,
-    .equipe {
+    .mission {
       padding-block: 72px;
     }
     .final__btn {

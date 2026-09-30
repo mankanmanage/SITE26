@@ -202,28 +202,19 @@ p {
   color: var(--rouge);
 }
 
-/* ---------- Barre du haut des pages intérieures ---------- */
+/* ---------- Logo en haut des pages intérieures ---------- */
 .topbar {
   position: absolute;
-  left: var(--pad-top);
-  right: var(--pad-top);
-  top: 32px;
+  left: 0;
+  right: 0;
+  top: 28px;
   z-index: 5;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
 }
-.topbar > :first-child {
-  justify-self: start;
-}
-.topbar > :last-child {
-  justify-self: end;
-}
-.topbar a {
-  padding: 12px 0;
+.topbar__logo {
+  pointer-events: auto;
 }
 .topbar__logo img {
   height: 44px;

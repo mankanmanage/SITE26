@@ -4,31 +4,27 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="footer__top">
-    <p class="italic footer__claim">Mankan parle pour vous.</p>
-    <ul class="footer__links">
-      <li><a href="/films/">( Films )</a></li>
-      <li><a href="/a-propos/">( À propos )</a></li>
-      <li><a href="/contact/">( Contact )</a></li>
+  <div class="footer__main">
+    <a href="/" class="footer__logo" aria-label="MANKAN — accueil">
+      <img src="/images/logo/mankan-logo-creme.png" alt="MANKAN communication" width="160" height="82" loading="lazy" />
+    </a>
+    <ul class="footer__social" aria-label="Réseaux sociaux">
       {
-        site.social.slice(0, 2).map((s) => (
+        site.social.map((s) => (
           <li>
             <a href={s.url} rel="noopener" target="_blank">
-              ( {s.label} )
+              {s.label}
             </a>
           </li>
         ))
       }
     </ul>
+    <a class="footer__mail" href={`mailto:${site.email}`}>{site.email}</a>
   </div>
-  <div>
-    <div class="footer__giant display" aria-hidden="true">MANKAN</div>
-    <div class="footer__bottom label--sm">
-      <span>© {year} {site.name}</span>
-      <span>{site.signature}</span>
-      <span>{site.address}</span>
-      <button type="button" class="footer__legal" data-open-dialog="mentions-legales">Mentions légales</button>
-    </div>
+  <div class="footer__bottom label--sm">
+    <span>© {year} {site.name}</span>
+    <span>{site.signature}</span>
+    <button type="button" class="footer__legal" data-open-dialog="mentions-legales">Mentions légales</button>
   </div>
 
   <dialog id="mentions-legales" class="legal" aria-labelledby="legal-titre">
@@ -57,25 +53,24 @@ const year = new Date().getFullYear();
   .footer {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 64px;
-    min-height: 460px;
-    padding: 64px var(--pad) 32px;
+    gap: 20px;
+    padding: 36px var(--pad) 24px;
     background: var(--noir);
     color: var(--creme);
-    overflow: hidden;
+    border-top: 1px solid rgb(255 247 243 / 0.12);
   }
-  .footer__top {
+  .footer__main {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: 16px 32px;
   }
-  .footer__claim {
-    font-size: clamp(26px, 2.3vw, 32px);
-    color: var(--jaune);
+  .footer__logo img {
+    height: 40px;
+    width: auto;
   }
-  .footer__links {
+  .footer__social {
     display: flex;
     flex-wrap: wrap;
     gap: 4px 28px;
@@ -86,25 +81,23 @@ const year = new Date().getFullYear();
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .footer__links a {
+  .footer__social a,
+  .footer__mail {
     display: inline-block;
     padding: 10px 0;
   }
-  .footer__giant {
-    font-size: clamp(96px, 23.6vw, 340px);
-    line-height: 0.82;
-    text-shadow: 0.035em 0.035em 0 var(--rouge);
-    white-space: nowrap;
+  .footer__mail {
+    font-size: 14px;
+    color: var(--gris);
   }
   .footer__bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 8px 24px;
-    margin-top: 10px;
-    padding-top: 14px;
-    border-top: 1px solid rgb(255 247 243 / 0.2);
-    color: var(--gris);
+    padding-top: 16px;
+    border-top: 1px solid rgb(255 247 243 / 0.12);
+    color: var(--gris-2);
     letter-spacing: 0.12em;
   }
   .footer__legal {

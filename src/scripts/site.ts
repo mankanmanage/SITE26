@@ -70,34 +70,20 @@ function initIntro() {
   intro.addEventListener('click', done);
 }
 
-/* ---------- Hero : index des films qui défile ---------- */
+/* ---------- Hero : les films s'enchaînent en plein écran ---------- */
 function initHero() {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (!hero) return;
   const slides = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
-  const rows = [...hero.querySelectorAll<HTMLElement>('[data-row]')];
-  const timecode = hero.querySelector<HTMLElement>('[data-timecode]');
-  const nowType = hero.querySelector<HTMLElement>('[data-now-type]');
-  const nowLink = hero.querySelector<HTMLAnchorElement>('[data-now-link]');
   const soundBtn = hero.querySelector<HTMLButtonElement>('[data-sound]');
-  const DURATION = 6;
+  const DURATION = 7000;
   let current = 0;
-  let t = 0;
-  let hover = false;
   let sound = false;
-
-  const visibleRows = () => rows.filter((r) => !r.hidden);
 
   const show = (index: number) => {
     current = index;
-    t = 0;
-    rows.forEach((r) => {
-      const on = Number(r.dataset.row) === index;
-      r.classList.toggle('is-active', on);
-      r.style.setProperty('--progress', '0%');
-    });
-    slides.forEach((s) => {
-      const on = Number(s.dataset.slide) === index;
+    slides.forEach((s, i) => {
+      const on = i === index;
       s.classList.toggle('is-active', on);
       const video = s.querySelector('video');
       if (!video) return;
@@ -109,44 +95,7 @@ function initHero() {
         video.pause();
       }
     });
-    const row = rows[index];
-    const link = row?.querySelector('a');
-    if (nowLink && link) nowLink.href = link.href;
-    if (nowType && row) nowType.textContent = row.dataset.typeLabel ?? nowType.textContent;
-    if (timecode) timecode.textContent = '00:00:00';
   };
-
-  rows.forEach((row) => {
-    const type = row.dataset.type;
-    const labels: Record<string, string> = {
-      film: 'Film',
-      pub: 'Publicité',
-      campagne: 'Campagne',
-      branding: 'Branding',
-      photo: 'Photographie',
-    };
-    row.dataset.typeLabel = labels[type ?? ''] ?? '';
-    const pick = () => {
-      hover = true;
-      if (Number(row.dataset.row) !== current) show(Number(row.dataset.row));
-    };
-    row.addEventListener('mouseenter', pick);
-    row.addEventListener('focusin', pick);
-    row.addEventListener('mouseleave', () => (hover = false));
-    row.addEventListener('focusout', () => (hover = false));
-  });
-
-  hero.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const f = btn.dataset.filter;
-      hero
-        .querySelectorAll<HTMLButtonElement>('[data-filter]')
-        .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-      rows.forEach((r) => (r.hidden = f !== 'all' && r.dataset.type !== f));
-      const first = visibleRows()[0];
-      if (first) show(Number(first.dataset.row));
-    });
-  });
 
   soundBtn?.addEventListener('click', () => {
     sound = !sound;
@@ -157,20 +106,31 @@ function initHero() {
   });
 
   show(0);
-  if (reduceMotion) return;
-
+  if (reduceMotion || slides.length < 2) return;
   setInterval(() => {
-    if (document.hidden) return;
-    t = Math.min(t + 1, DURATION);
-    if (timecode) timecode.textContent = `00:00:${pad(t)}`;
-    rows[current]?.style.setProperty('--progress', `${Math.round((t / DURATION) * 100)}%`);
-    if (t >= DURATION && !hover) {
-      const list = visibleRows();
-      const pos = list.findIndex((r) => Number(r.dataset.row) === current);
-      const nextRow = list[(pos + 1) % list.length];
-      if (nextRow) show(Number(nextRow.dataset.row));
+    if (!document.hidden) show((current + 1) % slides.length);
+  }, DURATION);
+}
+
+/* ---------- Menu « 3 traits » ---------- */
+function initMenu() {
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  if (!toggle || !menu) return;
+  const setOpen = (open: boolean) => {
+    menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.querySelector('.visually-hidden')!.textContent = open ? 'Fermer le menu' : 'Menu';
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) menu.querySelector<HTMLElement>('a')?.focus();
+  };
+  toggle.addEventListener('click', () => setOpen(menu.hidden));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu.hidden) {
+      setOpen(false);
+      toggle.focus();
     }
-  }, 1000);
+  });
 }
 
 /* ---------- Page Films : filtres (?type=film) ---------- */
@@ -321,6 +281,7 @@ initIntro();
 initReveal();
 initParallax();
 initHero();
+initMenu();
 initFilmsFilters();
 initFilmPage();
 initAudio();
