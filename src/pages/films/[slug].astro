@@ -1,0 +1,459 @@
+---
+import Base from '../../layouts/Base.astro';
+import { films, filmTypes, pad, type Film } from '../../data/films';
+
+export function getStaticPaths() {
+  return films.map((film, i) => ({ params: { slug: film.slug }, props: { index: i } }));
+}
+
+const { index } = Astro.props as { index: number };
+const film: Film = films[index];
+const prev = films[(index - 1 + films.length) % films.length];
+const next = films[(index + 1) % films.length];
+const typeLabel = filmTypes[film.type].label;
+const hasTitle = !film.title.startsWith('[');
+const fullTitle = hasTitle ? `${film.client} — ${film.title}` : film.client;
+const facts = [
+  { dt: 'Type', dd: typeLabel },
+  { dt: 'Client', dd: film.internal ? 'Production MANKAN' : film.client },
+  { dt: 'Réalisation', dd: film.direction },
+  { dt: 'Image', dd: film.image },
+].filter((f) => f.dd);
+const projectBlocks = [
+  { title: 'Le brief', text: film.brief },
+  { title: 'Notre réponse', text: film.response },
+  { title: 'Le résultat', text: film.result },
+].filter((b) => b.text);
+---
+
+<Base
+  title={`${fullTitle} | Films MANKAN, Bamako`}
+  description={film.description ?? `${fullTitle} — ${typeLabel.toLowerCase()} réalisé par MANKAN, agence de communication culturelle et de production à Bamako.`}
+  image={film.cover}
+  bodyClass="page-film"
+>
+  <main id="contenu" class="film" data-film>
+    <div class="film__media" aria-hidden="true">
+      {film.cover && <img src={film.cover} alt="" />}
+      {!film.cover && film.vimeoId && <img data-vimeo-thumb={film.vimeoId} alt="" hidden />}
+      {!film.cover && !film.vimeoId && <div class="film__blank display">{film.client}</div>}
+    </div>
+    <div class="film__veil"></div>
+    <div class="film__player" data-player={film.vimeoId || undefined} data-title={fullTitle}></div>
+
+    <!-- Barre du haut -->
+    <div class="film__top">
+      <div class="film__top-l">
+        <a href="/films/">( Fermer )</a>
+        <button type="button" class="c-jaune" data-panel-toggle aria-expanded="false" aria-controls="le-projet">( Le projet )</button>
+      </div>
+      <a href="/" class="film__logo" aria-label="MANKAN — accueil">
+        <img src="/images/logo/mankan-logo-creme.png" alt="MANKAN communication" width="160" height="82" />
+      </a>
+      <div class="film__top-r">
+        <a href={`/films/${prev.slug}/`} aria-label={`Film précédent : ${prev.client}`}>←</a>
+        <span>{pad(index + 1)} / {pad(films.length)}</span>
+        <a href={`/films/${next.slug}/`} aria-label={`Film suivant : ${next.client}`}>→</a>
+      </div>
+    </div>
+
+    <!-- Lecture -->
+    {
+      film.vimeoId ? (
+        <button type="button" class="film__bigplay play-dot" data-play aria-label={`Lire le film ${fullTitle}`}>
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
+        </button>
+      ) : (
+        <p class="film__soon label">Film bientôt en ligne</p>
+      )
+    }
+
+    <!-- À suivre -->
+    <a class="film__next" href={`/films/${next.slug}/`}>
+      <span class="film__next-img">
+        {next.cover ? <img src={next.cover} alt="" loading="lazy" /> : <span class="display">{next.client}</span>}
+      </span>
+      <span class="film__next-label label--sm c-jaune">À suivre</span>
+      <span class="film__next-name">
+        <strong>{next.client}</strong>
+        {!next.title.startsWith('[') && <span class="italic">{next.title}</span>}
+      </span>
+    </a>
+
+    <!-- Fiche du film -->
+    <div class="film__info">
+      <div class="film__heading">
+        <span class="film__client">{film.client}</span>
+        <h1 class="italic">{hasTitle ? film.title : typeLabel}</h1>
+        {film.description && <p class="serif">{film.description}</p>}
+      </div>
+      {
+        facts.length > 0 && (
+          <dl class="film__facts">
+            {facts.map((f) => (
+              <div>
+                <dt>{f.dt}</dt>
+                <dd>{f.dd}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </div>
+
+    <!-- Panneau « Le projet » -->
+    <aside class="film__panel" id="le-projet" aria-label="Le projet" data-panel hidden>
+      <button type="button" class="film__panel-close" data-panel-toggle aria-label="Fermer le projet">×</button>
+      <div class="film__panel-head">
+        <span class="label--sm c-jaune">Le projet</span>
+        <span class="italic film__panel-title">{fullTitle}</span>
+      </div>
+      {film.description && projectBlocks.length === 0 && <p class="film__panel-text">{film.description}</p>}
+      {
+        projectBlocks.map((b) => (
+          <div class="film__panel-block">
+            <span class="label--sm">{b.title}</span>
+            <p>{b.text}</p>
+          </div>
+        ))
+      }
+      {
+        film.gallery && film.gallery.length > 0 && (
+          <div class="film__gallery">
+            {film.gallery.map((g) => (
+              <img src={g.src} alt={g.alt} loading="lazy" />
+            ))}
+          </div>
+        )
+      }
+      <a class="btn btn--jaune film__panel-cta" href="/contact/">Un projet similaire&nbsp;? Parlons-en →</a>
+    </aside>
+  </main>
+</Base>
+
+<style>
+  .film {
+    position: relative;
+    height: 100svh;
+    min-height: 640px;
+    overflow: hidden;
+    background: var(--noir);
+  }
+  .film__media,
+  .film__veil,
+  .film__player {
+    position: absolute;
+    inset: 0;
+  }
+  .film__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .film__blank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: clamp(80px, 16vw, 240px);
+    color: rgb(255 247 243 / 0.07);
+    text-transform: uppercase;
+    background:
+      radial-gradient(60% 60% at 70% 40%, rgb(142 23 23 / 0.5), transparent 70%),
+      var(--noir);
+  }
+  .film__veil {
+    background: rgb(0 0 12 / 0.42);
+    transition: background 400ms ease;
+  }
+  .film__player {
+    z-index: 6;
+    display: none;
+    background: var(--noir);
+  }
+  .film.is-playing .film__player {
+    display: block;
+  }
+  .film__player :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .film__top {
+    position: absolute;
+    left: var(--pad-top);
+    right: var(--pad-top);
+    top: 32px;
+    z-index: 7;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .film__top-l,
+  .film__top-r {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .film__top-r {
+    justify-self: end;
+    gap: 22px;
+  }
+  .film__top a {
+    padding: 12px 4px;
+  }
+  .film__top button {
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .film__top button:hover {
+    color: var(--creme);
+  }
+  .film__logo img {
+    height: 40px;
+    width: auto;
+  }
+
+  .film__bigplay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    width: 120px;
+    height: 120px;
+    border: 0;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 300ms var(--ease);
+  }
+  .film__bigplay:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .film__soon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    padding: 14px 24px;
+    border: 1px solid rgb(255 247 243 / 0.5);
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+  }
+
+  .film__next {
+    position: absolute;
+    right: var(--pad-top);
+    top: 100px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 300px;
+    padding: 12px;
+    background: rgb(0 0 12 / 0.72);
+  }
+  .film__next:hover {
+    color: inherit;
+  }
+  .film__next-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    overflow: hidden;
+    background: #1a1a2a;
+    color: rgb(255 247 243 / 0.2);
+    font-size: 40px;
+  }
+  .film__next-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease);
+  }
+  .film__next:hover .film__next-img img {
+    transform: scale(1.05);
+  }
+  .film__next-name {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .film__next-name strong {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .film__next-name .italic {
+    font-size: 22px;
+  }
+
+  .film__info {
+    position: absolute;
+    left: var(--pad-top);
+    right: var(--pad-top);
+    bottom: 40px;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px 48px;
+  }
+  .film__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 640px;
+  }
+  .film__client {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .film__heading h1 {
+    font-size: clamp(40px, 4.4vw, 64px);
+    font-weight: 400;
+    line-height: 1;
+  }
+  .film__heading p {
+    margin-top: 6px;
+    font-size: clamp(18px, 1.5vw, 21px);
+    line-height: 1.35;
+    color: #e6dfdc;
+  }
+  .film__facts {
+    display: flex;
+    gap: 44px;
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+  }
+  .film__facts dt {
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+  .film__facts dd {
+    margin: 4px 0 0;
+  }
+
+  .film__panel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: min(480px, 100%);
+    height: 100%;
+    padding: 100px 40px 40px;
+    overflow: auto;
+    background: var(--noir);
+    animation: panel-in 450ms var(--ease);
+  }
+  .film__panel[hidden] {
+    display: none;
+  }
+  @keyframes panel-in {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  .film__panel-close {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgb(255 247 243 / 0.5);
+    border-radius: 50%;
+    background: none;
+    color: var(--creme);
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .film__panel-head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .film__panel-title {
+    font-size: 34px;
+    line-height: 1.1;
+  }
+  .film__panel-text,
+  .film__panel-block p {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  .film__panel-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 16px;
+    border-top: 1px solid rgb(255 247 243 / 0.3);
+  }
+  .film__panel-block .label--sm {
+    color: var(--gris);
+  }
+  .film__gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .film__gallery img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+  }
+  .film__panel-cta {
+    margin-top: auto;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+  }
+
+  @media (max-width: 860px) {
+    .film__next {
+      display: none;
+    }
+    .film__top {
+      top: 20px;
+      grid-template-columns: 1fr auto;
+    }
+    .film__logo {
+      display: none;
+    }
+    .film__top-l {
+      gap: 18px;
+    }
+    .film__facts {
+      flex-wrap: wrap;
+      gap: 12px 28px;
+    }
+    .film__info {
+      bottom: 28px;
+    }
+    .film__bigplay {
+      width: 88px;
+      height: 88px;
+      top: 42%;
+    }
+    .film__soon {
+      top: 40%;
+    }
+  }
+</style>

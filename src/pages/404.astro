@@ -1,17 +1,39 @@
 ---
 import Base from '../layouts/Base.astro';
+import TopBar from '../components/TopBar.astro';
 ---
 
-<Base title="Page introuvable | Mankan Communication" description="Cette page n'existe pas ou a été déplacée.">
-  <section class="section">
-    <div class="container">
-      <p class="eyebrow">Erreur 404</p>
-      <h1 style="color: var(--bleu); margin-bottom: 1.5rem;">Cette page s’est perdue en route.</h1>
-      <p class="lead">Elle n’existe pas ou a été déplacée.</p>
-      <p style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem">
-        <a class="btn" href="/">Retour à l’accueil</a>
-        <a class="btn btn--secondary" href="/projets/">Voir nos projets</a>
-      </p>
+<Base title="Page introuvable | MANKAN" description="Cette page n’existe pas ou a été déplacée.">
+  <main id="contenu" class="nf">
+    <TopBar left={{ label: 'Accueil', href: '/' }} right={{ label: 'Contact', href: '/contact/' }} />
+    <span class="label c-jaune">( Erreur 404 )</span>
+    <h1 class="display">Cette histoire<br />s’est perdue.</h1>
+    <div class="nf__actions">
+      <a class="btn btn--jaune" href="/">( Retour à l’accueil → )</a>
+      <a class="link-line" href="/films/">Voir nos films</a>
     </div>
-  </section>
+  </main>
 </Base>
+
+<style>
+  .nf {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    min-height: 100svh;
+    padding: 140px var(--pad) 80px;
+    background: var(--rouge);
+  }
+  .nf h1 {
+    font-size: clamp(56px, 9vw, 130px);
+    text-shadow: 0.06em 0.06em 0 var(--noir);
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 36px;
+    align-items: center;
+  }
+</style>

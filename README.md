@@ -1,6 +1,7 @@
 # Site Mankan Communication
 
-Site statique (Astro) de **mankancommunication.com** — 4 pages : Accueil, Projets, About, Contact.
+Site statique (Astro) de **mankancommunication.com**, construit sur la maquette « V3 — Lotumn » :
+Accueil, Films (index + une page par film), À propos, Contact.
 Hébergement : LWS (Apache + PHP pour le formulaire).
 
 ## Démarrer
@@ -15,17 +16,17 @@ npm run build    # génère le site final dans dist/
 
 | À modifier | Fichier |
 |---|---|
-| Coordonnées, réseaux sociaux, vidéo de fond de l'accueil | `src/data/site.ts` |
-| Expertises | `src/data/site.ts` |
-| Projets (titres, textes, identifiants Vimeo, projets mis en avant) | `src/data/projects.ts` |
+| Coordonnées, réseaux, équipe, clients, expertises, manifeste audio | `src/data/site.ts` |
+| Films (titres, textes, images, identifiants Vimeo, extraits de l'accueil) | `src/data/films.ts` |
 | Textes des pages | `src/pages/*.astro` |
-| Couleurs, polices, animations | `src/styles/global.css`, `src/scripts/motion.ts` |
+| Couleurs, polices, animations | `src/styles/global.css`, `src/scripts/site.ts` |
 | Destinataire du formulaire | `public/contact.php` |
 | Redirections, HTTPS, cache | `public/.htaccess` |
 
 **Vidéos :** hébergées sur Vimeo. Pour relier un film, coller l'identifiant (les chiffres de
-`vimeo.com/123456789`) dans le champ `vimeoId` du projet. La miniature Vimeo sert de couverture
-tant qu'aucune image `cover` n'est fournie.
+`vimeo.com/123456789`) dans le champ `vimeoId`. La miniature Vimeo sert de couverture tant
+qu'aucune image `cover` n'est fournie. Pour l'extrait muet en boucle de l'accueil, déposer un MP4
+court (5–10 s, sans son, ~2–4 Mo) dans `public/videos/` et le renseigner dans `preview`.
 
 ## Mise en ligne sur LWS
 
@@ -39,7 +40,8 @@ Avant la première mise en ligne : sauvegarder l'ancien site et sa base de donn�
 
 ## En attente
 
-- Polices Costa Mala et Amsterdamer-Garamont (WOFF2 + licence web) → `public/fonts/`
-- Logo SVG officiel, illustrations et « highlighters » de la charte
-- Liens Vimeo des films, portraits et biographies de l'équipe
-- Liens officiels des réseaux sociaux, informations des mentions légales
+- Licence web de la police Costa Mala (fichier repris de la maquette)
+- Liens Vimeo des films, extraits MP4 pour l'accueil, images en haute définition
+- Correspondance des photos restantes avec leurs films, titres et descriptions manquants
+- Portraits de l'équipe, fichiers audio du manifeste (bamanankan / français)
+- Informations des mentions légales

@@ -1,171 +1,168 @@
 ---
-import { nav, site } from '../data/site';
+import { site } from '../data/site';
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="site-footer__top">
-      <div>
-        <img
-          src="/images/logo/mankan-logo-creme.png"
-          alt="Mankan Communication"
-          width="180"
-          height="92"
-          loading="lazy"
-        />
-        <p class="site-footer__sig quote">« {site.signature} »</p>
-      </div>
-
-      <nav aria-label="Pied de page">
-        <ul>
-          {nav.map((item) => <li><a class="link" href={item.href}>{item.label}</a></li>)}
-        </ul>
-      </nav>
-
-      <address>
-        <a class="link" href={`mailto:${site.email}`}>{site.email}</a><br />
-        <a class="link" href={`tel:${site.phoneHref}`}>{site.phone}</a><br />
-        {site.locality}, {site.country}
-      </address>
-
+<footer class="footer">
+  <div class="footer__top">
+    <p class="italic footer__claim">Mankan parle pour vous.</p>
+    <ul class="footer__links">
+      <li><a href="/films/">( Films )</a></li>
+      <li><a href="/a-propos/">( À propos )</a></li>
+      <li><a href="/contact/">( Contact )</a></li>
       {
-        site.social.length > 0 && (
-          <ul class="site-footer__social">
-            {site.social.map((s) => (
-              <li>
-                <a class="link" href={s.url} rel="noopener" target="_blank">
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )
+        site.social.slice(0, 2).map((s) => (
+          <li>
+            <a href={s.url} rel="noopener" target="_blank">
+              ( {s.label} )
+            </a>
+          </li>
+        ))
       }
-    </div>
-
-    <div class="site-footer__bottom">
-      <p>© {year} {site.name}</p>
-      <button type="button" class="link site-footer__legal" data-open-dialog="mentions-legales">
-        Mentions légales
-      </button>
+    </ul>
+  </div>
+  <div>
+    <div class="footer__giant display" aria-hidden="true">MANKAN</div>
+    <div class="footer__bottom label--sm">
+      <span>© {year} {site.name}</span>
+      <span>{site.signature}</span>
+      <span>{site.address}</span>
+      <button type="button" class="footer__legal" data-open-dialog="mentions-legales">Mentions légales</button>
     </div>
   </div>
 
-  <dialog id="mentions-legales" class="legal-dialog" aria-labelledby="mentions-titre">
-    <div class="legal-dialog__inner">
-      <button type="button" class="dialog-close" data-close-dialog aria-label="Fermer">×</button>
-      <h2 id="mentions-titre">Mentions légales</h2>
-      <h3>Éditeur</h3>
-      <p>
-        {site.name} — {site.locality}, {site.country}.<br />
-        <!-- À compléter : raison sociale, forme juridique, numéro RCCM/NIF, responsable de publication. -->
-        Contact : <a href={`mailto:${site.email}`}>{site.email}</a>
-      </p>
-      <h3>Hébergement</h3>
-      <p>
-        LWS (Ligne Web Services).
-        <!-- À compléter : coordonnées complètes de l'hébergeur. -->
-      </p>
-      <h3>Données personnelles</h3>
-      <p>
-        Les informations envoyées via le formulaire de contact servent uniquement à répondre à votre
-        demande. Elles ne sont ni vendues ni transmises à des tiers. Pour toute question ou demande
-        de suppression, écrivez-nous à <a href={`mailto:${site.email}`}>{site.email}</a>.
-      </p>
-      <h3>Propriété intellectuelle</h3>
-      <p>
-        Les contenus de ce site (textes, images, films, logos) sont la propriété de {site.name} ou
-        de ses clients et ne peuvent être réutilisés sans autorisation.
-      </p>
-    </div>
+  <dialog id="mentions-legales" class="legal" aria-labelledby="legal-titre">
+    <button type="button" class="legal__close" data-close-dialog aria-label="Fermer">×</button>
+    <h2 id="legal-titre" class="display">Mentions légales</h2>
+    <h3>Éditeur</h3>
+    <p>
+      {site.name}, {site.address}, {site.country}. Contact :
+      <a href={`mailto:${site.email}`}>{site.email}</a>.
+      <!-- À compléter : raison sociale, forme juridique, RCCM / NIF, responsable de la publication. -->
+    </p>
+    <h3>Hébergement</h3>
+    <p>LWS (Ligne Web Services).<!-- À compléter : coordonnées complètes de l'hébergeur. --></p>
+    <h3>Données personnelles</h3>
+    <p>
+      Les informations envoyées via le formulaire servent uniquement à répondre à votre demande. Elles
+      ne sont ni vendues ni transmises à des tiers. Pour toute demande de suppression :
+      <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+    <h3>Propriété intellectuelle</h3>
+    <p>Les textes, images, films et logos de ce site appartiennent à {site.name} ou à ses clients.</p>
   </dialog>
 </footer>
 
 <style>
-  .site-footer {
+  .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 64px;
+    min-height: 460px;
+    padding: 64px var(--pad) 32px;
     background: var(--noir);
     color: var(--creme);
-    padding-block: 4rem 2rem;
-    font-size: 1rem;
+    overflow: hidden;
   }
-  .site-footer__top {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr 1.4fr;
-    gap: 2.5rem;
-    padding-bottom: 3rem;
-    border-bottom: 1px solid rgb(255 247 243 / 0.2);
+  .footer__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 24px;
   }
-  .site-footer__top img {
-    width: 150px;
-    height: auto;
+  .footer__claim {
+    font-size: clamp(26px, 2.3vw, 32px);
+    color: var(--jaune);
   }
-  .site-footer__sig {
-    margin-top: 1rem;
-    font-size: 1.125rem;
-    opacity: 0.85;
-  }
-  .site-footer ul {
-    list-style: none;
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 28px;
     margin: 0;
     padding: 0;
-    display: grid;
-    gap: 0.5rem;
+    list-style: none;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
-  address {
-    font-style: normal;
-    line-height: 1.9;
+  .footer__links a {
+    display: inline-block;
+    padding: 10px 0;
   }
-  .site-footer__bottom {
+  .footer__giant {
+    font-size: clamp(96px, 23.6vw, 340px);
+    line-height: 0.82;
+    text-shadow: 0.035em 0.035em 0 var(--rouge);
+    white-space: nowrap;
+  }
+  .footer__bottom {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 1rem;
-    padding-top: 1.5rem;
-    font-size: 0.9375rem;
-    opacity: 0.8;
+    gap: 8px 24px;
+    margin-top: 10px;
+    padding-top: 14px;
+    border-top: 1px solid rgb(255 247 243 / 0.2);
+    color: var(--gris);
+    letter-spacing: 0.12em;
   }
-  .site-footer__bottom p {
-    margin: 0;
-  }
-  .site-footer__legal {
+  .footer__legal {
+    padding: 0;
     border: 0;
+    background: none;
     color: inherit;
     font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
     cursor: pointer;
   }
-  @media (max-width: 760px) {
-    .site-footer__top {
-      grid-template-columns: 1fr;
-    }
-    .site-footer__bottom {
-      flex-direction: column;
-    }
+  .footer__legal:hover {
+    color: var(--jaune);
   }
 
-  .legal-dialog {
-    max-width: min(720px, calc(100vw - 2rem));
-    max-height: calc(100dvh - 2rem);
-    padding: 0;
+  .legal {
+    width: min(720px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    padding: clamp(24px, 5vw, 56px);
     border: 0;
-    border-radius: var(--radius);
     background: var(--creme);
     color: var(--noir);
+    font-size: 16px;
   }
-  .legal-dialog::backdrop {
-    background: rgb(0 0 12 / 0.7);
+  .legal::backdrop {
+    background: rgb(0 0 12 / 0.8);
   }
-  .legal-dialog__inner {
-    position: relative;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    font-size: 1rem;
+  .legal h2 {
+    margin-bottom: 24px;
+    font-size: 48px;
+    color: var(--rouge);
   }
-  .legal-dialog h2 {
-    margin-bottom: 1.5rem;
-    color: var(--bleu);
+  .legal h3 {
+    margin: 24px 0 6px;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rouge);
   }
-  .legal-dialog h3 {
-    margin: 1.5rem 0 0.5rem;
-    font-family: var(--font-body);
-    font-size: 1.0625rem;
+  .legal a {
+    text-decoration: underline;
+  }
+  .legal a:hover {
+    color: var(--rouge);
+  }
+  .legal__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--noir);
+    border-radius: 50%;
+    background: none;
+    color: var(--noir);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
   }
 </style>

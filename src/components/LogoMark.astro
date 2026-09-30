@@ -1,0 +1,28 @@
+---
+// Logo en trois calques (MANKAN, « communication », rayons), comme dans la maquette.
+interface Props {
+  beat?: boolean;
+  class?: string;
+}
+const { beat = false, class: className = '' } = Astro.props;
+---
+
+<span class={`logomark ${className}`}>
+  <img src="/images/logo/logo-mankan.png" alt="MANKAN communication" width="844" height="432" />
+  <img src="/images/logo/logo-communication.png" alt="" width="844" height="432" />
+  <img class={beat ? 'beat' : ''} src="/images/logo/logo-rayons.png" alt="" width="844" height="432" />
+</span>
+
+<style>
+  .logomark {
+    position: relative;
+    display: block;
+    aspect-ratio: 844 / 432;
+  }
+  .logomark img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>

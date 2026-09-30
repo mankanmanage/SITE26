@@ -1,0 +1,752 @@
+---
+import Base from '../layouts/Base.astro';
+import TopBar from '../components/TopBar.astro';
+import Footer from '../components/Footer.astro';
+import { site, team, clients, expertises, manifestoAudio } from '../data/site';
+import { films, pad } from '../data/films';
+
+const hasAudio = Boolean(manifestoAudio.bm || manifestoAudio.fr);
+const values = [
+  { n: '01', title: 'Accessible', text: '« An bè ye kelen ye » — Nous sommes un.' },
+  { n: '02', title: 'Créatif', text: 'Aussi varié que les motifs d’un bogolan.' },
+  { n: '03', title: 'Culturel', text: 'Enraciné comme un baobab centenaire.' },
+];
+---
+
+<Base
+  title="À propos — Les griots modernes de votre marque | MANKAN, Bamako"
+  description="MANKAN, agence de communication culturelle née à Bamako : notre histoire, notre manifeste, nos expertises et l’équipe qui fait entendre les marques."
+>
+  <main id="contenu">
+    <!-- 1. AN KA KO LA -->
+    <section class="histoire">
+      <TopBar left={{ label: 'Accueil', href: '/' }} right={{ label: 'Contact', href: '/contact/' }} />
+      <div class="histoire__title">
+        <span class="label c-jaune">( À propos de nous )</span>
+        <h1 class="display shadow-noir" data-reveal>AN KA<br />KO LA*</h1>
+        <p class="italic c-jaune histoire__note">* Notre histoire, en bamanankan.</p>
+      </div>
+      <div class="histoire__text serif">
+        <p data-reveal>
+          Mankan est née de ce que nos éducations ont semé en nous&nbsp;: les dimanches autour d’un grand
+          bol de zamai, les Tabaskis en famille, les rituels simples qui forgent une identité.
+        </p>
+        <p data-reveal style="--i:1">
+          C’est la manière, pour de jeunes Maliens, d’apporter leur pierre&nbsp;: une contribution
+          sincère, portée par l’espoir, par l’image que nous voulons renvoyer au monde, et surtout par
+          celle que nous voulons rendre à nous-mêmes.
+        </p>
+        <p class="c-jaune" data-reveal style="--i:2">
+          Avant d’être une agence, Mankan est un cri du cœur&nbsp;: ne plus attendre une place, mais la
+          créer.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. ÉCOUTE-MOI (affiché quand les fichiers audio sont fournis) -->
+    {
+      hasAudio && (
+        <section class="ecoute" data-audio>
+          <h2 class="display ecoute__title">LAISSEZ-NOUS AMPLIFIER VOTRE MESSAGE</h2>
+          <div class="ecoute__player">
+            <button type="button" class="play-dot ecoute__btn" data-audio-toggle aria-label="Écouter le manifeste">
+              <svg class="i-play" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
+              <svg class="i-pause" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="5" x2="8" y2="19" /><line x1="16" y1="5" x2="16" y2="19" /></svg>
+            </button>
+            <div class="ecoute__track">
+              <span class="italic ecoute__name">Écoute-moi — le manifeste Mankan, dit à voix haute</span>
+              <span class="ecoute__bar"><span data-audio-progress /></span>
+            </div>
+            <div class="ecoute__langs" role="group" aria-label="Langue">
+              {manifestoAudio.bm && <button type="button" data-audio-lang={manifestoAudio.bm} aria-pressed="true">Bamanankan</button>}
+              {manifestoAudio.fr && <button type="button" data-audio-lang={manifestoAudio.fr} aria-pressed={manifestoAudio.bm ? 'false' : 'true'}>Français</button>}
+            </div>
+            <audio preload="none" src={manifestoAudio.bm || manifestoAudio.fr} data-audio-el />
+          </div>
+        </section>
+      )
+    }
+
+    <!-- 3. ARTISAN DE VOTRE MARQUE -->
+    <section class="artisan" id="manifeste">
+      <div class="artisan__head">
+        <span class="label c-rouge">( Manifeste )</span>
+        <h2 class="display" data-reveal>ARTISAN DE VOTRE MARQUE</h2>
+        <span class="artisan__sig">{site.signature}</span>
+      </div>
+      <div class="artisan__col" data-reveal style="--i:1">
+        <p class="serif artisan__lead">Mankan, c’est plus qu’une agence créative. C’est une voix. Une mémoire. Un souffle.</p>
+        <p>
+          Nous sommes des griots d’aujourd’hui&nbsp;: nous ne vendons pas du rêve, nous transmettons un
+          héritage. Celui qui naît autour du thé, dans les rues de Bamako, dans les histoires de nos
+          grands-mères et dans les idées de demain.
+        </p>
+      </div>
+      <div class="artisan__col" data-reveal style="--i:2">
+        <p class="serif artisan__lead">Ici, on ne fait pas juste «&nbsp;de la com’&nbsp;».</p>
+        <p>
+          On tisse des récits, on réveille des imaginaires, on donne du sens aux marques qui veulent
+          parler avec sincérité. Nos histoires touchent, vibrent, restent. Chaque campagne porte un peu
+          de nous, un peu de vous, et beaucoup de ce qui fait que ça résonne.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3b. PASSERELLE -->
+    <a class="passerelle" href="/films/">
+      <span class="italic passerelle__txt">Nos histoires se regardent aussi.</span>
+      <span class="passerelle__cta">
+        Voir les films
+        <span class="passerelle__dot">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
+        </span>
+      </span>
+    </a>
+
+    <!-- 4. NOUS SOMMES -->
+    <section class="valeurs">
+      <div class="valeurs__head">
+        <h2 class="display">Nous sommes</h2>
+        <span class="label c-jaune">( 01 — 03 )</span>
+      </div>
+      <div class="valeurs__grid">
+        {
+          values.map((v, i) => (
+            <div data-reveal style={`--i:${i}`}>
+              <span class="c-jaune valeurs__n">{v.n}</span>
+              <h3 class="display">{v.title}</h3>
+              <p class="italic">{v.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 5. MISSION -->
+    <section class="mission">
+      <span class="label c-jaune">( Notre mission )</span>
+      <p class="serif mission__text" data-reveal>
+        Rendre votre message aussi <em class="c-jaune">visible</em> qu’un grand boubou un jour de fête,
+        aussi <em class="c-jaune">audible</em> qu’un djembé,
+        et aussi <em class="c-jaune">impactant</em> qu’une bonne dose de piment dans le zamai.
+      </p>
+    </section>
+
+    <!-- 6. EXPERTISES -->
+    <section class="expertises" id="expertises">
+      <div class="expertises__head">
+        <div>
+          <span class="label c-rouge">( Nous imaginons et mettons en œuvre )</span>
+          <h2 class="display c-rouge">Expertises</h2>
+        </div>
+        <span class="label">( 01 — {pad(expertises.length)} )</span>
+      </div>
+      <ol class="expertises__grid">
+        {
+          expertises.map((e, i) => (
+            <li data-reveal style={`--i:${i % 3}`}>
+              <span class="c-rouge">{pad(i + 1)}</span>
+              {e}
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- 7. ÉQUIPE -->
+    <section class="equipe">
+      <div class="equipe__intro">
+        <span class="label c-jaune">( L’équipe )</span>
+        <h2 class="display">Les griots</h2>
+        <p>
+          Un noyau dur à Bamako, entouré du Creative Hub&nbsp;: vidéastes, photographes, motion
+          designers, artistes 3D, stylistes, beatmakers.
+        </p>
+      </div>
+      {
+        team.map((m, i) => (
+          <div class="equipe__membre" data-reveal style={`--i:${i + 1}`}>
+            {m.photo ? (
+              <img src={m.photo} alt={`Portrait de ${m.name}`} loading="lazy" />
+            ) : (
+              <span class="equipe__portrait display" aria-hidden="true">
+                {m.name
+                  .split(' ')
+                  .map((w) => w[0])
+                  .join('')}
+              </span>
+            )}
+            <div>
+              <h3 class="display">{m.name}</h3>
+              <span>{m.role}</span>
+            </div>
+          </div>
+        ))
+      }
+    </section>
+
+    <!-- 8. COLLABORATIONS -->
+    <section class="collab">
+      <h2 class="label c-rouge collab__label">( Ils nous font confiance )</h2>
+      <ul class="collab__grid">
+        {clients.map((c) => <li>{c}</li>)}
+        <li class="collab__you"><a href="/contact/">Et vous&nbsp;? →</a></li>
+      </ul>
+    </section>
+
+    <!-- 8a. LA SUITE -->
+    <a class="suite" href="/films/">
+      <img src="/images/films/daibin-la-natte.jpg" alt="" aria-hidden="true" loading="lazy" />
+      <div class="suite__txt">
+        <span class="label--sm c-jaune">( La suite )</span>
+        <span class="display suite__title">Assez parlé.<br />Place aux films.</span>
+      </div>
+      <span class="suite__cta">( Voir nos {pad(films.length)} films → )</span>
+    </a>
+
+    <!-- 8b. APPEL FINAL -->
+    <section class="final">
+      <h2 class="display shadow-noir final__title" data-reveal>Votre histoire<br />est la prochaine.</h2>
+      <a class="final__btn" href="/contact/">Racontez-<br />la-nous →</a>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  /* 1. Histoire */
+  .histoire {
+    position: relative;
+    display: grid;
+    grid-template-columns: 620px 1fr;
+    gap: 36px 56px;
+    min-height: 900px;
+    padding: 190px var(--pad) 100px;
+    background: var(--rouge);
+  }
+  .histoire__title {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .histoire__title h1 {
+    font-size: clamp(88px, 11.8vw, 170px);
+    line-height: 0.92;
+    text-shadow: 0.06em 0.06em 0 var(--noir);
+  }
+  .histoire__note {
+    font-size: 28px;
+  }
+  .histoire__text {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 10px;
+    font-size: clamp(21px, 1.9vw, 27px);
+    line-height: 1.38;
+  }
+
+  /* 2. Écoute */
+  .ecoute {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    padding: 72px var(--pad);
+    background: var(--noir);
+  }
+  .ecoute__title {
+    font-size: clamp(24px, 3.2vw, 46px);
+    letter-spacing: 0.3em;
+    text-align: center;
+  }
+  .ecoute__player {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px 40px;
+  }
+  .ecoute__btn {
+    width: 96px;
+    height: 96px;
+    border: 0;
+    cursor: pointer;
+  }
+  .ecoute__btn .i-pause,
+  .is-playing .ecoute__btn .i-play {
+    display: none;
+  }
+  .is-playing .ecoute__btn .i-pause {
+    display: block;
+  }
+  .ecoute__track {
+    flex: 1 1 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .ecoute__name {
+    font-size: clamp(22px, 2vw, 30px);
+  }
+  .ecoute__bar {
+    position: relative;
+    height: 3px;
+    background: rgb(255 247 243 / 0.3);
+  }
+  .ecoute__bar span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 3px;
+    background: var(--jaune);
+  }
+  .ecoute__langs {
+    display: flex;
+    gap: 10px;
+  }
+  .ecoute__langs button {
+    height: 48px;
+    padding: 0 22px;
+    border: 1px solid var(--jaune);
+    background: transparent;
+    color: var(--creme);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .ecoute__langs button[aria-pressed='true'] {
+    background: var(--jaune);
+    color: var(--rouge);
+  }
+
+  /* 3. Artisan */
+  .artisan {
+    display: grid;
+    grid-template-columns: 520px 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+    padding: 110px var(--pad);
+    background: var(--creme);
+    color: var(--noir);
+  }
+  .artisan__head {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .artisan__head h2 {
+    font-size: clamp(56px, 6.4vw, 92px);
+    line-height: 0.98;
+    letter-spacing: 0.06em;
+    color: var(--bleu);
+  }
+  .artisan__sig {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--bleu);
+  }
+  .artisan__col {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 34px;
+    font-size: 19px;
+    line-height: 1.6;
+  }
+  .artisan__lead {
+    font-size: 30px;
+    line-height: 1.2;
+    color: var(--rouge);
+  }
+
+  /* 3b. Passerelle */
+  .passerelle {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 200px;
+    padding: 40px var(--pad);
+    background: var(--orange);
+  }
+  .passerelle:hover {
+    color: var(--creme);
+  }
+  .passerelle__txt {
+    font-size: clamp(30px, 3.2vw, 46px);
+  }
+  .passerelle__cta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .passerelle__dot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--creme);
+    color: var(--rouge);
+    transition: transform 300ms var(--ease);
+  }
+  .passerelle:hover .passerelle__dot {
+    transform: scale(1.12);
+  }
+
+  /* 4. Valeurs */
+  .valeurs {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    padding: 100px var(--pad);
+  }
+  .valeurs__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .valeurs__head h2 {
+    font-size: clamp(56px, 6.7vw, 96px);
+  }
+  .valeurs__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 48px;
+  }
+  .valeurs__grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 22px;
+    border-top: 1px solid rgb(255 247 243 / 0.4);
+  }
+  .valeurs__n {
+    font-size: 13px;
+  }
+  .valeurs__grid h3 {
+    font-size: clamp(40px, 3.6vw, 52px);
+  }
+  .valeurs__grid p {
+    font-size: clamp(22px, 1.8vw, 26px);
+    line-height: 1.25;
+  }
+
+  /* 5. Mission */
+  .mission {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    min-height: 520px;
+    padding: 100px var(--pad);
+    background: var(--rouge);
+  }
+  .mission__text {
+    max-width: 1180px;
+    font-size: clamp(30px, 3.75vw, 54px);
+    line-height: 1.12;
+  }
+
+  /* 6. Expertises */
+  .expertises {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    padding: 100px var(--pad);
+    background: var(--creme);
+    color: var(--noir);
+  }
+  .expertises__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .expertises__head > div {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .expertises__head h2 {
+    font-size: clamp(56px, 6.7vw, 96px);
+  }
+  .expertises__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 48px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: clamp(18px, 1.5vw, 22px);
+  }
+  .expertises__grid li {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 22px 0;
+    border-top: 1px solid var(--noir);
+  }
+  .expertises__grid li:nth-last-child(-n + 3) {
+    border-bottom: 1px solid var(--noir);
+  }
+  .expertises__grid span {
+    font-size: 13px;
+  }
+
+  /* 7. Équipe */
+  .equipe {
+    display: grid;
+    grid-template-columns: 420px 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+    padding: 100px var(--pad);
+    background: var(--bleu);
+  }
+  .equipe__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .equipe__intro h2 {
+    font-size: clamp(56px, 6.1vw, 88px);
+  }
+  .equipe__intro p {
+    margin-top: 8px;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .equipe__membre {
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+  }
+  .equipe__membre img,
+  .equipe__portrait {
+    width: 150px;
+    height: 190px;
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+  .equipe__portrait {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a5e;
+    font-size: 56px;
+    color: rgb(255 247 243 / 0.3);
+  }
+  .equipe__membre > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .equipe__membre h3 {
+    font-size: 34px;
+  }
+  .equipe__membre span {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* 8. Collaborations */
+  .collab {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    padding: 90px var(--pad);
+    background: var(--creme);
+    color: var(--bleu);
+  }
+  .collab__label {
+    font-weight: 400;
+  }
+  .collab__grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--noir);
+    border-left: 1px solid var(--noir);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .collab__grid li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    padding: 12px;
+    border-right: 1px solid var(--noir);
+    border-bottom: 1px solid var(--noir);
+    text-align: center;
+    transition:
+      background 250ms var(--ease),
+      color 250ms var(--ease);
+  }
+  .collab__grid li:hover {
+    background: var(--bleu);
+    color: var(--creme);
+  }
+  .collab__you {
+    background: var(--rouge);
+    color: var(--jaune);
+    padding: 0 !important;
+  }
+  .collab__you a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 8a. Suite */
+  .suite {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    min-height: 400px;
+    padding: 56px var(--pad);
+    overflow: hidden;
+  }
+  .suite:hover {
+    color: var(--creme);
+  }
+  .suite img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    transition:
+      opacity 500ms var(--ease),
+      transform 900ms var(--ease);
+  }
+  .suite:hover img {
+    opacity: 0.65;
+    transform: scale(1.04);
+  }
+  .suite__txt,
+  .suite__cta {
+    position: relative;
+  }
+  .suite__txt {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .suite__title {
+    font-size: clamp(52px, 6.7vw, 96px);
+  }
+  .suite__cta {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* 8b. Final */
+  .final {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px 64px;
+    min-height: 420px;
+    padding: 80px var(--pad);
+    background: var(--rouge);
+  }
+  .final__title {
+    font-size: clamp(56px, 7.6vw, 110px);
+    text-shadow: 0.07em 0.07em 0 var(--noir);
+  }
+  .final__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: var(--jaune);
+    color: var(--rouge);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    line-height: 1.4;
+    text-align: center;
+    text-transform: uppercase;
+    transition: transform 400ms var(--ease);
+  }
+  .final__btn:hover {
+    color: var(--rouge);
+    transform: scale(1.08) rotate(-6deg);
+  }
+
+  @media (max-width: 1180px) {
+    .histoire,
+    .artisan,
+    .equipe {
+      grid-template-columns: 1fr;
+    }
+    .artisan__col {
+      padding-top: 0;
+    }
+    .collab__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 760px) {
+    .histoire {
+      min-height: 0;
+      padding-top: 140px;
+    }
+    .valeurs__grid,
+    .expertises__grid {
+      grid-template-columns: 1fr;
+    }
+    .expertises__grid li:nth-last-child(-n + 3) {
+      border-bottom: 0;
+    }
+    .expertises__grid li:last-child {
+      border-bottom: 1px solid var(--noir);
+    }
+    .collab__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      font-size: 14px;
+    }
+    .equipe__membre img,
+    .equipe__portrait {
+      width: 110px;
+      height: 140px;
+    }
+    .valeurs,
+    .expertises,
+    .artisan,
+    .mission,
+    .equipe {
+      padding-block: 72px;
+    }
+    .final__btn {
+      width: 160px;
+      height: 160px;
+    }
+  }
+</style>

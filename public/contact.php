@@ -10,7 +10,7 @@ const BACK = '/contact/';
 
 function back(string $status): void
 {
-    header('Location: ' . BACK . '?' . $status . '=1#devis', true, 303);
+    header('Location: ' . BACK . '?' . $status . '=1#formulaire', true, 303);
     exit;
 }
 

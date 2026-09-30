@@ -7,7 +7,8 @@ RewriteCond %{HTTP_HOST} ^www\. [NC]
 RewriteRule ^ https://mankancommunication.com%{REQUEST_URI} [L,R=301]
 
 # Anciennes adresses du site → nouvelles pages
-RewriteRule ^projects/?$ /projets/ [L,R=301]
+RewriteRule ^projects/?$ /films/ [L,R=301]
+RewriteRule ^about/?$ /a-propos/ [L,R=301]
 
 ErrorDocument 404 /404.html
 

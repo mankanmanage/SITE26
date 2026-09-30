@@ -1,0 +1,16 @@
+---
+// Barre du haut des pages intérieures : ( lien ) — logo — ( lien )
+interface Props {
+  left: { label: string; href: string };
+  right: { label: string; href: string };
+}
+const { left, right } = Astro.props;
+---
+
+<nav class="topbar" aria-label="Navigation principale">
+  <a href={left.href}>( {left.label} )</a>
+  <a class="topbar__logo" href="/" aria-label="MANKAN — accueil">
+    <img src="/images/logo/mankan-logo-creme.png" alt="MANKAN communication" width="160" height="82" />
+  </a>
+  <a href={right.href}>( {right.label} )</a>
+</nav>

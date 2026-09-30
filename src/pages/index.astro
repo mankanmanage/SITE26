@@ -1,11 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import CtaBand from '../components/CtaBand.astro';
-import Marquee from '../components/Marquee.astro';
-import Rays from '../components/Rays.astro';
-import { site, expertises } from '../data/site';
-import { featuredProjects } from '../data/projects';
+import Footer from '../components/Footer.astro';
+import LogoMark from '../components/LogoMark.astro';
+import { site, clients, verbs, team } from '../data/site';
+import { films, featuredFilms, filmTypes, usedTypes, pad } from '../data/films';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -15,411 +13,1186 @@ const jsonLd = {
   email: site.email,
   telephone: site.phone,
   slogan: site.signature,
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Bamako',
-    addressCountry: 'ML',
-  },
+  address: { '@type': 'PostalAddress', streetAddress: 'Hamdallaye ACI 2000', addressLocality: 'Bamako', addressCountry: 'ML' },
+  sameAs: site.social.map((s) => s.url),
 };
 
-const steps = [
-  { n: '01', title: 'Échanger', text: 'Nous partons de vos objectifs, de votre public et de votre histoire.' },
-  { n: '02', title: 'Orienter', text: 'Nous construisons une direction créative claire et partagée.' },
-  { n: '03', title: 'Produire', text: 'Identités, films, photos et contenus prennent forme.' },
-  { n: '04', title: 'Affiner', text: 'Nous ajustons les livrables avec vous jusqu’au bon résultat.' },
-];
+const heroFilms = films.map((f, i) => ({ ...f, num: pad(i + 1), typeLabel: filmTypes[f.type].label }));
+const hasPreview = films.some((f) => f.preview);
 ---
 
 <Base
-  title="Agence de communication à Bamako | Mankan Communication"
-  description="Mankan Communication, agence de communication à Bamako : stratégie de marque, identité visuelle, films et contenus créatifs nourris par la culture malienne."
-  headerTone="bleu"
+  title="MANKAN — Agence de communication culturelle & production à Bamako"
+  description="MANKAN, agence de communication culturelle et de production à Bamako : films, spots publicitaires, campagnes 360° et branding. Les griots modernes de votre marque."
+  image="/images/films/paps-soda.jpg"
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline slot="head">
+    try {
+      if (sessionStorage.getItem('mankan-intro') || matchMedia('(prefers-reduced-motion: reduce)').matches)
+        document.documentElement.classList.add('no-intro');
+    } catch (e) {}
+  </script>
 
-  <!-- Introduction -->
-  <section class="hero">
-    <div class="hero__video" data-hero-video={site.heroVimeoId || undefined} aria-hidden="true"></div>
-    <div class="container hero__inner">
-      <h1 class="hero__title">
-        <span class="line"><span>Agence de communication</span></span>
-        <span class="line"><span>à Bamako,</span></span>
-        <span class="line"><span class="accent">créative par culture.</span></span>
-      </h1>
-      <div class="hero__bottom">
-        <p class="lead">
-          Nous aidons les marques à trouver leur voix et à la faire résonner. Stratégie, identité
-          visuelle et contenus : chez Mankan, la culture nourrit chaque idée.
-        </p>
-        <div class="hero__actions">
-          <a class="btn" href="/contact/#devis">Demander un devis <span class="arrow" aria-hidden="true">→</span></a>
-          <a class="btn btn--secondary" href="/projets/">Voir nos projets</a>
-        </div>
-      </div>
-      <Rays class="hero__rays" />
-    </div>
-  </section>
-
-  <section class="section intro">
-    <div class="container intro__grid">
-      <p class="eyebrow" data-reveal>Mankan Communication</p>
-      <p class="intro__text" data-reveal style="--i:1">
-        Nous racontons les marques avec ce qui nous ressemble : des histoires, des images et des
-        références qui parlent à nos publics. Depuis Bamako, nous transformons cette matière
-        culturelle en idées de communication adaptées à votre projet.
-      </p>
-    </div>
-  </section>
-
-  <!-- Réalisations -->
-  <section class="section section--creme-2 work" aria-labelledby="work-titre">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow" data-reveal>Réalisations</p>
-          <h2 id="work-titre" data-reveal style="--i:1">Des idées qui prennent vie.</h2>
-        </div>
-        <p data-reveal style="--i:2">
-          Découvrez une sélection de nos identités, campagnes et productions.
-        </p>
-      </div>
-      <div class="work__grid">
-        {featuredProjects.map((p, i) => <ProjectCard project={p} index={i} size={i === 0 ? 'large' : 'normal'} />)}
-      </div>
-      <div class="work__more" data-reveal>
-        <a class="btn btn--secondary" href="/projets/">Tous les projets <span class="arrow" aria-hidden="true">→</span></a>
-      </div>
-    </div>
-  </section>
-
-  <Marquee items={expertises.map((e) => e.title)} />
-
-  <!-- Expertises -->
-  <section class="section" aria-labelledby="expertises-titre">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow" data-reveal>Expertises</p>
-          <h2 id="expertises-titre" data-reveal style="--i:1">De la réflexion à la production.</h2>
-        </div>
-        <p data-reveal style="--i:2">
-          De la première réflexion à la production, nous vous accompagnons pour donner une
-          direction claire à votre communication et une forme forte à vos messages.
-        </p>
-      </div>
-      <ol class="expertises">
+  <main id="contenu">
+    <!-- ============ HERO : index des films ============ -->
+    <section class="hero" id="top" data-hero>
+      <div class="hero__media" aria-hidden="true">
         {
-          expertises.map((e, i) => (
-            <li data-reveal style={`--i:${i % 3}`}>
-              <span class="expertises__n">{String(i + 1).padStart(2, '0')}</span>
-              <h3>{e.title}</h3>
-              <p>{e.text}</p>
-            </li>
+          heroFilms.map((f, i) => (
+            <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide={i}>
+              {f.preview ? (
+                <video muted loop playsinline preload="none" poster={f.cover} data-src={f.preview} />
+              ) : f.cover ? (
+                <img class="zoom" src={f.cover} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
+              ) : f.vimeoId ? (
+                <img class="zoom" data-vimeo-thumb={f.vimeoId} alt="" hidden />
+              ) : (
+                <div class="hero__blank">
+                  <span class="display">{f.client}</span>
+                </div>
+              )}
+            </div>
           ))
         }
-      </ol>
-    </div>
-  </section>
-
-  <!-- Signature culturelle -->
-  <section class="section section--bleu signature" aria-labelledby="signature-titre">
-    <div class="container signature__grid">
-      <div>
-        <p class="eyebrow" data-reveal>Signature culturelle</p>
-        <h2 id="signature-titre" data-reveal style="--i:1">Notre patrimoine est une source de création.</h2>
+        <div class="hero__veil"></div>
       </div>
-      <div data-reveal style="--i:2">
-        <p class="lead">
-          Nous puisons dans les gestes, les récits et les codes de notre quotidien pour donner aux
-          marques une expression qui leur appartient.
-        </p>
-        <p class="signature__quote quote">
-          « {site.signature} »<br /><span>{site.signatureTranslation}</span>
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <!-- Méthode -->
-  <section class="section" aria-labelledby="methode-titre">
-    <div class="container">
-      <div class="section-head">
+      <header class="hero__info">
         <div>
-          <p class="eyebrow" data-reveal>Méthode</p>
-          <h2 id="methode-titre" data-reveal style="--i:1">Comment nous travaillons.</h2>
+          <span class="hero__brand">MANKAN</span>
+          <h1>Agence culturelle<br />&amp; production</h1>
         </div>
-        <p data-reveal style="--i:2">
-          Nous échangeons sur vos objectifs, construisons une direction créative, produisons les
-          contenus et affinons les livrables avec vous.
-        </p>
+        <div class="hide-sm">
+          <span>Bamako, Mali</span>
+          <span class="muted">{team.map((m) => m.name).join(' · ')}</span>
+        </div>
+        <ul class="hide-md muted">
+          <li>Films &amp; spots</li>
+          <li>Campagnes 360°</li>
+          <li>Branding</li>
+          <li>Photographie</li>
+        </ul>
+      </header>
+
+      <a class="hero__logo" href="#top" aria-label="MANKAN — accueil">
+        <LogoMark beat />
+      </a>
+
+      <nav class="hero__nav" aria-label="Navigation principale">
+        <ul class="hide-md">
+          {usedTypes.map((t) => <li><a href={`/films/?type=${t}`}>{filmTypes[t].plural}</a></li>)}
+        </ul>
+        <ul class="hero__nav-main">
+          <li><a href="/a-propos/">À propos</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li class="hide-sm"><a href={site.social[0].url} rel="noopener" target="_blank">Instagram</a></li>
+        </ul>
+      </nav>
+
+      <div class="hero__center">
+        <a class="italic" href="/a-propos/">Qui sont les griots derrière ces images&nbsp;? →</a>
+        <a class="hero__mail" href={`mailto:${site.email}`}>{site.email}</a>
       </div>
-      <ol class="steps">
+
+      <div class="hero__index">
         {
-          steps.map((s, i) => (
+          usedTypes.length > 1 && (
+            <div class="hero__filters" role="group" aria-label="Filtrer les projets">
+              <button type="button" data-filter="all" aria-pressed="true">
+                Tout <span>{pad(films.length)}</span>
+              </button>
+              {usedTypes.map((t) => (
+                <button type="button" data-filter={t} aria-pressed="false">
+                  {filmTypes[t].plural} <span>{pad(films.filter((f) => f.type === t).length)}</span>
+                </button>
+              ))}
+            </div>
+          )
+        }
+        <ol class="hero__rows">
+          {
+            heroFilms.map((f, i) => (
+              <li data-row={i} data-type={f.type} class={i === 0 ? 'is-active' : ''}>
+                <a href={`/films/${f.slug}/`}>
+                  <span class="row__num">{f.num}</span>
+                  <span class="row__client">{f.client}</span>
+                  <span class="row__title italic">{f.title}</span>
+                  <span class="row__cta">Voir →</span>
+                  <span class="row__track" aria-hidden="true"><span class="row__bar" /></span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="hero__now">
+        <div class="hero__now-meta">
+          <span data-now-type>{heroFilms[0].typeLabel}</span>
+          {hasPreview && (
+            <button type="button" data-sound aria-pressed="false">( Son coupé )</button>
+          )}
+        </div>
+        <span class="hero__timecode display" data-timecode aria-hidden="true">00:00:00</span>
+        <a class="hero__play" href={`/films/${heroFilms[0].slug}/`} data-now-link>
+          <span class="play-dot" style="width:40px;height:40px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
+          </span>
+          Voir le film
+        </a>
+      </div>
+
+      <a class="hero__scroll" href="#decouvrir">( Défiler )<span class="bob"></span></a>
+
+      <!-- Intro : logo animé puis rideau (une fois par visite) -->
+      <div class="intro" data-intro aria-hidden="true">
+        <div class="intro__logo">
+          <span class="intro__sun"></span>
+          <img class="intro__word" src="/images/logo/logo-mankan.png" alt="" />
+          <img class="intro__rays" src="/images/logo/logo-rayons.png" alt="" />
+          <img class="intro__comm" src="/images/logo/logo-communication.png" alt="" />
+        </div>
+        <span class="intro__sig">{site.signature}</span>
+      </div>
+    </section>
+
+    <!-- ============ 1. MANIFESTE ============ -->
+    <section id="decouvrir" class="manifeste">
+      <span class="manifeste__l label c-rouge">( Qui sommes-nous )</span>
+      <span class="manifeste__r label">( Bamako — Afrique de l’Ouest )</span>
+      <img class="m-img m-img--1" src="/images/films/portrait-gele-dore.jpg" alt="" loading="lazy" data-parallax="0.04" />
+      <img class="m-img m-img--2" src="/images/films/daibin-la-natte.jpg" alt="" loading="lazy" data-parallax="-0.03" />
+      <img class="m-img m-img--3" src="/images/films/mariee-voile-blanc.jpg" alt="" loading="lazy" data-parallax="-0.04" />
+      <img class="m-img m-img--4" src="/images/films/serie-orange.jpg" alt="" loading="lazy" data-parallax="0.04" />
+      <h2 class="manifeste__title display" data-reveal>
+        ON DONNE<br /><span class="c-rouge">DU MANKAN*</span><br />À VOS MARQUES
+      </h2>
+      <p class="manifeste__note italic">* mankan&nbsp;: la voix, le son, en bamanankan.</p>
+    </section>
+
+    <!-- ============ 2. À PROPOS ============ -->
+    <section class="apropos">
+      <span class="label c-rouge">( À propos )</span>
+      <div class="apropos__body">
+        <p class="serif apropos__text" data-reveal>
+          Nous façonnons des <em class="c-rouge">films</em>, des <em class="c-rouge">campagnes</em>
+          et des <em class="c-rouge">identités</em> qui font entendre les marques au-delà du bruit. Enracinés à
+          Bamako, pensés pour le monde&nbsp;: nous sommes les griots modernes de votre marque.
+        </p>
+        <div class="apropos__actions" data-reveal style="--i:1">
+          <a class="btn" href="/a-propos/">( Découvrir l’agence → )</a>
+          <a class="link-line" href="/a-propos/#manifeste">Lire notre manifeste</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. PROJETS À LA UNE ============ -->
+    <section class="recits">
+      <div class="recits__head">
+        <div>
+          <span class="label c-jaune">( Projets à la une )</span>
+          <h2 class="display recits__title" data-reveal>Nos récits</h2>
+        </div>
+        <span class="label">( 01 — {pad(featuredFilms.length)} )</span>
+      </div>
+      <div class="recits__grid">
+        {
+          featuredFilms.map((f, i) => (
+            <a class="recit" href={`/films/${f.slug}/`} data-reveal style={`--i:${i % 2}`}>
+              <div class="recit__media">
+                {f.cover ? (
+                  <img src={f.cover} alt={f.coverAlt ?? ''} loading="lazy" />
+                ) : f.vimeoId ? (
+                  <img data-vimeo-thumb={f.vimeoId} alt="" hidden />
+                ) : null}
+                {!f.cover && (
+                  <span class="recit__blank display" aria-hidden="true">
+                    {f.client}
+                  </span>
+                )}
+              </div>
+              {f.tags && (
+                <ul class="recit__tags">
+                  {f.tags.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+              )}
+              <h3 class="display">
+                {f.client}
+                {!f.title.startsWith('[') && <span> — {f.title}</span>}
+              </h3>
+              {f.description && <p class="italic">{f.description}</p>}
+              <span class="recit__cta label">{f.type === 'photo' || f.type === 'branding' ? 'Voir le projet →' : 'Voir le film →'}</span>
+            </a>
+          ))
+        }
+      </div>
+      <a class="btn btn--pill recits__all" href="/films/">( Tous nos films — {pad(films.length)} )</a>
+    </section>
+
+    <!-- ============ 4. CE QU'ON FAIT ============ -->
+    <section class="verbes">
+      <div class="verbes__head">
+        <div>
+          <span class="label c-jaune">( Ce qu’on fait )</span>
+          <h2 class="display shadow-noir verbes__title" data-reveal>Trois verbes</h2>
+        </div>
+        <span class="italic c-jaune verbes__sub">…et une seule voix&nbsp;: la vôtre.</span>
+      </div>
+      <ol class="verbes__list">
+        {
+          verbs.map((v, i) => (
             <li data-reveal style={`--i:${i}`}>
-              <span class="steps__n">{s.n}</span>
-              <h3>{s.title}</h3>
-              <p>{s.text}</p>
+              <a href="/a-propos/#expertises">
+                <span class="c-jaune verbes__n">{v.n}</span>
+                <span class="verbes__bm">{v.bm}</span>
+                <span class="italic verbes__fr">{v.fr}</span>
+                <span class="verbes__txt">{v.text}</span>
+                <span class="verbes__arrow" aria-hidden="true">→</span>
+              </a>
             </li>
           ))
         }
       </ol>
-    </div>
-  </section>
+    </section>
 
-  <CtaBand />
+    <!-- ============ 5. CLIENTS ============ -->
+    <section class="clients" aria-labelledby="clients-titre">
+      <h2 id="clients-titre" class="label c-rouge clients__label">( Ils nous font confiance )</h2>
+      <p class="visually-hidden">{clients.join(', ')}</p>
+      <div class="clients__viewport" aria-hidden="true">
+        <div class="mq clients__track">
+          {
+            [0, 1].map(() =>
+              clients.map((c) => (
+                <>
+                  <span>{c.toUpperCase()}</span>
+                  <span class="clients__dot">●</span>
+                </>
+              )),
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. APPEL À L'ACTION ============ -->
+    <section class="cta">
+      <p class="italic cta__q" data-reveal>Vous avez une histoire à raconter&nbsp;?</p>
+      <h2 class="display cta__title" data-reveal style="--i:1">ON A LA VOIX.</h2>
+      <div class="cta__actions" data-reveal style="--i:2">
+        <a class="btn" href="/contact/">( Parlons-en → )</a>
+        <a class="link-line cta__mail" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
 </Base>
 
 <style>
-  /* Introduction plein écran */
+  /* ---------- HERO ---------- */
   .hero {
     position: relative;
-    min-height: calc(100svh - 76px);
-    display: flex;
-    background: var(--bleu);
-    color: var(--creme);
+    height: 100svh;
+    min-height: 640px;
     overflow: hidden;
-    isolation: isolate;
-  }
-  .hero__video {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 800ms var(--ease);
-  }
-  .hero__video.is-playing {
-    opacity: 1;
-  }
-  .hero__video::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgb(35 35 124 / 0.35), rgb(0 0 12 / 0.7));
-  }
-  .hero__video :global(iframe) {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vw;
-    height: 56.25vw;
-    min-height: 100%;
-    min-width: 177.78vh;
-    transform: translate(-50%, -50%);
-    border: 0;
-    pointer-events: none;
-  }
-  .hero__inner {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 3rem;
-    padding-block: clamp(3rem, 8vh, 6rem) clamp(2rem, 6vh, 4rem);
-  }
-  .hero__title {
-    font-size: clamp(2.5rem, 7.5vw, 7rem);
-    line-height: 0.98;
+    background: var(--noir);
+    font-size: 13px;
+    line-height: 1.55;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  .hero__title .line {
-    display: block;
-    overflow: hidden;
-    padding-bottom: 0.06em;
-  }
-  .hero__title .line > span {
-    display: inline-block;
-    animation: line-up 900ms var(--ease) both;
-  }
-  .hero__title .line:nth-child(2) > span {
-    animation-delay: 120ms;
-  }
-  .hero__title .line:nth-child(3) > span {
-    animation-delay: 240ms;
-  }
-  .hero__title .accent {
-    color: var(--orange);
-  }
-  @keyframes line-up {
-    from {
-      transform: translateY(105%);
-    }
-  }
-  .hero__bottom {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 2rem;
-    animation: fade-in 800ms var(--ease) 500ms both;
-  }
-  .hero__bottom .lead {
-    margin: 0;
-    max-width: 44ch;
-  }
-  .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .hero .btn--secondary {
-    color: var(--creme);
-    border-color: var(--creme);
-  }
-  .hero .btn--secondary:hover {
-    background: var(--creme);
-    color: var(--bleu);
-  }
-  .hero .btn:not(.btn--secondary):hover {
-    border-color: var(--creme);
-  }
-  .hero :global(.hero__rays) {
+  .hero__media,
+  .hero__slide,
+  .hero__veil {
     position: absolute;
-    top: clamp(1.5rem, 6vh, 4rem);
-    right: var(--gutter);
-    font-size: clamp(4rem, 10vw, 9rem);
-    animation: fade-in 800ms var(--ease) 700ms both;
+    inset: 0;
   }
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
+  .hero__slide {
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .hero__slide.is-active {
+    opacity: 1;
+  }
+  .hero__slide img,
+  .hero__slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero__blank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(60% 60% at 70% 40%, rgb(142 23 23 / 0.55), transparent 70%),
+      radial-gradient(50% 50% at 20% 80%, rgb(35 35 124 / 0.6), transparent 70%),
+      var(--noir);
+  }
+  .hero__blank span {
+    font-size: clamp(64px, 14vw, 220px);
+    color: rgb(255 247 243 / 0.08);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hero__veil {
+    background: rgb(0 0 12 / 0.38);
+  }
+
+  .hero__info,
+  .hero__nav,
+  .hero__logo,
+  .hero__index,
+  .hero__now,
+  .hero__center,
+  .hero__scroll {
+    position: absolute;
+    z-index: 3;
+  }
+  .hero ul,
+  .hero ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .hero__info {
+    left: var(--pad-top);
+    top: 36px;
+    display: grid;
+    grid-template-columns: 180px 190px 150px;
+    gap: 28px;
+  }
+  .hero__info > div {
+    display: flex;
+    flex-direction: column;
+  }
+  .hero__brand {
+    font-weight: 600;
+  }
+  .hero__info h1 {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1.55;
+  }
+  .muted {
+    color: var(--gris);
+  }
+  .hero__logo {
+    left: 50%;
+    top: 30px;
+    width: 120px;
+    transform: translateX(-50%);
+  }
+  .hero__nav {
+    right: var(--pad-top);
+    top: 36px;
+    display: grid;
+    grid-template-columns: 150px 130px;
+    gap: 28px;
+  }
+  .hero__nav-main {
+    text-align: right;
+  }
+  .hero__center {
+    left: 0;
+    right: 0;
+    top: 108px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .hero__center a {
+    pointer-events: auto;
+  }
+  .hero__center .italic {
+    padding: 6px 0;
+    font-size: 22px;
+  }
+  .hero__mail {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--gris);
+  }
+
+  .hero__index {
+    left: var(--pad-top);
+    bottom: 40px;
+    width: min(620px, calc(100% - 2 * var(--pad-top)));
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .hero__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+  }
+  .hero__filters button {
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: none;
+    color: var(--gris-2);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .hero__filters button span {
+    color: var(--jaune);
+  }
+  .hero__filters button[aria-pressed='true'] {
+    color: var(--creme);
+    border-bottom-color: var(--jaune);
+  }
+  .hero__rows li[hidden] {
+    display: none;
+  }
+  .hero__rows a {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 4px 0 6px;
+    opacity: 0.45;
+    transition: opacity 300ms ease;
+  }
+  .hero__rows a:hover {
+    color: inherit;
+  }
+  .hero__rows .is-active a,
+  .hero__rows a:focus-visible {
+    opacity: 1;
+  }
+  .row__num {
+    width: 22px;
+    flex-shrink: 0;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--jaune);
+  }
+  .row__client {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .row__title {
+    overflow: hidden;
+    font-size: 24px;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .row__cta {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--jaune);
+    opacity: 0;
+    transition: opacity 300ms ease;
+  }
+  .is-active .row__cta {
+    opacity: 1;
+  }
+  .row__track {
+    position: absolute;
+    left: 36px;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+  }
+  .is-active .row__track {
+    background: rgb(255 247 243 / 0.25);
+  }
+  .row__bar {
+    display: block;
+    width: 0;
+    height: 2px;
+    background: var(--jaune);
+  }
+  .is-active .row__bar {
+    width: var(--progress, 0%);
+    transition: width 1s linear;
+  }
+
+  .hero__now {
+    right: var(--pad-top);
+    bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+  }
+  .hero__now-meta {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--gris);
+  }
+  .hero__now-meta button {
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--creme);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .hero__timecode {
+    font-size: 64px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+  }
+  .hero__play {
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 20px 8px 8px;
+    border: 1px solid rgb(255 247 243 / 0.6);
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    transition:
+      background 250ms var(--ease),
+      color 250ms var(--ease);
+  }
+  .hero__play:hover {
+    background: var(--creme);
+    color: var(--noir);
+  }
+  .hero__scroll {
+    left: 50%;
+    bottom: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+  }
+  .bob {
+    display: block;
+    width: 1px;
+    height: 44px;
+    background: var(--jaune);
+    transform-origin: top;
+    animation: bob 1.8s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: scaleY(0.35);
+    }
+    50% {
+      transform: scaleY(1);
     }
   }
 
   /* Intro */
-  .intro__grid {
-    display: grid;
-    grid-template-columns: 1fr 2.2fr;
-    gap: 2rem;
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    background: var(--rouge);
+    animation: curtain 0.9s var(--ease-io) 3.2s forwards;
+    cursor: pointer;
   }
-  .intro__text {
-    margin: 0;
-    max-width: 34ch;
-    font-size: clamp(1.5rem, 1.8vw + 1rem, 2.5rem);
-    line-height: 1.3;
+  :global(.no-intro) .intro {
+    display: none;
+  }
+  .intro__logo {
+    position: relative;
+    width: min(560px, 80vw);
+    aspect-ratio: 844 / 432;
+  }
+  .intro__logo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .intro__sun {
+    position: absolute;
+    left: 23%;
+    top: -33%;
+    width: 84%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: sun 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
+  }
+  .intro__word {
+    animation: wipe 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.5s both;
+  }
+  .intro__rays {
+    transform-origin: 74% 32%;
+    animation: burst 1.5s ease-out 1.3s both;
+  }
+  .intro__comm {
+    animation: fadeup 0.6s ease-out 1.7s both;
+  }
+  .intro__sig {
+    font-size: 15px;
     font-weight: 500;
-    color: var(--bleu);
+    letter-spacing: 0.3em;
+    animation: fadeup 0.6s ease-out 2.1s both;
+  }
+  @keyframes curtain {
+    to {
+      transform: translateY(-100%);
+      visibility: hidden;
+    }
+  }
+  @keyframes sun {
+    from {
+      transform: scale(0);
+    }
+  }
+  @keyframes wipe {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes burst {
+    0% {
+      opacity: 0;
+      transform: scale(0.2) rotate(-14deg);
+    }
+    30% {
+      opacity: 1;
+      transform: scale(1.2) rotate(0);
+    }
+    45% {
+      transform: scale(1);
+    }
+    60% {
+      transform: scale(1.14);
+    }
+    72% {
+      transform: scale(1);
+    }
+    86% {
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes fadeup {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
   }
 
-  /* En-têtes de section */
-  .section-head {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    align-items: end;
-    gap: 2rem;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  /* ---------- MANIFESTE ---------- */
+  .manifeste {
+    position: relative;
+    min-height: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 160px var(--pad) 140px;
+    overflow: hidden;
+    background: var(--creme);
+    color: var(--noir);
   }
-  .section-head > p {
-    margin: 0;
+  .manifeste__l,
+  .manifeste__r {
+    position: absolute;
+    top: 72px;
   }
-  .section-head h2 {
-    color: var(--bleu);
+  .manifeste__l {
+    left: var(--pad);
+  }
+  .manifeste__r {
+    right: var(--pad);
+  }
+  .manifeste__title {
+    position: relative;
+    z-index: 2;
+    font-size: clamp(54px, 10.4vw, 150px);
+    line-height: 1.02;
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+  .manifeste__note {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 64px;
+    padding: 0 var(--pad);
+    font-size: 22px;
+    text-align: center;
+    color: var(--texte-doux);
+  }
+  .m-img {
+    position: absolute;
+    object-fit: cover;
+    will-change: transform;
+  }
+  .m-img--1 {
+    left: 6%;
+    top: 150px;
+    width: 190px;
+    height: 240px;
+    rotate: -6deg;
+  }
+  .m-img--2 {
+    right: 7.6%;
+    top: 130px;
+    width: 230px;
+    height: 160px;
+    rotate: 5deg;
+  }
+  .m-img--3 {
+    left: 11%;
+    bottom: 110px;
+    width: 170px;
+    height: 210px;
+    rotate: 4deg;
+  }
+  .m-img--4 {
+    right: 10.4%;
+    bottom: 120px;
+    width: 240px;
+    height: 170px;
+    rotate: -4deg;
   }
 
-  /* Réalisations */
-  .work__grid {
+  /* ---------- À PROPOS ---------- */
+  .apropos {
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: 260px 1fr;
+    gap: 64px;
+    padding: 110px var(--pad);
+    border-top: 1px solid rgb(0 0 12 / 0.12);
+    background: var(--creme);
+    color: var(--noir);
   }
-  .work__grid > :global(.card--large) {
-    grid-row: span 2;
+  .apropos > .label {
+    padding-top: 14px;
   }
-  .work__more {
-    margin-top: 3rem;
+  .apropos__body {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
   }
-
-  /* Expertises */
-  .expertises {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    border-top: 2px solid var(--bleu);
+  .apropos__text {
+    font-size: clamp(30px, 3.75vw, 54px);
+    line-height: 1.12;
   }
-  .expertises li {
-    padding: 2rem 2rem 2rem 0;
-    border-bottom: 1px solid rgb(35 35 124 / 0.2);
+  .apropos__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 40px;
+    align-items: center;
   }
-  .expertises__n,
-  .steps__n {
-    display: block;
-    margin-bottom: 1rem;
-    font-weight: 700;
+  .apropos .link-line:hover {
     color: var(--rouge);
   }
-  .expertises h3 {
-    margin-bottom: 0.75rem;
-    color: var(--bleu);
-  }
-  .expertises p {
-    margin: 0;
-    font-size: 1.0625rem;
-  }
 
-  /* Signature */
-  .signature__grid {
+  /* ---------- RÉCITS ---------- */
+  .recits {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    padding: 110px var(--pad);
+  }
+  .recits__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .recits__head > div {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .recits__title {
+    font-size: clamp(64px, 7.6vw, 110px);
+  }
+  .recits__grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 6vw, 6rem);
-    align-items: end;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 64px 48px;
   }
-  .signature__quote {
-    margin-top: 2rem;
-    font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
-    line-height: 1.2;
-    color: var(--creme);
+  .recit {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
-  .signature__quote span {
-    display: inline-block;
-    margin-top: 0.5rem;
-    font-family: var(--font-body);
-    font-style: normal;
-    font-size: 1rem;
-    opacity: 0.8;
+  .recit:hover {
+    color: inherit;
   }
-
-  /* Méthode */
-  .steps {
-    list-style: none;
+  .recit__media {
+    position: relative;
+    height: clamp(240px, 28vw, 400px);
+    overflow: hidden;
+    background: #1a1a2a;
+  }
+  .recit__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 900ms var(--ease);
+  }
+  .recit:hover .recit__media img {
+    transform: scale(1.05);
+  }
+  .recit__blank {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-size: clamp(40px, 5vw, 72px);
+    text-align: center;
+    color: rgb(255 247 243 / 0.14);
+    background:
+      radial-gradient(70% 70% at 80% 20%, rgb(142 23 23 / 0.5), transparent 70%),
+      #12121c;
+  }
+  .recit__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    counter-reset: step;
+    list-style: none;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
-  .steps li {
-    padding-top: 1.5rem;
-    border-top: 2px solid var(--orange);
+  .recit__tags li {
+    padding: 6px 12px 5px;
+    border: 1px solid rgb(255 247 243 / 0.5);
+    border-radius: 999px;
   }
-  .steps h3 {
-    margin-bottom: 0.75rem;
+  .recit h3 {
+    font-size: clamp(32px, 3vw, 44px);
+    line-height: 1.05;
   }
-  .steps p {
-    margin: 0;
-    font-size: 1.0625rem;
+  .recit p {
+    font-size: clamp(20px, 1.7vw, 24px);
+    line-height: 1.3;
+    color: #e6dfdc;
+  }
+  .recit__cta {
+    font-weight: 600;
+    color: var(--jaune);
+    transition: letter-spacing 300ms var(--ease);
+  }
+  .recit:hover .recit__cta {
+    letter-spacing: 0.24em;
+  }
+  .recits__all {
+    align-self: center;
   }
 
-  @media (max-width: 860px) {
-    .intro__grid,
-    .section-head,
-    .signature__grid,
-    .work__grid {
-      grid-template-columns: 1fr;
+  /* ---------- VERBES ---------- */
+  .verbes {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    padding: 100px var(--pad);
+    background: var(--rouge);
+  }
+  .verbes__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .verbes__head > div {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .verbes__title {
+    font-size: clamp(56px, 6.7vw, 96px);
+  }
+  .verbes__sub {
+    font-size: 26px;
+  }
+  .verbes__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid rgb(255 247 243 / 0.4);
+  }
+  .verbes__list a {
+    display: grid;
+    grid-template-columns: 60px 320px 1fr 360px 40px;
+    gap: 24px;
+    align-items: center;
+    min-height: 118px;
+    border-top: 1px solid rgb(255 247 243 / 0.4);
+    transition: padding 300ms var(--ease);
+  }
+  .verbes__list a:hover {
+    padding-left: 16px;
+  }
+  .verbes__n {
+    font-size: 13px;
+  }
+  .verbes__bm {
+    font-size: clamp(36px, 3.6vw, 52px);
+    font-weight: 600;
+  }
+  .verbes__fr {
+    font-size: clamp(24px, 2.2vw, 32px);
+  }
+  .verbes__txt {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .verbes__arrow {
+    font-size: 28px;
+    text-align: right;
+  }
+
+  /* ---------- CLIENTS ---------- */
+  .clients {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 56px 0;
+    overflow: hidden;
+    background: var(--creme);
+    color: var(--bleu);
+  }
+  .clients__label {
+    margin: 0;
+    padding: 0 var(--pad);
+    font-weight: 400;
+  }
+  .clients__track {
+    gap: 56px;
+    padding-right: 56px;
+    font-family: var(--f-display);
+    font-size: clamp(40px, 4vw, 58px);
+    white-space: nowrap;
+  }
+  .clients__dot {
+    color: var(--orange);
+  }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    min-height: 700px;
+    padding: 100px var(--pad);
+    background: var(--jaune);
+    color: var(--rouge);
+    text-align: center;
+  }
+  .cta__q {
+    font-size: clamp(28px, 3.3vw, 48px);
+    color: var(--noir);
+  }
+  .cta__title {
+    font-size: clamp(72px, 13.2vw, 190px);
+  }
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 32px;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .cta__mail {
+    font-size: 16px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--noir);
+  }
+  .cta__mail:hover {
+    color: var(--rouge);
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1180px) {
+    .hero .hide-md {
+      display: none;
     }
-    .work__grid > :global(.card--large) {
-      grid-row: auto;
+    .hero__info {
+      grid-template-columns: 180px 200px;
     }
-    .steps {
-      grid-template-columns: 1fr 1fr;
+    .hero__nav {
+      grid-template-columns: auto;
+    }
+    .verbes__list a {
+      grid-template-columns: 40px 1fr 1fr 32px;
+      padding-block: 20px;
+    }
+    .verbes__txt {
+      grid-column: 2 / 4;
+      grid-row: 2;
+    }
+    .verbes__arrow {
+      grid-column: 4;
+      grid-row: 1;
     }
   }
-  @media (max-width: 520px) {
-    .steps {
+  @media (max-width: 760px) {
+    .hero .hide-sm {
+      display: none;
+    }
+    .hero {
+      min-height: 700px;
+    }
+    .hero__info {
+      top: 24px;
+      grid-template-columns: auto;
+    }
+    .hero__nav {
+      top: 24px;
+    }
+    .hero__logo {
+      top: 88px;
+      left: var(--pad-top);
+      width: 110px;
+      transform: none;
+    }
+    .hero__center {
+      display: none;
+    }
+    .hero__index {
+      bottom: 150px;
+    }
+    .row__title {
+      font-size: 19px;
+    }
+    .row__cta {
+      display: none;
+    }
+    .hero__now {
+      left: var(--pad-top);
+      right: var(--pad-top);
+      bottom: 28px;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hero__timecode {
+      font-size: 28px;
+    }
+    .hero__play {
+      padding-right: 16px;
+      font-size: 12px;
+    }
+    .hero__now-meta {
+      display: none;
+    }
+    .hero__scroll {
+      display: none;
+    }
+
+    .manifeste {
+      min-height: 0;
+      padding: 150px var(--pad) 120px;
+    }
+    .manifeste__r {
+      display: none;
+    }
+    .m-img--1 {
+      left: -20px;
+      top: 118px;
+      width: 110px;
+      height: 140px;
+    }
+    .m-img--2 {
+      right: -20px;
+      top: 80px;
+      width: 130px;
+      height: 92px;
+    }
+    .m-img--3,
+    .m-img--4 {
+      display: none;
+    }
+    .manifeste__title {
+      margin-top: 90px;
+    }
+    .manifeste__note {
+      bottom: 40px;
+      font-size: 18px;
+    }
+    .apropos {
       grid-template-columns: 1fr;
+      gap: 24px;
+      padding-block: 72px;
+    }
+    .recits {
+      padding-block: 72px;
+      gap: 40px;
+    }
+    .recits__grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .verbes {
+      padding-block: 72px;
+    }
+    .verbes__list a {
+      grid-template-columns: 32px 1fr 24px;
+      gap: 6px 12px;
+    }
+    .verbes__fr {
+      grid-column: 2;
+      grid-row: 2;
+    }
+    .verbes__txt {
+      grid-column: 2;
+      grid-row: 3;
+    }
+    .verbes__arrow {
+      grid-column: 3;
+    }
+    .cta {
+      min-height: 520px;
     }
   }
 </style>
