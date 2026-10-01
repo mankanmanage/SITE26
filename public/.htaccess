@@ -23,6 +23,7 @@ ErrorDocument 404 /404.html
   ExpiresByType image/webp "access plus 1 month"
   ExpiresByType image/jpeg "access plus 1 month"
   ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 1 month"
 </IfModule>
 
 <IfModule mod_deflate.c>
@@ -34,3 +35,6 @@ ErrorDocument 404 /404.html
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set X-Frame-Options "SAMEORIGIN"
 </IfModule>
+
+# Vidéos : type MIME correct pour la lecture dans le navigateur
+AddType video/mp4 .mp4

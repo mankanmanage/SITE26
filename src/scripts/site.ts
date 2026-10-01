@@ -170,8 +170,25 @@ function initFilmPage() {
   const toggles = page.querySelectorAll<HTMLButtonElement>('[data-panel-toggle]');
 
   page.querySelector('[data-play]')?.addEventListener('click', () => {
-    const id = player?.dataset.player;
-    if (!player || !id) return;
+    if (!player) return;
+    // Film hébergé sur le site (LWS)
+    if (player.dataset.video) {
+      const video = document.createElement('video');
+      video.src = player.dataset.video;
+      if (player.dataset.poster) video.poster = player.dataset.poster;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.preload = 'auto';
+      video.setAttribute('aria-label', player.dataset.title ?? 'Film');
+      player.replaceChildren(video);
+      page.classList.add('is-playing');
+      video.play().catch(() => {});
+      return;
+    }
+    // Film hébergé sur Vimeo
+    const id = player.dataset.player;
+    if (!id) return;
     const params = new URLSearchParams({ autoplay: '1', dnt: '1', color: 'FAD02C', title: '0', byline: '0', portrait: '0' });
     const iframe = document.createElement('iframe');
     iframe.src = `https://player.vimeo.com/video/${id}?${params}`;

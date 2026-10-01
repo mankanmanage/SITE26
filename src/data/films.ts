@@ -1,8 +1,9 @@
 // Films et projets. Chaque film a sa page : /films/<slug>/
 //
-// Pour relier une vidéo Vimeo : coller l'identifiant (les chiffres de vimeo.com/123456789)
-// dans `vimeoId`. Pour l'extrait muet qui tourne en fond de l'accueil : `preview`
-// (fichier MP4 court dans /public/videos/). Un champ vide n'est pas affiché.
+// Vidéos hébergées chez LWS (dossier /videos/ du site) :
+//   - `video`   : le film complet, ex. '/videos/daibin-la-natte.mp4'
+//   - `preview` : l'extrait muet en boucle de l'accueil, ex. '/videos/daibin-la-natte-extrait.mp4'
+// Autre possibilité : `vimeoId` (les chiffres de vimeo.com/123456789). Un champ vide n'est pas affiché.
 
 export type FilmType = 'film' | 'pub' | 'campagne' | 'branding' | 'photo';
 
@@ -28,6 +29,7 @@ export interface Film {
   cover?: string;
   coverAlt?: string;
   preview?: string;
+  video?: string;
   vimeoId?: string;
   duration?: string;
   tags?: string[];

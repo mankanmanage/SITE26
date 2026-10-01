@@ -39,7 +39,7 @@ const projectBlocks = [
       {!film.cover && !film.vimeoId && <div class="film__blank display">{film.client}</div>}
     </div>
     <div class="film__veil"></div>
-    <div class="film__player" data-player={film.vimeoId || undefined} data-title={fullTitle}></div>
+    <div class="film__player" data-player={film.vimeoId || undefined} data-video={film.video || undefined} data-poster={film.cover || undefined} data-title={fullTitle}></div>
 
     <!-- Barre du haut -->
     <div class="film__top">
@@ -59,7 +59,7 @@ const projectBlocks = [
 
     <!-- Lecture -->
     {
-      film.vimeoId ? (
+      film.video || film.vimeoId ? (
         <button type="button" class="film__bigplay play-dot" data-play aria-label={`Lire le film ${fullTitle}`}>
           <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
         </button>
@@ -174,10 +174,13 @@ const projectBlocks = [
   .film.is-playing .film__player {
     display: block;
   }
-  .film__player :global(iframe) {
+  .film__player :global(iframe),
+  .film__player :global(video) {
     width: 100%;
     height: 100%;
     border: 0;
+    object-fit: contain;
+    background: var(--noir);
   }
 
   .film__top {
