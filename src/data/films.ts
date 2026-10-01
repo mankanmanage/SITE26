@@ -1,4 +1,4 @@
-// Films et projets. Chaque film a sa page : /films/<slug>/
+// Projets (films, campagnes…). Chaque projet a sa page : /projets/<slug>/
 //
 // Vidéos hébergées chez LWS (dossier /videos/ du site) :
 //   - `video`   : le film complet, ex. '/videos/daibin-la-natte.mp4'

@@ -6,19 +6,41 @@ import { site, expertises, manifestoAudio } from '../data/site';
 import { films, pad } from '../data/films';
 
 const hasAudio = Boolean(manifestoAudio.bm || manifestoAudio.fr);
-const values = [
-  { n: '01', title: 'Accessible', text: '« An bè ye kelen ye » — Nous sommes un.' },
-  { n: '02', title: 'Créatif', text: 'Aussi varié que les motifs d’un bogolan.' },
-  { n: '03', title: 'Culturel', text: 'Enraciné comme un baobab centenaire.' },
+
+// Découpe un texte en mots pour l'effet « les mots s'allument au défilement ».
+const words = (text: string) => text.split(' ');
+
+const story = [
+  'Mankan est née de ce que nos éducations ont semé en nous : les dimanches autour d’un grand bol de zamai, les Tabaskis en famille, les rituels simples qui forgent une identité.',
+  'C’est la manière, pour de jeunes Maliens, d’apporter leur pierre : une contribution sincère, portée par l’espoir, par l’image que nous voulons renvoyer au monde, et surtout par celle que nous voulons rendre à nous-mêmes.',
 ];
+
+// Panneaux qui défilent à l'horizontale (repris de la maquette Canva).
+// Images provisoires : à remplacer par les illustrations de la charte.
+const panels = [
+  { title: 'On parle fort', text: 'Uniquement pour vous, à travers nos campagnes.', img: '/images/films/paps-soda.jpg', bg: 'rouge' },
+  { title: 'On rêve loin', text: 'Oui, même les idées les plus folles sont réalisables. En rendant l’imaginaire réel.', img: '/images/films/serie-orange.jpg', bg: 'bleu' },
+  { title: 'On cherche', text: 'Storytelling et recherche culturelle : nous fouillons les récits, les gestes et les mémoires avant de créer.', img: '/images/films/homme-djembe.jpg', bg: 'orange' },
+  { title: 'On est authentique', text: 'Enracinés et fiers.', img: '/images/films/mariee-voile-blanc.jpg', bg: 'rouge' },
+];
+
+const values = [
+  { n: '01', title: 'Accessible', text: '« An bè ye kelen ye »', tr: 'Nous sommes un.' },
+  { n: '02', title: 'Créatif', text: 'Aussi varié que les motifs d’un bogolan.', tr: '' },
+  { n: '03', title: 'Culturel', text: 'Enraciné comme un baobab centenaire.', tr: '' },
+];
+
+const mission =
+  'Rendre votre message aussi visible qu’un grand boubou un jour de fête, aussi audible qu’un djembé, et aussi impactant qu’une bonne dose de piment dans le zamai.';
+const missionAccents = ['visible', 'audible', 'impactant'];
 ---
 
 <Base
   title="À propos — Les griots modernes de votre marque | MANKAN, Bamako"
-  description="MANKAN, agence de communication culturelle née à Bamako : notre histoire, notre manifeste, nos expertises et l’équipe qui fait entendre les marques."
+  description="MANKAN, agence de communication culturelle née à Bamako : storytelling, recherche culturelle, stratégie de marque, films et campagnes. Écoutez notre manifeste en bambara et en français."
 >
   <main id="contenu">
-    <!-- 1. AN KA KO LA -->
+    <!-- 1. AN KA KO LA : les mots s'allument au défilement -->
     <section class="histoire">
       <TopBar />
       <div class="histoire__title">
@@ -26,48 +48,81 @@ const values = [
         <h1 class="display shadow-noir" data-reveal>AN KA<br />KO LA*</h1>
         <p class="italic c-jaune histoire__note">* Notre histoire, en bamanankan.</p>
       </div>
-      <div class="histoire__text serif">
-        <p data-reveal>
-          Mankan est née de ce que nos éducations ont semé en nous&nbsp;: les dimanches autour d’un grand
-          bol de zamai, les Tabaskis en famille, les rituels simples qui forgent une identité.
-        </p>
-        <p data-reveal style="--i:1">
-          C’est la manière, pour de jeunes Maliens, d’apporter leur pierre&nbsp;: une contribution
-          sincère, portée par l’espoir, par l’image que nous voulons renvoyer au monde, et surtout par
-          celle que nous voulons rendre à nous-mêmes.
-        </p>
-        <p class="c-jaune" data-reveal style="--i:2">
-          Avant d’être une agence, Mankan est un cri du cœur&nbsp;: ne plus attendre une place, mais la
-          créer.
+      <div class="histoire__text serif" data-words>
+        {story.map((p) => <p>{words(p).map((w) => <span class="w">{w} </span>)}</p>)}
+        <p class="histoire__cri c-jaune">
+          {words('Avant d’être une agence, Mankan est un cri du cœur : ne plus attendre une place, mais la créer.').map((w) => <span class="w">{w} </span>)}
         </p>
       </div>
     </section>
 
-    <!-- 2. ÉCOUTE-MOI (affiché quand les fichiers audio sont fournis) -->
+    <!-- 2. ÉCOUTE-MOI : le manifeste en bambara et en français -->
     {
       hasAudio && (
         <section class="ecoute" data-audio>
-          <h2 class="display ecoute__title">LAISSEZ-NOUS AMPLIFIER VOTRE MESSAGE</h2>
+          <h2 class="display ecoute__title">Laissez-nous amplifier votre message</h2>
           <div class="ecoute__player">
             <button type="button" class="play-dot ecoute__btn" data-audio-toggle aria-label="Écouter le manifeste">
-              <svg class="i-play" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
-              <svg class="i-pause" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="5" x2="8" y2="19" /><line x1="16" y1="5" x2="16" y2="19" /></svg>
+              <svg class="i-play" width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
+              <svg class="i-pause" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><line x1="8" y1="5" x2="8" y2="19" /><line x1="16" y1="5" x2="16" y2="19" /></svg>
             </button>
             <div class="ecoute__track">
-              <span class="italic ecoute__name">Écoute-moi — le manifeste Mankan, dit à voix haute</span>
-              <span class="ecoute__bar"><span data-audio-progress /></span>
+              <div class="ecoute__line">
+                <span class="italic ecoute__name">Écoute-moi — le manifeste Mankan</span>
+                <span class="ecoute__time" data-audio-time>00:00</span>
+              </div>
+              <div class="ecoute__eq" aria-hidden="true">
+                {Array.from({ length: 48 }, (_, i) => <span style={`--d:${(i * 37) % 11}`} />)}
+              </div>
+              <input
+                class="ecoute__seek"
+                type="range"
+                min="0"
+                max="100"
+                step="0.1"
+                value="0"
+                aria-label="Position dans l’enregistrement"
+                data-audio-seek
+              />
             </div>
             <div class="ecoute__langs" role="group" aria-label="Langue">
-              {manifestoAudio.bm && <button type="button" data-audio-lang={manifestoAudio.bm} aria-pressed="true">Bamanankan</button>}
-              {manifestoAudio.fr && <button type="button" data-audio-lang={manifestoAudio.fr} aria-pressed={manifestoAudio.bm ? 'false' : 'true'}>Français</button>}
+              {manifestoAudio.bm && (
+                <button type="button" data-audio-lang={manifestoAudio.bm} aria-pressed="true">
+                  Bambara
+                </button>
+              )}
+              {manifestoAudio.fr && (
+                <button type="button" data-audio-lang={manifestoAudio.fr} aria-pressed={manifestoAudio.bm ? 'false' : 'true'}>
+                  Français
+                </button>
+              )}
             </div>
-            <audio preload="none" src={manifestoAudio.bm || manifestoAudio.fr} data-audio-el />
+            <audio preload="metadata" src={manifestoAudio.bm || manifestoAudio.fr} data-audio-el />
           </div>
         </section>
       )
     }
 
-    <!-- 3. ARTISAN DE VOTRE MARQUE -->
+    <!-- 3. ON PARLE FORT / ON RÊVE LOIN… : défilement horizontal -->
+    <section class="panels" data-panels style={`--count:${panels.length}`} aria-label="Ce qui nous anime">
+      <div class="panels__sticky">
+        <div class="panels__track" data-panels-track>
+          {
+            panels.map((p, i) => (
+              <article class={`panel panel--${p.bg}`}>
+                <span class="panel__n label">{pad(i + 1)} / {pad(panels.length)}</span>
+                <h2 class="display shadow-noir panel__title">{p.title}</h2>
+                <p class="serif panel__text">{p.text}</p>
+                <img class="panel__img" src={p.img} alt="" loading="lazy" />
+              </article>
+            ))
+          }
+        </div>
+        <div class="panels__progress" aria-hidden="true"><span data-panels-bar /></div>
+      </div>
+    </section>
+
+    <!-- 4. ARTISAN DE VOTRE MARQUE -->
     <section class="artisan" id="manifeste">
       <div class="artisan__head">
         <span class="label c-rouge">( Manifeste )</span>
@@ -86,53 +141,52 @@ const values = [
         <p class="serif artisan__lead">Ici, on ne fait pas juste «&nbsp;de la com’&nbsp;».</p>
         <p>
           On tisse des récits, on réveille des imaginaires, on donne du sens aux marques qui veulent
-          parler avec sincérité. Nos histoires touchent, vibrent, restent. Chaque campagne porte un peu
-          de nous, un peu de vous, et beaucoup de ce qui fait que ça résonne.
+          parler avec sincérité. Du grin au grand écran, de la rue au réseau, on accompagne celles et
+          ceux qui veulent faire entendre leur voix&nbsp;: claire, fière, enracinée.
         </p>
       </div>
     </section>
 
-    <!-- 3b. PASSERELLE -->
-    <a class="passerelle" href="/films/">
-      <span class="italic passerelle__txt">Nos histoires se regardent aussi.</span>
-      <span class="passerelle__cta">
-        Voir les films
-        <span class="passerelle__dot">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
-        </span>
-      </span>
-    </a>
-
-    <!-- 4. NOUS SOMMES -->
+    <!-- 5. NOUS SOMMES : cartes qui se retournent -->
     <section class="valeurs">
       <div class="valeurs__head">
         <h2 class="display">Nous sommes</h2>
-        <span class="label c-jaune">( 01 — 03 )</span>
+        <span class="label c-jaune">( Survolez les cartes )</span>
       </div>
       <div class="valeurs__grid">
         {
           values.map((v, i) => (
-            <div data-reveal style={`--i:${i}`}>
-              <span class="c-jaune valeurs__n">{v.n}</span>
-              <h3 class="display">{v.title}</h3>
-              <p class="italic">{v.text}</p>
-            </div>
+            <button type="button" class="valeur" data-reveal style={`--i:${i}`} aria-pressed="false" data-flip>
+              <span class="valeur__inner">
+                <span class="valeur__face valeur__front">
+                  <span class="c-jaune valeur__n">{v.n}</span>
+                  <span class="display valeur__title">{v.title}</span>
+                  <span class="valeur__hint label--sm">Retourner ↻</span>
+                </span>
+                <span class="valeur__face valeur__back">
+                  <span class="italic valeur__text">{v.text}</span>
+                  {v.tr && <span class="valeur__tr">{v.tr}</span>}
+                </span>
+              </span>
+            </button>
           ))
         }
       </div>
     </section>
 
-    <!-- 5. MISSION -->
+    <!-- 6. MISSION : les mots s'allument au défilement -->
     <section class="mission">
       <span class="label c-jaune">( Notre mission )</span>
-      <p class="serif mission__text" data-reveal>
-        Rendre votre message aussi <em class="c-jaune">visible</em> qu’un grand boubou un jour de fête,
-        aussi <em class="c-jaune">audible</em> qu’un djembé,
-        et aussi <em class="c-jaune">impactant</em> qu’une bonne dose de piment dans le zamai.
+      <p class="serif mission__text" data-words>
+        {
+          words(mission).map((w) => (
+            <span class={`w${missionAccents.some((a) => w.startsWith(a)) ? ' w--accent' : ''}`}>{w} </span>
+          ))
+        }
       </p>
     </section>
 
-    <!-- 6. EXPERTISES -->
+    <!-- 7. EXPERTISES : accordéon -->
     <section class="expertises" id="expertises">
       <div class="expertises__head">
         <div>
@@ -141,29 +195,33 @@ const values = [
         </div>
         <span class="label">( 01 — {pad(expertises.length)} )</span>
       </div>
-      <ol class="expertises__grid">
+      <div class="expertises__list">
         {
           expertises.map((e, i) => (
-            <li data-reveal style={`--i:${i % 3}`}>
-              <span class="c-rouge">{pad(i + 1)}</span>
-              {e}
-            </li>
+            <details class="exp" open={i === 0}>
+              <summary>
+                <span class="c-rouge exp__n">{pad(i + 1)}</span>
+                <span class="exp__title">{e.title}</span>
+                <span class="exp__icon" aria-hidden="true" />
+              </summary>
+              <p class="exp__text">{e.text}</p>
+            </details>
           ))
         }
-      </ol>
+      </div>
     </section>
 
-    <!-- 8a. LA SUITE -->
-    <a class="suite" href="/films/">
+    <!-- 8. LA SUITE -->
+    <a class="suite" href="/projets/">
       <img src="/images/films/daibin-la-natte.jpg" alt="" aria-hidden="true" loading="lazy" />
       <div class="suite__txt">
         <span class="label--sm c-jaune">( La suite )</span>
-        <span class="display suite__title">Assez parlé.<br />Place aux films.</span>
+        <span class="display suite__title">Assez parlé.<br />Place aux projets.</span>
       </div>
-      <span class="suite__cta">( Voir nos {pad(films.length)} films → )</span>
+      <span class="suite__cta">( Voir nos {pad(films.length)} projets → )</span>
     </a>
 
-    <!-- 8b. APPEL FINAL -->
+    <!-- 9. APPEL FINAL -->
     <section class="final">
       <h2 class="display shadow-noir final__title" data-reveal>Votre histoire<br />est la prochaine.</h2>
       <a class="final__btn" href="/contact/">Racontez-<br />la-nous →</a>
@@ -173,20 +231,35 @@ const values = [
 </Base>
 
 <style>
+  /* Mots qui s'allument au défilement */
+  .w {
+    opacity: 0.22;
+    transition: opacity 250ms ease;
+  }
+  .w.is-lit {
+    opacity: 1;
+  }
+  :global(html:not(.js)) .w {
+    opacity: 1;
+  }
+
   /* 1. Histoire */
   .histoire {
     position: relative;
     display: grid;
-    grid-template-columns: 620px 1fr;
-    gap: 36px 56px;
-    min-height: 900px;
-    padding: 190px var(--pad) 100px;
+    grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+    gap: 36px 64px;
+    min-height: 100svh;
+    padding: 170px var(--pad) 100px;
     background: var(--rouge);
   }
   .histoire__title {
+    position: sticky;
+    top: 120px;
     display: flex;
     flex-direction: column;
     gap: 22px;
+    align-self: start;
   }
   .histoire__title h1 {
     font-size: clamp(88px, 11.8vw, 170px);
@@ -199,10 +272,14 @@ const values = [
   .histoire__text {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 28px;
     padding-top: 10px;
-    font-size: clamp(21px, 1.9vw, 27px);
-    line-height: 1.38;
+    font-size: clamp(24px, 2.4vw, 36px);
+    line-height: 1.3;
+  }
+  .histoire__cri {
+    font-size: 1.15em;
+    font-style: italic;
   }
 
   /* 2. Écoute */
@@ -210,13 +287,14 @@ const values = [
     display: flex;
     flex-direction: column;
     gap: 44px;
-    padding: 72px var(--pad);
-    background: var(--noir);
+    padding: 80px var(--pad);
+    background: var(--bleu);
   }
   .ecoute__title {
     font-size: clamp(24px, 3.2vw, 46px);
-    letter-spacing: 0.3em;
+    letter-spacing: 0.25em;
     text-align: center;
+    text-transform: uppercase;
   }
   .ecoute__player {
     display: flex;
@@ -229,6 +307,10 @@ const values = [
     height: 96px;
     border: 0;
     cursor: pointer;
+    transition: transform 300ms var(--ease);
+  }
+  .ecoute__btn:hover {
+    transform: scale(1.06);
   }
   .ecoute__btn .i-pause,
   .is-playing .ecoute__btn .i-play {
@@ -241,30 +323,59 @@ const values = [
     flex: 1 1 320px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
+    min-width: 0;
+  }
+  .ecoute__line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
   }
   .ecoute__name {
-    font-size: clamp(22px, 2vw, 30px);
+    font-size: clamp(20px, 2vw, 28px);
   }
-  .ecoute__bar {
-    position: relative;
-    height: 3px;
-    background: rgb(255 247 243 / 0.3);
+  .ecoute__time {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+    color: var(--jaune);
   }
-  .ecoute__bar span {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 0;
-    height: 3px;
+  .ecoute__eq {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 44px;
+  }
+  .ecoute__eq span {
+    flex: 1;
+    height: 20%;
+    background: rgb(255 247 243 / 0.35);
+  }
+  .is-playing .ecoute__eq span {
     background: var(--jaune);
+    animation: eq 900ms ease-in-out infinite alternate;
+    animation-delay: calc(var(--d) * -90ms);
+  }
+  @keyframes eq {
+    from {
+      height: 15%;
+    }
+    to {
+      height: 100%;
+    }
+  }
+  .ecoute__seek {
+    width: 100%;
+    accent-color: var(--jaune);
+    cursor: pointer;
   }
   .ecoute__langs {
     display: flex;
     gap: 10px;
   }
   .ecoute__langs button {
-    height: 48px;
+    min-height: 48px;
     padding: 0 22px;
     border: 1px solid var(--jaune);
     background: transparent;
@@ -280,10 +391,95 @@ const values = [
     color: var(--rouge);
   }
 
-  /* 3. Artisan */
+  /* 3. Panneaux horizontaux */
+  .panels {
+    position: relative;
+    height: calc(var(--count) * 100svh);
+  }
+  .panels__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+  .panels__track {
+    display: flex;
+    height: 100%;
+    width: calc(var(--count) * 100vw);
+    will-change: transform;
+  }
+  .panel {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    grid-template-rows: auto 1fr auto;
+    gap: 24px 48px;
+    align-items: center;
+    width: 100vw;
+    height: 100%;
+    padding: 110px var(--pad) 80px;
+    overflow: hidden;
+  }
+  .panel--rouge {
+    background: var(--rouge);
+  }
+  .panel--bleu {
+    background: var(--bleu);
+  }
+  .panel--orange {
+    background: var(--orange);
+  }
+  .panel__n {
+    grid-column: 1;
+    color: var(--jaune);
+  }
+  .panel__title {
+    grid-column: 1;
+    font-size: clamp(48px, 6.6vw, 112px);
+    text-transform: uppercase;
+  }
+  .panel__text {
+    grid-column: 1;
+    max-width: 30ch;
+    font-size: clamp(22px, 2.2vw, 32px);
+    line-height: 1.25;
+  }
+  .panel__img {
+    grid-column: 2;
+    grid-row: 1 / 4;
+    justify-self: center;
+    width: min(100%, 460px);
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 8px solid var(--creme);
+    rotate: 3deg;
+    transition: rotate 600ms var(--ease);
+  }
+  .panel:nth-child(even) .panel__img {
+    rotate: -3deg;
+  }
+  .panel:hover .panel__img {
+    rotate: 0deg;
+  }
+  .panels__progress {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: 36px;
+    height: 2px;
+    background: rgb(255 247 243 / 0.3);
+  }
+  .panels__progress span {
+    display: block;
+    width: var(--p, 0%);
+    height: 100%;
+    background: var(--jaune);
+  }
+
+  /* 4. Artisan */
   .artisan {
     display: grid;
-    grid-template-columns: 520px 1fr 1fr;
+    grid-template-columns: minmax(0, 520px) minmax(0, 1fr) minmax(0, 1fr);
     gap: 56px;
     align-items: start;
     padding: 110px var(--pad);
@@ -321,58 +517,20 @@ const values = [
     color: var(--rouge);
   }
 
-  /* 3b. Passerelle */
-  .passerelle {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    min-height: 200px;
-    padding: 40px var(--pad);
-    background: var(--orange);
-  }
-  .passerelle:hover {
-    color: var(--creme);
-  }
-  .passerelle__txt {
-    font-size: clamp(30px, 3.2vw, 46px);
-  }
-  .passerelle__cta {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-  .passerelle__dot {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--creme);
-    color: var(--rouge);
-    transition: transform 300ms var(--ease);
-  }
-  .passerelle:hover .passerelle__dot {
-    transform: scale(1.12);
-  }
-
-  /* 4. Valeurs */
+  /* 5. Valeurs : cartes qui se retournent */
   .valeurs {
     display: flex;
     flex-direction: column;
-    gap: 64px;
+    gap: 56px;
     padding: 100px var(--pad);
+    background: var(--bleu);
   }
   .valeurs__head {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
+    gap: 16px;
   }
   .valeurs__head h2 {
     font-size: clamp(56px, 6.7vw, 96px);
@@ -380,47 +538,91 @@ const values = [
   .valeurs__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 48px;
+    gap: 24px;
   }
-  .valeurs__grid > div {
+  .valeur {
+    height: 320px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    perspective: 1200px;
+    cursor: pointer;
+  }
+  .valeur__inner {
+    position: relative;
+    display: block;
+    height: 100%;
+    transition: transform 700ms var(--ease);
+    transform-style: preserve-3d;
+  }
+  .valeur:hover .valeur__inner,
+  .valeur[aria-pressed='true'] .valeur__inner {
+    transform: rotateY(180deg);
+  }
+  .valeur__face {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    padding-top: 22px;
-    border-top: 1px solid rgb(255 247 243 / 0.4);
+    padding: 28px;
+    backface-visibility: hidden;
   }
-  .valeurs__n {
+  .valeur__front {
+    justify-content: space-between;
+    border: 1px solid rgb(255 247 243 / 0.4);
+  }
+  .valeur__back {
+    justify-content: center;
+    background: var(--rouge);
+    transform: rotateY(180deg);
+  }
+  .valeur__n {
     font-size: 13px;
   }
-  .valeurs__grid h3 {
-    font-size: clamp(40px, 3.6vw, 52px);
+  .valeur__title {
+    font-size: clamp(40px, 3.6vw, 56px);
   }
-  .valeurs__grid p {
-    font-size: clamp(22px, 1.8vw, 26px);
-    line-height: 1.25;
+  .valeur__hint {
+    color: var(--gris);
+  }
+  .valeur__text {
+    font-size: clamp(24px, 2.2vw, 32px);
+    line-height: 1.2;
+  }
+  .valeur__tr {
+    font-size: 16px;
+    color: var(--jaune);
   }
 
-  /* 5. Mission */
+  /* 6. Mission */
   .mission {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 28px;
-    min-height: 520px;
+    min-height: 80svh;
     padding: 100px var(--pad);
     background: var(--rouge);
   }
   .mission__text {
     max-width: 1180px;
-    font-size: clamp(30px, 3.75vw, 54px);
+    font-size: clamp(32px, 4.2vw, 62px);
     line-height: 1.12;
   }
+  .w--accent {
+    font-style: italic;
+    color: var(--jaune);
+  }
 
-  /* 6. Expertises */
+  /* 7. Expertises : accordéon */
   .expertises {
     display: flex;
     flex-direction: column;
-    gap: 56px;
+    gap: 48px;
     padding: 100px var(--pad);
     background: var(--creme);
     color: var(--noir);
@@ -439,30 +641,75 @@ const values = [
   .expertises__head h2 {
     font-size: clamp(56px, 6.7vw, 96px);
   }
-  .expertises__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 48px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-size: clamp(18px, 1.5vw, 22px);
-  }
-  .expertises__grid li {
-    display: flex;
-    align-items: baseline;
-    gap: 18px;
-    padding: 22px 0;
-    border-top: 1px solid var(--noir);
-  }
-  .expertises__grid li:nth-last-child(-n + 3) {
+  .expertises__list {
     border-bottom: 1px solid var(--noir);
   }
-  .expertises__grid span {
+  .exp {
+    border-top: 1px solid var(--noir);
+  }
+  .exp summary {
+    display: grid;
+    grid-template-columns: 48px 1fr 32px;
+    align-items: center;
+    gap: 16px;
+    min-height: 76px;
+    font-size: clamp(20px, 2vw, 28px);
+    cursor: pointer;
+    list-style: none;
+    transition:
+      padding 300ms var(--ease),
+      color 300ms var(--ease);
+  }
+  .exp summary::-webkit-details-marker {
+    display: none;
+  }
+  .exp summary:hover {
+    padding-left: 12px;
+    color: var(--rouge);
+  }
+  .exp__n {
     font-size: 13px;
   }
+  .exp__icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+  .exp__icon::before,
+  .exp__icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 24px;
+    height: 2px;
+    background: currentColor;
+    transition: transform 300ms var(--ease);
+  }
+  .exp__icon::after {
+    transform: rotate(90deg);
+  }
+  .exp[open] .exp__icon::after {
+    transform: rotate(0deg);
+  }
+  .exp[open] summary {
+    color: var(--rouge);
+  }
+  .exp__text {
+    max-width: 60ch;
+    padding: 0 0 26px 64px;
+    font-size: 18px;
+    line-height: 1.55;
+    animation: exp-open 400ms var(--ease);
+  }
+  @keyframes exp-open {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
 
-  /* 8a. Suite */
+  /* 8. Suite */
   .suite {
     position: relative;
     display: flex;
@@ -473,6 +720,7 @@ const values = [
     min-height: 400px;
     padding: 56px var(--pad);
     overflow: hidden;
+    background: var(--bleu);
   }
   .suite:hover {
     color: var(--creme);
@@ -511,7 +759,7 @@ const values = [
     text-transform: uppercase;
   }
 
-  /* 8b. Final */
+  /* 9. Final */
   .final {
     display: flex;
     flex-wrap: wrap;
@@ -554,6 +802,9 @@ const values = [
     .artisan {
       grid-template-columns: 1fr;
     }
+    .histoire__title {
+      position: static;
+    }
     .artisan__col {
       padding-top: 0;
     }
@@ -561,17 +812,28 @@ const values = [
   @media (max-width: 760px) {
     .histoire {
       min-height: 0;
-      padding-top: 140px;
+      padding-top: 130px;
     }
-    .valeurs__grid,
-    .expertises__grid {
+    .valeurs__grid {
       grid-template-columns: 1fr;
     }
-    .expertises__grid li:nth-last-child(-n + 3) {
-      border-bottom: 0;
+    .valeur {
+      height: 220px;
     }
-    .expertises__grid li:last-child {
-      border-bottom: 1px solid var(--noir);
+    .panel {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto 1fr;
+      align-content: start;
+      padding-top: 100px;
+    }
+    .panel__img {
+      grid-column: 1;
+      grid-row: 4;
+      width: min(70%, 280px);
+      align-self: center;
+    }
+    .exp__text {
+      padding-left: 0;
     }
     .valeurs,
     .expertises,
@@ -582,6 +844,26 @@ const values = [
     .final__btn {
       width: 160px;
       height: 160px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .panels {
+      height: auto;
+    }
+    .panels__sticky {
+      position: static;
+      height: auto;
+    }
+    .panels__track {
+      flex-direction: column;
+      width: 100%;
+    }
+    .panel {
+      width: 100%;
+      min-height: 100svh;
+    }
+    .panels__progress {
+      display: none;
     }
   }
 </style>

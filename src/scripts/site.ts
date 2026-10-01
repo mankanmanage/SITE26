@@ -133,32 +133,111 @@ function initMenu() {
   });
 }
 
-/* ---------- Page Films : filtres (?type=film) ---------- */
-function initFilmsFilters() {
-  const bar = document.querySelector<HTMLElement>('[data-films-filters]');
-  if (!bar) return;
-  const items = document.querySelectorAll<HTMLElement>('.films-list [data-type]');
-  const apply = (filter: string) => {
-    bar
-      .querySelectorAll<HTMLButtonElement>('[data-filter]')
-      .forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
-    items.forEach((el) => {
-      el.hidden = filter !== 'all' && el.dataset.type !== filter;
-      if (!el.hidden) el.classList.add('is-visible');
+/* ---------- Page Projets : plein écran + bande des projets (façon Lotumn) ---------- */
+function initReel() {
+  const reel = document.querySelector<HTMLElement>('[data-reel]');
+  if (!reel) return;
+  const slides = [...reel.querySelectorAll<HTMLElement>('[data-slide]')];
+  const rows = [...reel.querySelectorAll<HTMLElement>('[data-row]')];
+  const strip = reel.querySelector<HTMLElement>('[data-strip]');
+  const link = reel.querySelector<HTMLAnchorElement>('[data-now-link]');
+  const client = reel.querySelector<HTMLElement>('[data-now-client]');
+  const title = reel.querySelector<HTMLElement>('[data-now-title]');
+  const type = reel.querySelector<HTMLElement>('[data-now-type]');
+  const timecode = reel.querySelector<HTMLElement>('[data-timecode]');
+  const gridItems = document.querySelectorAll<HTMLElement>('.all__grid [data-type]');
+  const DURATION = 6;
+  let current = 0;
+  let t = 0;
+  let hover = false;
+
+  const visibleRows = () => rows.filter((r) => !r.hidden);
+
+  const show = (index: number) => {
+    if (index === current && t > 0) return;
+    current = index;
+    t = 0;
+    rows.forEach((r) => {
+      r.classList.toggle('is-active', Number(r.dataset.row) === index);
+      r.style.setProperty('--progress', '0%');
     });
+    slides.forEach((s) => {
+      const on = Number(s.dataset.slide) === index;
+      s.classList.toggle('is-active', on);
+      const video = s.querySelector('video');
+      if (!video) return;
+      if (on) {
+        if (!video.src && video.dataset.src) video.src = video.dataset.src;
+        video.play().catch(() => {});
+      } else video.pause();
+    });
+    const a = rows[index]?.querySelector<HTMLAnchorElement>('a');
+    if (a) {
+      reel.classList.add('is-switching');
+      window.setTimeout(() => {
+        if (link) link.href = a.href;
+        if (client) client.textContent = a.dataset.client ?? '';
+        if (title) title.textContent = a.dataset.title ?? '';
+        if (type) type.textContent = a.dataset.typeLabel ?? '';
+        reel.classList.remove('is-switching');
+      }, reduceMotion ? 0 : 250);
+      // Garde la vignette active visible dans la bande
+      if (strip) {
+        const li = rows[index];
+        const left = li.offsetLeft - strip.clientWidth / 2 + li.clientWidth / 2;
+        strip.scrollTo({ left, behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    }
+    if (timecode) timecode.textContent = '00:00:00';
   };
-  bar.addEventListener('click', (e) => {
-    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
-    if (!btn) return;
-    const f = btn.dataset.filter!;
-    apply(f);
-    const url = new URL(location.href);
-    if (f === 'all') url.searchParams.delete('type');
-    else url.searchParams.set('type', f);
-    history.replaceState(null, '', url);
+
+  rows.forEach((row) => {
+    const pick = () => {
+      hover = true;
+      show(Number(row.dataset.row));
+    };
+    row.addEventListener('mouseenter', pick);
+    row.addEventListener('focusin', pick);
+    row.addEventListener('mouseleave', () => (hover = false));
+    row.addEventListener('focusout', () => (hover = false));
   });
-  const initial = new URLSearchParams(location.search).get('type');
-  if (initial && bar.querySelector(`[data-filter="${CSS.escape(initial)}"]`)) apply(initial);
+
+  reel.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter;
+      reel
+        .querySelectorAll<HTMLButtonElement>('[data-filter]')
+        .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      rows.forEach((r) => (r.hidden = f !== 'all' && r.dataset.type !== f));
+      gridItems.forEach((g) => {
+        g.hidden = f !== 'all' && g.dataset.type !== f;
+        if (!g.hidden) g.classList.add('is-visible');
+      });
+      const first = visibleRows()[0];
+      if (first) {
+        t = 0;
+        current = -1;
+        show(Number(first.dataset.row));
+      }
+    });
+  });
+
+  if (reduceMotion) return;
+  setInterval(() => {
+    if (document.hidden) return;
+    t = Math.min(t + 1, DURATION);
+    if (timecode) timecode.textContent = `00:00:${pad(t)}`;
+    rows[current]?.style.setProperty('--progress', `${Math.round((t / DURATION) * 100)}%`);
+    if (t >= DURATION && !hover) {
+      const list = visibleRows();
+      const pos = list.findIndex((r) => Number(r.dataset.row) === current);
+      const nextRow = list[(pos + 1) % list.length];
+      if (nextRow) {
+        t = 0;
+        show(Number(nextRow.dataset.row));
+      }
+    }
+  }, 1000);
 }
 
 /* ---------- Page film : lecteur Vimeo + panneau « Le projet » ---------- */
@@ -225,16 +304,32 @@ function initAudio() {
   const section = document.querySelector<HTMLElement>('[data-audio]');
   const audio = section?.querySelector<HTMLAudioElement>('[data-audio-el]');
   if (!section || !audio) return;
-  const bar = section.querySelector<HTMLElement>('[data-audio-progress]');
+  const seek = section.querySelector<HTMLInputElement>('[data-audio-seek]');
+  const time = section.querySelector<HTMLElement>('[data-audio-time]');
+  const fmt = (sec: number) => `${pad(Math.floor(sec / 60))}:${pad(Math.floor(sec % 60))}`;
+  let seeking = false;
+
   section.querySelector('[data-audio-toggle]')?.addEventListener('click', () => {
     if (audio.paused) audio.play().catch(() => {});
     else audio.pause();
   });
   audio.addEventListener('play', () => section.classList.add('is-playing'));
   audio.addEventListener('pause', () => section.classList.remove('is-playing'));
-  audio.addEventListener('timeupdate', () => {
-    if (bar && audio.duration) bar.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+  audio.addEventListener('ended', () => section.classList.remove('is-playing'));
+  audio.addEventListener('loadedmetadata', () => {
+    if (time) time.textContent = `00:00 / ${fmt(audio.duration)}`;
   });
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    if (seek && !seeking) seek.value = String((audio.currentTime / audio.duration) * 100);
+    if (time) time.textContent = `${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;
+  });
+  seek?.addEventListener('input', () => {
+    seeking = true;
+    if (audio.duration) audio.currentTime = (Number(seek.value) / 100) * audio.duration;
+  });
+  seek?.addEventListener('change', () => (seeking = false));
+
   section.querySelectorAll<HTMLButtonElement>('[data-audio-lang]').forEach((btn) => {
     btn.addEventListener('click', () => {
       section
@@ -242,7 +337,81 @@ function initAudio() {
         .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
       const wasPlaying = !audio.paused;
       audio.src = btn.dataset.audioLang!;
+      if (seek) seek.value = '0';
       if (wasPlaying) audio.play().catch(() => {});
+    });
+  });
+}
+
+/* ---------- Mots qui s'allument au défilement ---------- */
+function initWords() {
+  const blocks = [...document.querySelectorAll<HTMLElement>('[data-words]')];
+  if (!blocks.length) return;
+  const all = blocks.map((b) => [...b.querySelectorAll<HTMLElement>('.w')]);
+  if (reduceMotion) {
+    all.flat().forEach((w) => w.classList.add('is-lit'));
+    return;
+  }
+  let ticking = false;
+  const update = () => {
+    const vh = window.innerHeight;
+    blocks.forEach((block, i) => {
+      const r = block.getBoundingClientRect();
+      // 0 quand le bloc entre par le bas (à 85 % de l'écran), 1 quand il atteint 35 %.
+      const progress = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.5)));
+      const lit = Math.round(progress * all[i].length * 1.15);
+      all[i].forEach((w, k) => w.classList.toggle('is-lit', k < lit));
+    });
+    ticking = false;
+  };
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    },
+    { passive: true },
+  );
+  update();
+}
+
+/* ---------- Panneaux qui défilent à l'horizontale ---------- */
+function initPanels() {
+  const section = document.querySelector<HTMLElement>('[data-panels]');
+  const track = section?.querySelector<HTMLElement>('[data-panels-track]');
+  const bar = section?.querySelector<HTMLElement>('[data-panels-bar]');
+  if (!section || !track || reduceMotion) return;
+  let ticking = false;
+  const update = () => {
+    const r = section.getBoundingClientRect();
+    const total = section.offsetHeight - window.innerHeight;
+    const progress = Math.min(1, Math.max(0, -r.top / total));
+    const max = track.scrollWidth - window.innerWidth;
+    track.style.transform = `translate3d(${(-progress * max).toFixed(1)}px, 0, 0)`;
+    bar?.style.setProperty('--p', `${(progress * 100).toFixed(1)}%`);
+    ticking = false;
+  };
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    },
+    { passive: true },
+  );
+  window.addEventListener('resize', update);
+  update();
+}
+
+/* ---------- Cartes qui se retournent (au toucher sur mobile) ---------- */
+function initFlip() {
+  document.querySelectorAll<HTMLButtonElement>('[data-flip]').forEach((card) => {
+    card.addEventListener('click', () => {
+      card.setAttribute('aria-pressed', String(card.getAttribute('aria-pressed') !== 'true'));
     });
   });
 }
@@ -265,6 +434,28 @@ function initVimeoThumbs() {
     } catch {
       /* le visuel de remplacement reste affiché */
     }
+  });
+}
+
+/* ---------- Curseur d'inactivité ---------- */
+function initIdleCursor() {
+  const el = document.querySelector<HTMLElement>('[data-idle-cursor]');
+  if (!el || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const IDLE = 3000;
+  let timer = 0;
+  const onMove = (e: PointerEvent) => {
+    el.classList.remove('is-visible');
+    // Les rayons se posent juste au-dessus à droite de la flèche de la souris.
+    el.style.setProperty('--x', `${e.clientX + 6}px`);
+    el.style.setProperty('--y', `${e.clientY - 40}px`);
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => el.classList.add('is-visible'), IDLE);
+  };
+  window.addEventListener('pointermove', onMove, { passive: true });
+  window.addEventListener('pointerdown', () => el.classList.remove('is-visible'));
+  document.addEventListener('mouseleave', () => {
+    window.clearTimeout(timer);
+    el.classList.remove('is-visible');
   });
 }
 
@@ -299,9 +490,13 @@ initReveal();
 initParallax();
 initHero();
 initMenu();
-initFilmsFilters();
+initReel();
 initFilmPage();
 initAudio();
+initWords();
+initPanels();
+initFlip();
 initVimeoThumbs();
 initDialogs();
+initIdleCursor();
 initFormStatus();

@@ -23,7 +23,8 @@
   --texte-doux: #4a4a55;
 
   --f-display: 'Costa Mala', 'Federo', Georgia, serif;
-  --f-sans: 'League Spartan', Futura, 'Trebuchet MS', sans-serif;
+  /* Jost : version libre et gratuite inspirée de Futura. */
+  --f-sans: 'Jost', Futura, 'Trebuchet MS', sans-serif;
   --f-serif: 'EB Garamond', Garamond, Georgia, serif;
 
   --pad: clamp(20px, 4.4vw, 64px);
@@ -46,7 +47,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--noir);
+  background: var(--bleu);
   color: var(--creme);
   font-family: var(--f-sans);
   font-size: 16px;
@@ -248,6 +249,34 @@ p {
 .js [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* Curseur d'inactivité : les rayons du logo apparaissent après 3 s sans mouvement */
+.idle-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 80;
+  width: 48px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(var(--x, -100px), var(--y, -100px)) scale(0.4);
+  transition:
+    opacity 300ms var(--ease),
+    transform 400ms var(--ease);
+}
+.idle-cursor img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgb(0 0 12 / 0.35));
+}
+.idle-cursor.is-visible {
+  opacity: 1;
+  transform: translate(var(--x), var(--y)) scale(1);
+}
+.idle-cursor.is-visible img {
+  animation: beat 2.4s ease-in-out infinite;
+  transform-origin: 20% 80%;
 }
 
 /* Rayons du logo qui « battent » */

@@ -5,7 +5,7 @@ import { site } from '../data/site';
 
 const links = [
   { n: '01', label: 'Accueil', href: '/' },
-  { n: '02', label: 'Films', href: '/films/' },
+  { n: '02', label: 'Projets', href: '/projets/' },
   { n: '03', label: 'À propos', href: '/a-propos/' },
   { n: '04', label: 'Contact', href: '/contact/' },
 ];
@@ -109,7 +109,7 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     justify-content: space-between;
     padding: 28px var(--pad) 40px;
     overflow: hidden auto;
-    background: var(--noir);
+    background: var(--bleu);
     color: var(--creme);
     animation: menu-in 450ms var(--ease-io);
   }

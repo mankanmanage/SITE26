@@ -20,6 +20,17 @@ const jsonLd = {
 // Accueil : uniquement les images / vidéos des films, sans titres.
 const heroFilms = films.filter((f) => f.preview || f.cover || f.vimeoId);
 const hasPreview = heroFilms.some((f) => f.preview);
+
+// Images cliquables autour de « On fait du bruit pour vous ».
+// Modèles provisoires : remplacer `src` (image) et `href` (lien) par les vrais projets.
+const manifestoTiles = [
+  { src: '/images/films/portrait-gele-dore.jpg', href: '/projets/', label: 'Projet 01', parallax: '0.04' },
+  { src: '/images/films/daibin-la-natte.jpg', href: '/projets/daibin-la-natte/', label: 'Daibin', parallax: '-0.03' },
+  { src: '/images/films/mariee-voile-blanc.jpg', href: '/projets/', label: 'Projet 03', parallax: '-0.04' },
+  { src: '/images/films/serie-orange.jpg', href: '/projets/', label: 'Projet 04', parallax: '0.04' },
+  { src: '/images/films/paps-soda.jpg', href: '/projets/paps-soda-le-frigo/', label: 'Pap’s Soda', parallax: '0.05' },
+  { src: '/images/films/homme-djembe.jpg', href: '/projets/', label: 'Projet 06', parallax: '-0.05' },
+];
 ---
 
 <Base
@@ -86,10 +97,14 @@ const hasPreview = heroFilms.some((f) => f.preview);
     <section id="decouvrir" class="manifeste">
       <span class="manifeste__l label c-rouge">( Qui sommes-nous )</span>
       <span class="manifeste__r label">( Bamako — Afrique de l’Ouest )</span>
-      <img class="m-img m-img--1" src="/images/films/portrait-gele-dore.jpg" alt="" loading="lazy" data-parallax="0.04" />
-      <img class="m-img m-img--2" src="/images/films/daibin-la-natte.jpg" alt="" loading="lazy" data-parallax="-0.03" />
-      <img class="m-img m-img--3" src="/images/films/mariee-voile-blanc.jpg" alt="" loading="lazy" data-parallax="-0.04" />
-      <img class="m-img m-img--4" src="/images/films/serie-orange.jpg" alt="" loading="lazy" data-parallax="0.04" />
+      {
+        manifestoTiles.map((t, i) => (
+          <a class={`m-img m-img--${i + 1}`} href={t.href} data-parallax={t.parallax}>
+            <img src={t.src} alt="" loading="lazy" />
+            <span class="m-img__label">{t.label} →</span>
+          </a>
+        ))
+      }
       <h2 class="manifeste__title display" data-reveal>
         ON FAIT<br /><span class="c-rouge">DU BRUIT</span><br />POUR VOUS
       </h2>
@@ -101,9 +116,10 @@ const hasPreview = heroFilms.some((f) => f.preview);
       <span class="label c-rouge">( À propos )</span>
       <div class="apropos__body">
         <p class="serif apropos__text" data-reveal>
-          Nous façonnons des <em class="c-rouge">films</em>, des <em class="c-rouge">campagnes</em>
-          et des <em class="c-rouge">identités</em> qui font entendre les marques au-delà du bruit. Enracinés à
-          Bamako, pensés pour le monde&nbsp;: nous sommes les griots modernes de votre marque.
+          Par le <em class="c-rouge">storytelling</em> et la <em class="c-rouge">recherche culturelle</em>,
+          nous façonnons des films, des campagnes et des identités qui font entendre les marques au-delà
+          du bruit. Enracinés à Bamako, pensés pour le monde&nbsp;: nous sommes les griots modernes de
+          votre marque.
         </p>
         <div class="apropos__actions" data-reveal style="--i:1">
           <a class="btn" href="/a-propos/">( Découvrir l’agence → )</a>
@@ -124,7 +140,7 @@ const hasPreview = heroFilms.some((f) => f.preview);
       <div class="recits__grid">
         {
           featuredFilms.map((f, i) => (
-            <a class="recit" href={`/films/${f.slug}/`} data-reveal style={`--i:${i % 2}`}>
+            <a class="recit" href={`/projets/${f.slug}/`} data-reveal style={`--i:${i % 2}`}>
               <div class="recit__media">
                 {f.cover ? (
                   <img src={f.cover} alt={f.coverAlt ?? ''} loading="lazy" />
@@ -154,7 +170,7 @@ const hasPreview = heroFilms.some((f) => f.preview);
           ))
         }
       </div>
-      <a class="btn btn--pill recits__all" href="/films/">( Tous nos films — {pad(films.length)} )</a>
+      <a class="btn btn--pill recits__all" href="/projets/">( Tous nos projets — {pad(films.length)} )</a>
     </section>
 
     <!-- ============ 4. CE QU'ON FAIT ============ -->
@@ -162,7 +178,7 @@ const hasPreview = heroFilms.some((f) => f.preview);
       <div class="verbes__head">
         <div>
           <span class="label c-jaune">( Ce qu’on fait )</span>
-          <h2 class="display shadow-noir verbes__title" data-reveal>Trois verbes</h2>
+          <h2 class="display shadow-noir verbes__title" data-reveal>Deux verbes</h2>
         </div>
         <span class="italic c-jaune verbes__sub">…et une seule voix&nbsp;: la vôtre.</span>
       </div>
@@ -224,7 +240,7 @@ const hasPreview = heroFilms.some((f) => f.preview);
     height: 100svh;
     min-height: 560px;
     overflow: hidden;
-    background: var(--noir);
+    background: var(--bleu);
   }
   .hero__media,
   .hero__slide,
@@ -453,36 +469,88 @@ const hasPreview = heroFilms.some((f) => f.preview);
   }
   .m-img {
     position: absolute;
-    object-fit: cover;
+    z-index: 3;
+    display: block;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgb(0 0 12 / 0.18);
     will-change: transform;
   }
+  .m-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease);
+  }
+  .m-img__label {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    padding: 5px 10px 4px;
+    background: var(--jaune);
+    color: var(--rouge);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 250ms var(--ease),
+      transform 250ms var(--ease);
+  }
+  .m-img:hover,
+  .m-img:focus-visible {
+    z-index: 4;
+  }
+  .m-img:hover img {
+    transform: scale(1.08);
+  }
+  .m-img:hover .m-img__label,
+  .m-img:focus-visible .m-img__label {
+    opacity: 1;
+    transform: none;
+  }
   .m-img--1 {
-    left: 6%;
-    top: 150px;
-    width: 190px;
-    height: 240px;
+    left: 5%;
+    top: 130px;
+    width: 180px;
+    height: 230px;
     rotate: -6deg;
   }
   .m-img--2 {
-    right: 7.6%;
-    top: 130px;
+    right: 7%;
+    top: 120px;
     width: 230px;
     height: 160px;
     rotate: 5deg;
   }
   .m-img--3 {
-    left: 11%;
-    bottom: 110px;
+    left: 9%;
+    bottom: 100px;
     width: 170px;
     height: 210px;
     rotate: 4deg;
   }
   .m-img--4 {
-    right: 10.4%;
-    bottom: 120px;
+    right: 9%;
+    bottom: 110px;
     width: 240px;
     height: 170px;
     rotate: -4deg;
+  }
+  .m-img--5 {
+    left: 26%;
+    top: 70px;
+    width: 150px;
+    height: 110px;
+    rotate: 3deg;
+  }
+  .m-img--6 {
+    right: 27%;
+    bottom: 60px;
+    width: 150px;
+    height: 190px;
+    rotate: -3deg;
   }
 
   /* ---------- À PROPOS ---------- */
@@ -555,7 +623,7 @@ const hasPreview = heroFilms.some((f) => f.preview);
     position: relative;
     height: clamp(240px, 28vw, 400px);
     overflow: hidden;
-    background: #1a1a2a;
+    background: #1a1a5e;
   }
   .recit__media img {
     width: 100%;
@@ -578,7 +646,7 @@ const hasPreview = heroFilms.some((f) => f.preview);
     color: rgb(255 247 243 / 0.14);
     background:
       radial-gradient(70% 70% at 80% 20%, rgb(142 23 23 / 0.5), transparent 70%),
-      #12121c;
+      #1a1a5e;
   }
   .recit__tags {
     display: flex;
@@ -784,7 +852,9 @@ const hasPreview = heroFilms.some((f) => f.preview);
       height: 92px;
     }
     .m-img--3,
-    .m-img--4 {
+    .m-img--4,
+    .m-img--5,
+    .m-img--6 {
       display: none;
     }
     .manifeste__title {

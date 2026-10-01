@@ -27,7 +27,7 @@ const projectBlocks = [
 ---
 
 <Base
-  title={`${fullTitle} | Films MANKAN, Bamako`}
+  title={`${fullTitle} | Projets MANKAN, Bamako`}
   description={film.description ?? `${fullTitle} — ${typeLabel.toLowerCase()} réalisé par MANKAN, agence de communication culturelle et de production à Bamako.`}
   image={film.cover}
   bodyClass="page-film"
@@ -44,16 +44,16 @@ const projectBlocks = [
     <!-- Barre du haut -->
     <div class="film__top">
       <div class="film__top-l">
-        <a href="/films/">( Fermer )</a>
+        <a href="/projets/">( Fermer )</a>
         <button type="button" class="c-jaune" data-panel-toggle aria-expanded="false" aria-controls="le-projet">( Le projet )</button>
       </div>
       <a href="/" class="film__logo" aria-label="MANKAN — accueil">
         <img src="/images/logo/mankan-logo-creme.png" alt="MANKAN communication" width="160" height="82" />
       </a>
       <div class="film__top-r">
-        <a href={`/films/${prev.slug}/`} aria-label={`Film précédent : ${prev.client}`}>←</a>
+        <a href={`/projets/${prev.slug}/`} aria-label={`Projet précédent : ${prev.client}`}>←</a>
         <span>{pad(index + 1)} / {pad(films.length)}</span>
-        <a href={`/films/${next.slug}/`} aria-label={`Film suivant : ${next.client}`}>→</a>
+        <a href={`/projets/${next.slug}/`} aria-label={`Projet suivant : ${next.client}`}>→</a>
       </div>
     </div>
 
@@ -64,12 +64,12 @@ const projectBlocks = [
           <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20" /></svg>
         </button>
       ) : (
-        <p class="film__soon label">Film bientôt en ligne</p>
+        <p class="film__soon label">Vidéo bientôt en ligne</p>
       )
     }
 
     <!-- À suivre -->
-    <a class="film__next" href={`/films/${next.slug}/`}>
+    <a class="film__next" href={`/projets/${next.slug}/`}>
       <span class="film__next-img">
         {next.cover ? <img src={next.cover} alt="" loading="lazy" /> : <span class="display">{next.client}</span>}
       </span>
@@ -137,7 +137,7 @@ const projectBlocks = [
     height: 100svh;
     min-height: 640px;
     overflow: hidden;
-    background: var(--noir);
+    background: var(--bleu);
   }
   .film__media,
   .film__veil,
@@ -160,7 +160,7 @@ const projectBlocks = [
     text-transform: uppercase;
     background:
       radial-gradient(60% 60% at 70% 40%, rgb(142 23 23 / 0.5), transparent 70%),
-      var(--noir);
+      var(--bleu);
   }
   .film__veil {
     background: rgb(0 0 12 / 0.42);
@@ -267,7 +267,7 @@ const projectBlocks = [
     gap: 10px;
     width: 300px;
     padding: 12px;
-    background: rgb(0 0 12 / 0.72);
+    background: rgb(35 35 124 / 0.85);
   }
   .film__next:hover {
     color: inherit;
@@ -278,7 +278,7 @@ const projectBlocks = [
     justify-content: center;
     height: 150px;
     overflow: hidden;
-    background: #1a1a2a;
+    background: #1a1a5e;
     color: rgb(255 247 243 / 0.2);
     font-size: 40px;
   }
@@ -368,7 +368,7 @@ const projectBlocks = [
     height: 100%;
     padding: 100px 40px 40px;
     overflow: auto;
-    background: var(--noir);
+    background: var(--bleu);
     animation: panel-in 450ms var(--ease);
   }
   .film__panel[hidden] {

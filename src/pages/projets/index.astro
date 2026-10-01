@@ -1,0 +1,436 @@
+---
+import Base from '../../layouts/Base.astro';
+import Footer from '../../components/Footer.astro';
+import LogoMark from '../../components/LogoMark.astro';
+import { films, filmTypes, usedTypes, pad } from '../../data/films';
+
+// Façon Lotumn : un projet en plein écran, son nom en grand, et la bande des projets en bas.
+const items = films.map((f, i) => ({
+  ...f,
+  num: pad(i + 1),
+  typeLabel: filmTypes[f.type].label,
+  showTitle: !f.title.startsWith('['),
+}));
+---
+
+<Base
+  title="Projets : films, spots et campagnes | MANKAN, Bamako"
+  description="Les projets de MANKAN : spots publicitaires, films de marque, campagnes et photographie, réalisés à Bamako par une agence de communication culturelle."
+>
+  <main id="contenu">
+    <section class="reel" data-reel aria-label="Projets">
+      <div class="reel__media" aria-hidden="true">
+        {
+          items.map((f, i) => (
+            <div class={`reel__slide${i === 0 ? ' is-active' : ''}`} data-slide={i}>
+              {f.preview ? (
+                <video muted loop playsinline preload="none" poster={f.cover} data-src={f.preview} />
+              ) : f.cover ? (
+                <img class="zoom" src={f.cover} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
+              ) : f.vimeoId ? (
+                <img class="zoom" data-vimeo-thumb={f.vimeoId} alt="" hidden />
+              ) : (
+                <div class="reel__blank" />
+              )}
+            </div>
+          ))
+        }
+        <div class="reel__veil"></div>
+      </div>
+
+      <a class="reel__logo" href="/" aria-label="MANKAN — accueil"><LogoMark /></a>
+
+      {
+        usedTypes.length > 1 && (
+          <div class="reel__filters" role="group" aria-label="Filtrer les projets">
+            <button type="button" data-filter="all" aria-pressed="true">
+              Tout <span>{pad(films.length)}</span>
+            </button>
+            {usedTypes.map((t) => (
+              <button type="button" data-filter={t} aria-pressed="false">
+                {filmTypes[t].plural} <span>{pad(films.filter((f) => f.type === t).length)}</span>
+              </button>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="reel__now">
+        <a class="reel__title" href={`/projets/${items[0].slug}/`} data-now-link>
+          <span class="reel__client display" data-now-client>{items[0].client}</span>
+          <span class="reel__name" data-now-title>{items[0].showTitle ? items[0].title : ''}</span>
+        </a>
+        <span class="reel__meta">
+          <span data-now-type>{items[0].typeLabel}</span>
+          <span class="reel__time" data-timecode>00:00:00</span>
+        </span>
+      </div>
+
+      <ol class="reel__strip" data-strip>
+        {
+          items.map((f, i) => (
+            <li data-row={i} data-type={f.type} class={i === 0 ? 'is-active' : ''}>
+              <a
+                href={`/projets/${f.slug}/`}
+                data-client={f.client}
+                data-title={f.showTitle ? f.title : ''}
+                data-type-label={f.typeLabel}
+              >
+                {f.cover ? (
+                  <img src={f.cover} alt="" loading="lazy" />
+                ) : (
+                  <span class="reel__thumb-blank display">{f.client}</span>
+                )}
+                <span class="visually-hidden">
+                  {f.client}
+                  {f.showTitle && ` — ${f.title}`}
+                </span>
+                <span class="reel__bar" aria-hidden="true" />
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- Tous les projets, en grille -->
+    <section class="all" aria-labelledby="all-titre">
+      <div class="all__head">
+        <span class="label c-jaune">( Tous nos projets — {pad(films.length)} )</span>
+        <h1 id="all-titre" class="display all__title">Nos récits en images</h1>
+      </div>
+      <ol class="all__grid">
+        {
+          items.map((f, i) => (
+            <li data-type={f.type} data-reveal style={`--i:${i % 3}`}>
+              <a href={`/projets/${f.slug}/`}>
+                <span class="all__media">
+                  {f.cover ? (
+                    <img src={f.cover} alt={f.coverAlt ?? ''} loading="lazy" />
+                  ) : f.vimeoId ? (
+                    <img data-vimeo-thumb={f.vimeoId} alt="" hidden />
+                  ) : null}
+                  {!f.cover && <span class="all__blank display">{f.client}</span>}
+                </span>
+                <span class="all__meta">
+                  <span class="all__num c-jaune">{f.num}</span>
+                  <span class="all__client">{f.client}</span>
+                  {f.showTitle && <span class="italic all__name">{f.title}</span>}
+                  <span class="all__type label--sm">{f.typeLabel}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  /* ---------- Plein écran façon Lotumn ---------- */
+  .reel {
+    position: relative;
+    height: 100svh;
+    min-height: 640px;
+    overflow: hidden;
+    background: var(--bleu);
+  }
+  .reel__media,
+  .reel__slide,
+  .reel__veil {
+    position: absolute;
+    inset: 0;
+  }
+  .reel__slide {
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+  .reel__slide.is-active {
+    opacity: 1;
+  }
+  .reel__slide img,
+  .reel__slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .reel__blank {
+    width: 100%;
+    height: 100%;
+    background:
+      radial-gradient(60% 60% at 70% 40%, rgb(142 23 23 / 0.6), transparent 70%),
+      var(--bleu);
+  }
+  .reel__veil {
+    background: linear-gradient(180deg, rgb(0 0 12 / 0.35), transparent 25%, transparent 50%, rgb(0 0 12 / 0.65));
+  }
+  .reel__logo {
+    position: absolute;
+    left: 50%;
+    top: 26px;
+    z-index: 3;
+    width: 110px;
+    transform: translateX(-50%);
+  }
+  .reel__filters {
+    position: absolute;
+    right: var(--pad-top);
+    top: 32px;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px 18px;
+    max-width: 40%;
+  }
+  .reel__filters button {
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    background: none;
+    color: var(--gris);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .reel__filters button span {
+    color: var(--jaune);
+  }
+  .reel__filters button[aria-pressed='true'] {
+    color: var(--creme);
+    border-bottom-color: var(--jaune);
+  }
+
+  .reel__now {
+    position: absolute;
+    left: var(--pad-top);
+    right: var(--pad-top);
+    bottom: 168px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+  }
+  .reel__title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0 0.3em;
+    font-size: clamp(36px, 6vw, 88px);
+    line-height: 1;
+    text-transform: uppercase;
+    transition: opacity 300ms ease;
+  }
+  .reel__title:hover {
+    color: var(--jaune);
+  }
+  .reel__name {
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .reel.is-switching .reel__title {
+    opacity: 0;
+  }
+  .reel__meta {
+    display: flex;
+    gap: 18px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gris);
+  }
+  .reel__time {
+    color: var(--jaune);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Bande des projets */
+  .reel__strip {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    display: flex;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    list-style: none;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .reel__strip::-webkit-scrollbar {
+    display: none;
+  }
+  .reel__strip li {
+    flex: 0 0 auto;
+  }
+  .reel__strip li[hidden] {
+    display: none;
+  }
+  .reel__strip a {
+    position: relative;
+    display: block;
+    width: clamp(160px, 15vw, 220px);
+    height: 140px;
+    overflow: hidden;
+    background: #1a1a5e;
+    opacity: 0.55;
+    transition: opacity 300ms ease;
+  }
+  .reel__strip .is-active a,
+  .reel__strip a:hover,
+  .reel__strip a:focus-visible {
+    opacity: 1;
+  }
+  .reel__strip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease);
+  }
+  .reel__strip a:hover img {
+    transform: scale(1.06);
+  }
+  .reel__thumb-blank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 12px;
+    font-size: 22px;
+    text-align: center;
+    color: rgb(255 247 243 / 0.5);
+  }
+  .reel__bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background: var(--jaune);
+  }
+  .is-active .reel__bar {
+    width: var(--progress, 0%);
+    transition: width 1s linear;
+  }
+
+  /* ---------- Grille ---------- */
+  .all {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: 100px var(--pad) 110px;
+  }
+  .all__head {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .all__title {
+    font-size: clamp(48px, 6.5vw, 96px);
+  }
+  .all__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+    gap: 48px 36px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .all__grid li[hidden] {
+    display: none;
+  }
+  .all__grid a {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .all__grid a:hover {
+    color: inherit;
+  }
+  .all__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #1a1a5e;
+  }
+  .all__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 900ms var(--ease);
+  }
+  .all__grid a:hover img {
+    transform: scale(1.05);
+  }
+  .all__blank {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-size: clamp(32px, 3.6vw, 52px);
+    text-align: center;
+    color: rgb(255 247 243 / 0.2);
+    background: radial-gradient(70% 70% at 80% 20%, rgb(142 23 23 / 0.5), transparent 70%), #1a1a5e;
+  }
+  .all__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgb(255 247 243 / 0.3);
+  }
+  .all__num {
+    font-size: 12px;
+  }
+  .all__client {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .all__name {
+    font-size: 22px;
+  }
+  .all__type {
+    margin-left: auto;
+    color: var(--gris);
+  }
+
+  @media (max-width: 760px) {
+    .reel__filters {
+      top: 92px;
+      left: var(--pad-top);
+      right: var(--pad-top);
+      max-width: none;
+      justify-content: flex-start;
+    }
+    .reel__logo {
+      width: 90px;
+      top: 18px;
+    }
+    .reel__now {
+      bottom: 128px;
+    }
+    .reel__strip a {
+      width: 130px;
+      height: 100px;
+    }
+    .all {
+      padding-block: 72px;
+    }
+  }
+</style>

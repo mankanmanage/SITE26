@@ -1,9 +1,8 @@
 ---
-import '@fontsource/league-spartan/300.css';
-import '@fontsource/league-spartan/400.css';
-import '@fontsource/league-spartan/500.css';
-import '@fontsource/league-spartan/600.css';
-import '@fontsource/league-spartan/700.css';
+import '@fontsource/jost/400.css';
+import '@fontsource/jost/500.css';
+import '@fontsource/jost/600.css';
+import '@fontsource/jost/700.css';
 import '@fontsource/eb-garamond/400.css';
 import '@fontsource/eb-garamond/400-italic.css';
 import '@fontsource/eb-garamond/500-italic.css';
@@ -51,6 +50,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <body class={bodyClass}>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
     <SiteNav />
+    <div class="idle-cursor" data-idle-cursor aria-hidden="true">
+      <img src="/images/logo/rayons-curseur.png" alt="" width="48" height="43" />
+    </div>
     <slot />
     <script>
       import '../scripts/site.ts';
