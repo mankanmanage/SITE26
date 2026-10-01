@@ -1,0 +1,3 @@
+Déposer ici les vidéos compressées (MP4, nom en minuscules sans espaces ni accents).
+Exemples : daibin-la-natte.mp4 (film), daibin-la-natte-extrait.mp4 (extrait muet de l'accueil).
+Puis renseigner les champs `video` et `preview` du projet dans src/data/films.ts.

@@ -1,7 +1,7 @@
 # Site Mankan Communication
 
 Site statique (Astro) de **mankancommunication.com**, construit sur la maquette « V3 — Lotumn » :
-Accueil, Films (index + une page par film), À propos, Contact.
+Accueil, Projets (plein écran + une page par projet), À propos, Contact.
 Hébergement : LWS (Apache + PHP pour le formulaire).
 
 ## Démarrer
@@ -16,17 +16,18 @@ npm run build    # génère le site final dans dist/
 
 | À modifier | Fichier |
 |---|---|
-| Coordonnées, réseaux, équipe, clients, expertises, manifeste audio | `src/data/site.ts` |
-| Films (titres, textes, images, identifiants Vimeo, extraits de l'accueil) | `src/data/films.ts` |
+| Coordonnées, réseaux, clients, verbes, expertises, manifeste audio | `src/data/site.ts` |
+| Projets (titres, textes, images, vidéos, extraits de l'accueil) | `src/data/films.ts` |
+| Images cliquables « On fait du bruit pour vous » | `src/pages/index.astro` (`manifestoTiles`) |
 | Textes des pages | `src/pages/*.astro` |
 | Couleurs, polices, animations | `src/styles/global.css`, `src/scripts/site.ts` |
 | Destinataire du formulaire | `public/contact.php` |
 | Redirections, HTTPS, cache | `public/.htaccess` |
 
-**Vidéos :** hébergées sur Vimeo. Pour relier un film, coller l'identifiant (les chiffres de
-`vimeo.com/123456789`) dans le champ `vimeoId`. La miniature Vimeo sert de couverture tant
-qu'aucune image `cover` n'est fournie. Pour l'extrait muet en boucle de l'accueil, déposer un MP4
-court (5–10 s, sans son, ~2–4 Mo) dans `public/videos/` et le renseigner dans `preview`.
+**Vidéos :** hébergées directement chez LWS, dans le dossier `videos/` du site (voir `public/videos/`).
+Dans `src/data/films.ts` : `video` pour le film complet (MP4 compressé, ~20–60 Mo) et `preview` pour
+l'extrait muet en boucle de l'accueil et de la page Projets (5–10 s, sans son, ~2–4 Mo).
+`vimeoId` reste possible si un film est un jour hébergé sur Vimeo.
 
 ## Mise en ligne sur LWS
 
@@ -41,7 +42,7 @@ Avant la première mise en ligne : sauvegarder l'ancien site et sa base de donn�
 ## En attente
 
 - Licence web de la police Costa Mala (fichier repris de la maquette)
-- Liens Vimeo des films, extraits MP4 pour l'accueil, images en haute définition
-- Correspondance des photos restantes avec leurs films, titres et descriptions manquants
-- Portraits de l'équipe, fichiers audio du manifeste (bamanankan / français)
-- Informations des mentions légales
+- Vidéos compressées (films + extraits), images en haute définition
+- Images et liens des 6 vignettes « On fait du bruit pour vous »
+- Illustrations de la maquette Canva en fichiers séparés (panneaux de la page À propos)
+- Titres et descriptions manquants des projets
