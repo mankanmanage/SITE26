@@ -5,7 +5,8 @@
 declare(strict_types=1);
 
 const RECIPIENT = 'team@mankancommunication.com';
-const SENDER = 'site@mankancommunication.com';
+// Expéditeur : une adresse qui existe vraiment chez LWS (sinon les messages peuvent être bloqués).
+const SENDER = 'team@mankancommunication.com';
 const BACK = '/contact/';
 
 function back(string $status): void
