@@ -139,7 +139,9 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     top: 28%;
     width: min(440px, 30vw);
     aspect-ratio: 1;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 6%;
+    background: var(--creme);
     border: 8px solid var(--creme);
   }
   .menu__top {

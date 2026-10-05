@@ -54,6 +54,7 @@ const manifestoTiles = [
         {
           heroFilms.map((f, i) => (
             <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide={i} data-orient={f.vertical ? 'vertical' : 'horizontal'}>
+              {f.preview && f.cover && <img class="hero__bg" src={f.cover} alt="" loading="lazy" />}
               {f.preview ? (
                 <video muted loop playsinline preload="none" poster={f.cover} data-src={f.preview} />
               ) : f.cover ? (
@@ -105,15 +106,6 @@ const manifestoTiles = [
           </a>
         ))
       }
-      <img
-        class="manifeste__bouche"
-        src="/images/illustrations/mankan-parle-pour-vous.webp"
-        alt="Collage : une bouche ouverte d’où sort « Mankan parle pour vous »"
-        width="900"
-        height="975"
-        loading="lazy"
-        data-reveal
-      />
       <h2 class="manifeste__title display" data-reveal>
         ON FAIT<br /><span class="c-rouge">DU BRUIT</span><br />POUR VOUS
       </h2>
@@ -305,9 +297,34 @@ const manifestoTiles = [
   }
   .hero__slide img,
   .hero__slide video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  /* Vidéo dont le format ne correspond pas à l'écran (verticale sur ordinateur,
+     horizontale sur téléphone) : affichée en entier, sur un fond flouté. */
+  .hero__bg {
+    display: none;
+    filter: blur(28px) saturate(1.15);
+    transform: scale(1.15);
+  }
+  @media (orientation: landscape) {
+    .hero__slide[data-orient='vertical'] .hero__bg {
+      display: block;
+    }
+    .hero__slide[data-orient='vertical'] video {
+      object-fit: contain;
+    }
+  }
+  @media (orientation: portrait) {
+    .hero__slide[data-orient='horizontal'] .hero__bg {
+      display: block;
+    }
+    .hero__slide[data-orient='horizontal'] video {
+      object-fit: contain;
+    }
   }
   .hero__veil {
     background: linear-gradient(180deg, rgb(0 0 12 / 0.18), transparent 22%, transparent 78%, rgb(0 0 12 / 0.25));
@@ -476,7 +493,7 @@ const manifestoTiles = [
   /* ---------- MANIFESTE ---------- */
   .manifeste {
     position: relative;
-    min-height: 1040px;
+    min-height: 900px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -504,14 +521,6 @@ const manifestoTiles = [
     line-height: 1.02;
     letter-spacing: 0.04em;
     text-align: center;
-  }
-  .manifeste__bouche {
-    position: relative;
-    z-index: 1;
-    width: clamp(220px, 24vw, 340px);
-    height: auto;
-    margin-bottom: -12px;
-    mix-blend-mode: multiply;
   }
   .manifeste__note {
     position: absolute;
@@ -602,8 +611,8 @@ const manifestoTiles = [
     rotate: 3deg;
   }
   .m-img--6 {
-    left: 22%;
-    top: 400px;
+    right: 27%;
+    bottom: 60px;
     width: 150px;
     height: 190px;
     rotate: -3deg;
@@ -1108,8 +1117,8 @@ const manifestoTiles = [
     .m-img--6 {
       display: none;
     }
-    .manifeste__bouche {
-      margin-top: 110px;
+    .manifeste__title {
+      margin-top: 90px;
     }
     .manifeste__note {
       bottom: 40px;

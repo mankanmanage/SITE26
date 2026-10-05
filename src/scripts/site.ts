@@ -77,10 +77,8 @@ function initHero() {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (!hero) return;
   const all = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
-  // Écran en hauteur (téléphone) : vidéos verticales ; écran en largeur : vidéos horizontales.
-  const portrait = window.matchMedia('(orientation: portrait)').matches;
-  const fitting = all.filter((s) => (s.dataset.orient === 'vertical') === portrait);
-  const slides = fitting.length ? fitting : all;
+  // Toutes les vidéos s'enchaînent, quel que soit leur format (voir .hero__bg).
+  const slides = all;
   all.forEach((s) => s.classList.toggle('is-active', false));
   const soundBtn = hero.querySelector<HTMLButtonElement>('[data-sound]');
   const DURATION = 7000;
