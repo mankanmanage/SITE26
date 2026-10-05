@@ -15,13 +15,12 @@ const story = [
   'C’est la manière, pour de jeunes Maliens, d’apporter leur pierre : une contribution sincère, portée par l’espoir, par l’image que nous voulons renvoyer au monde, et surtout par celle que nous voulons rendre à nous-mêmes.',
 ];
 
-// Panneaux qui défilent à l'horizontale (repris de la maquette Canva).
-// Images provisoires : à remplacer par les illustrations de la charte.
-const panels = [
-  { title: 'On parle fort', text: 'Uniquement pour vous, à travers nos campagnes.', img: '/images/illustrations/megaphone.webp', illus: true, bg: 'rouge' },
-  { title: 'On rêve loin', text: 'Oui, même les idées les plus folles sont réalisables. En rendant l’imaginaire réel.', img: '/images/illustrations/chiwara.webp', illus: true, bg: 'bleu' },
-  { title: 'On cherche', text: 'Storytelling et recherche culturelle : nous fouillons les récits, les gestes et les mémoires avant de créer.', img: '/images/illustrations/djembe.webp', illus: true, bg: 'orange' },
-  { title: 'On est authentique', text: 'Enracinés et fiers.', img: '/images/photos/femme-indigo.jpg', illus: false, bg: 'rouge' },
+// Ce qui nous anime, à côté du collage « Mankan parle pour vous ».
+const drives = [
+  { title: 'On parle fort', text: 'Uniquement pour vous, à travers nos campagnes.' },
+  { title: 'On rêve loin', text: 'Même les idées les plus folles sont réalisables : nous rendons l’imaginaire réel.' },
+  { title: 'On cherche', text: 'Storytelling et recherche culturelle : nous fouillons les récits, les gestes et les mémoires avant de créer.' },
+  { title: 'On est authentique', text: 'Enracinés et fiers.' },
 ];
 
 const values = [
@@ -103,23 +102,28 @@ const missionAccents = ['visible', 'audible', 'impactant'];
       )
     }
 
-    <!-- 3. ON PARLE FORT / ON RÊVE LOIN… : défilement horizontal -->
-    <section class="panels" data-panels style={`--count:${panels.length}`} aria-label="Ce qui nous anime">
-      <div class="panels__sticky">
-        <div class="panels__track" data-panels-track>
-          {
-            panels.map((p, i) => (
-              <article class={`panel panel--${p.bg}`}>
-                <span class="panel__n label">{pad(i + 1)} / {pad(panels.length)}</span>
-                <h2 class="display shadow-noir panel__title">{p.title}</h2>
-                <p class="serif panel__text">{p.text}</p>
-                <img class={`panel__img${p.illus ? ' panel__img--illus' : ''}`} src={p.img} alt="" loading="lazy" />
-              </article>
-            ))
-          }
-        </div>
-        <div class="panels__progress" aria-hidden="true"><span data-panels-bar /></div>
-      </div>
+    <!-- 3. MANKAN PARLE POUR VOUS : le collage + ce qui nous anime -->
+    <section class="parle" aria-label="Ce qui nous anime">
+      <figure class="parle__img" data-reveal>
+        <img
+          src="/images/illustrations/mankan-parle-pour-vous.webp"
+          alt="Collage de bouches : Mankan parle pour vous"
+          width="900"
+          height="975"
+          loading="lazy"
+        />
+      </figure>
+      <ol class="parle__list">
+        {
+          drives.map((d, i) => (
+            <li data-reveal style={`--i:${i}`}>
+              <span class="label c-rouge">{pad(i + 1)}</span>
+              <h2 class="display parle__title">{d.title}</h2>
+              <p class="serif parle__text">{d.text}</p>
+            </li>
+          ))
+        }
+      </ol>
     </section>
 
     <!-- 4. ARTISAN DE VOTRE MARQUE -->
@@ -391,94 +395,50 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     color: var(--rouge);
   }
 
-  /* 3. Panneaux horizontaux */
-  .panels {
-    position: relative;
-    height: calc(var(--count) * 100svh);
-  }
-  .panels__sticky {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    overflow: hidden;
-  }
-  .panels__track {
-    display: flex;
-    height: 100%;
-    width: calc(var(--count) * 100vw);
-    will-change: transform;
-  }
-  .panel {
-    position: relative;
+  /* 3. Mankan parle pour vous */
+  .parle {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
-    grid-template-rows: auto 1fr auto;
-    gap: 24px 48px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px 80px;
     align-items: center;
-    width: 100vw;
-    height: 100%;
-    padding: 110px var(--pad) 80px;
-    overflow: hidden;
+    padding: 110px var(--pad);
+    background: var(--creme);
+    color: var(--noir);
   }
-  .panel--rouge {
-    background: var(--rouge);
+  .parle__img {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    margin: 0;
+    mix-blend-mode: multiply;
   }
-  .panel--bleu {
-    background: var(--bleu);
+  .parle__img img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
-  .panel--orange {
-    background: var(--orange);
+  .parle__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid var(--noir);
   }
-  .panel__n {
-    grid-column: 1;
-    color: var(--jaune);
+  .parle__list li {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 34px 0;
+    border-top: 1px solid var(--noir);
   }
-  .panel__title {
-    grid-column: 1;
-    font-size: clamp(48px, 6.6vw, 112px);
+  .parle__title {
+    font-size: clamp(40px, 4.6vw, 72px);
+    color: var(--bleu);
     text-transform: uppercase;
   }
-  .panel__text {
-    grid-column: 1;
-    max-width: 30ch;
-    font-size: clamp(22px, 2.2vw, 32px);
-    line-height: 1.25;
-  }
-  .panel__img {
-    grid-column: 2;
-    grid-row: 1 / 4;
-    justify-self: center;
-    width: min(100%, 460px);
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    border: 8px solid var(--creme);
-    rotate: 3deg;
-    transition: rotate 600ms var(--ease);
-  }
-  .panel__img--illus {
-    object-fit: contain;
-    padding: 28px;
-    background: var(--creme);
-  }
-  .panel:nth-child(even) .panel__img {
-    rotate: -3deg;
-  }
-  .panel:hover .panel__img {
-    rotate: 0deg;
-  }
-  .panels__progress {
-    position: absolute;
-    left: var(--pad);
-    right: var(--pad);
-    bottom: 36px;
-    height: 2px;
-    background: rgb(255 247 243 / 0.3);
-  }
-  .panels__progress span {
-    display: block;
-    width: var(--p, 0%);
-    height: 100%;
-    background: var(--jaune);
+  .parle__text {
+    max-width: 34ch;
+    font-size: clamp(20px, 1.8vw, 26px);
+    line-height: 1.3;
   }
 
   /* 4. Artisan */
@@ -804,8 +764,13 @@ const missionAccents = ['visible', 'audible', 'impactant'];
 
   @media (max-width: 1180px) {
     .histoire,
-    .artisan {
+    .artisan,
+    .parle {
       grid-template-columns: 1fr;
+    }
+    .parle__img {
+      position: static;
+      max-width: 560px;
     }
     .histoire__title {
       position: static;
@@ -825,50 +790,19 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     .valeur {
       height: 220px;
     }
-    .panel {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto auto auto 1fr;
-      align-content: start;
-      padding-top: 100px;
-    }
-    .panel__img {
-      grid-column: 1;
-      grid-row: 4;
-      width: min(70%, 280px);
-      align-self: center;
-    }
     .exp__text {
       padding-left: 0;
     }
     .valeurs,
     .expertises,
     .artisan,
+    .parle,
     .mission {
       padding-block: 72px;
     }
     .final__btn {
       width: 160px;
       height: 160px;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .panels {
-      height: auto;
-    }
-    .panels__sticky {
-      position: static;
-      height: auto;
-    }
-    .panels__track {
-      flex-direction: column;
-      width: 100%;
-    }
-    .panel {
-      width: 100%;
-      min-height: 100svh;
-    }
-    .panels__progress {
-      display: none;
     }
   }
 </style>
