@@ -60,6 +60,7 @@ export const films: Film[] = [
     cover: '/images/films/paps-soda-le-frigo.jpg',
     video: '/videos/paps-soda-le-frigo.mp4',
     preview: '/videos/paps-soda-le-frigo-extrait.mp4',
+    previewAlt: '/videos/paps-soda-le-frigo-extrait-alt.mp4',
     tags: ['Spot', 'Direction artistique', 'Production'],
     description:
       'Pour Pap’s Soda, un spot qui fait pétiller le goût du pays : couleurs de marché, énergie de la rue, fraîcheur à chaque plan.',
@@ -74,6 +75,7 @@ export const films: Film[] = [
     cover: '/images/films/sanu-edito.jpg',
     video: '/videos/sanu-edito.mp4',
     preview: '/videos/sanu-edito-extrait.mp4',
+    previewAlt: '/videos/sanu-edito-extrait-alt.mp4',
     tags: ['Film éditorial', 'Direction artistique'],
     description:
       'Un voyage sensoriel dans l’univers de SÀNU, où l’encens raconte une culture autant qu’une senteur. Gestes, matières et fumée révèlent les savoir-faire qui font vivre cet héritage.',
@@ -109,6 +111,7 @@ export const films: Film[] = [
     cover: '/images/films/mobilite-verte-lancement.jpg',
     video: '/videos/mobilite-verte-lancement.mp4',
     preview: '/videos/mobilite-verte-lancement-extrait.mp4',
+    previewAlt: '/videos/mobilite-verte-lancement-extrait-alt.mp4',
     tags: ['Campagne'],
     description: 'Communication autour des engins électriques et de leurs usages à Bamako.',
   },
@@ -121,6 +124,7 @@ export const films: Film[] = [
     cover: '/images/films/paps-soda-ramadan.jpg',
     video: '/videos/paps-soda-ramadan.mp4',
     preview: '/videos/paps-soda-ramadan-extrait.mp4',
+    previewAlt: '/videos/paps-soda-ramadan-extrait-alt.mp4',
   },
   {
     slug: 'mankan-22-septembre',
@@ -132,6 +136,7 @@ export const films: Film[] = [
     cover: '/images/films/mankan-22-septembre.jpg',
     video: '/videos/mankan-22-septembre.mp4',
     preview: '/videos/mankan-22-septembre-extrait.mp4',
+    previewAlt: '/videos/mankan-22-septembre-extrait-alt.mp4',
     tags: ['Film de marque', 'Écriture', 'Réalisation'],
     description:
       'Film de marque autour de l’indépendance du Mali et de la transmission culturelle.',
@@ -146,6 +151,7 @@ export const films: Film[] = [
     cover: '/images/films/mankan-campagne-decembre.jpg',
     video: '/videos/mankan-campagne-decembre.mp4',
     preview: '/videos/mankan-campagne-decembre-extrait.mp4',
+    previewAlt: '/videos/mankan-campagne-decembre-extrait-alt.mp4',
     tags: ['Campagne', 'Lancement'],
   },
   {
@@ -157,6 +163,7 @@ export const films: Film[] = [
     cover: '/images/films/awale.jpg',
     video: '/videos/awale.mp4',
     preview: '/videos/awale-extrait.mp4',
+    previewAlt: '/videos/awale-extrait-alt.mp4',
     tags: ['Campagne interne', 'Storytelling'],
     description:
       'Le quotidien a ses rituels, ses histoires et ses leçons. Avec Awalé, Mankan porte un regard sur ces scènes familières qui nous apprennent à vivre ensemble et transmettent, presque sans le dire, une manière d’être au monde.',
@@ -174,6 +181,7 @@ export const films: Film[] = [
     cover: '/images/films/bamako.jpg',
     video: '/videos/bamako.mp4',
     preview: '/videos/bamako-extrait.mp4',
+    previewAlt: '/videos/bamako-extrait-alt.mp4',
     tags: ['Film', 'Storytelling'],
     description:
       'Bamako se raconte dans le bruit, les gestes et les mouvements de ceux qui l’habitent. Un portrait vivant de la ville, porté par cette effervescence collective qui façonne notre identité.',
@@ -192,6 +200,7 @@ export const films: Film[] = [
     coverAlt: 'Vue du dessus : des enfants assis sur une natte rayée',
     video: '/videos/daibin-la-natte.mp4',
     preview: '/videos/daibin-la-natte-extrait.mp4',
+    previewAlt: '/videos/daibin-la-natte-extrait-alt.mp4',
     tags: ['Film', 'Narration'],
     description:
       'Un film qui déroule la natte comme on déroule une mémoire : lentement, avec respect.',
