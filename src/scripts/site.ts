@@ -102,13 +102,24 @@ function initHero() {
     });
   };
 
-  soundBtn?.addEventListener('click', () => {
-    sound = !sound;
-    soundBtn.setAttribute('aria-pressed', String(sound));
-    soundBtn.textContent = sound ? '( Son activé )' : '( Son coupé )';
+  const setSound = (on: boolean) => {
+    sound = on;
+    soundBtn?.setAttribute('aria-pressed', String(sound));
+    if (soundBtn) soundBtn.textContent = sound ? '( Son activé )' : '( Son coupé )';
     const video = slides[current]?.querySelector('video');
     if (video) video.muted = !sound;
-  });
+  };
+  soundBtn?.addEventListener('click', () => setSound(!sound));
+
+  // Le son se coupe dès qu'on fait défiler la page au-delà des films.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting && sound) setSound(false);
+      },
+      { threshold: 0.6 },
+    ).observe(hero);
+  }
 
   slides[0]?.classList.add('is-active');
   introDone.then(() => {
@@ -365,6 +376,16 @@ function initFilmPage() {
     player.replaceChildren(iframe);
     page.classList.add('is-playing');
   });
+
+  // Film complet : mis en pause quand on fait défiler la page au-delà du lecteur.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) player?.querySelector('video')?.pause();
+      },
+      { threshold: 0.4 },
+    ).observe(page);
+  }
 
   const setPanel = (open: boolean) => {
     if (!panel) return;
