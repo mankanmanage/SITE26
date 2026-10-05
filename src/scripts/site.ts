@@ -74,7 +74,12 @@ function initIntro() {
 function initHero() {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (!hero) return;
-  const slides = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
+  const all = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
+  // Écran en hauteur (téléphone) : vidéos verticales ; écran en largeur : vidéos horizontales.
+  const portrait = window.matchMedia('(orientation: portrait)').matches;
+  const fitting = all.filter((s) => (s.dataset.orient === 'vertical') === portrait);
+  const slides = fitting.length ? fitting : all;
+  all.forEach((s) => s.classList.toggle('is-active', false));
   const soundBtn = hero.querySelector<HTMLButtonElement>('[data-sound]');
   const DURATION = 7000;
   let current = 0;

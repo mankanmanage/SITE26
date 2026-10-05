@@ -53,7 +53,7 @@ const manifestoTiles = [
       <div class="hero__media" aria-hidden="true">
         {
           heroFilms.map((f, i) => (
-            <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide={i}>
+            <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide={i} data-orient={f.vertical ? 'vertical' : 'horizontal'}>
               {f.preview ? (
                 <video muted loop playsinline preload="none" poster={f.cover} data-src={f.preview} />
               ) : f.cover ? (

@@ -30,6 +30,8 @@ export interface Film {
   coverAlt?: string;
   preview?: string;
   video?: string;
+  /** Vidéo au format téléphone (9:16) : affichée en priorité sur mobile. */
+  vertical?: boolean;
   vimeoId?: string;
   duration?: string;
   tags?: string[];
