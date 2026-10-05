@@ -126,18 +126,18 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
   }
   .menu__sun {
     position: absolute;
-    right: -12%;
-    top: 20%;
-    width: min(820px, 60vw);
+    right: -16%;
+    top: 10%;
+    width: min(1040px, 68vw);
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--jaune);
   }
   .menu__img {
     position: absolute;
-    right: 4%;
-    top: 22%;
-    width: min(560px, 38vw);
+    right: 3%;
+    bottom: 5%;
+    width: min(760px, 50vw, 82vh);
     aspect-ratio: 944 / 1000;
     object-fit: contain;
   }
@@ -220,16 +220,28 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     .menu__city {
       display: none;
     }
+    .menu__top {
+      order: 0;
+    }
     .menu__img {
-      top: auto;
-      bottom: 190px;
-      right: 6px;
-      width: min(41vw, 165px);
+      position: relative;
+      right: auto;
+      bottom: auto;
+      order: 1;
+      align-self: flex-end;
+      width: min(68vw, 300px);
+      margin: 4px -8px -12px 0;
+    }
+    nav {
+      order: 2;
+    }
+    .menu__foot {
+      order: 3;
     }
     .menu__sun {
-      width: 110vw;
-      right: -60%;
-      top: 45%;
+      width: 92vw;
+      right: -28%;
+      top: 40px;
     }
     .menu__top {
       padding-left: 64px;
