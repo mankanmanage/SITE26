@@ -218,9 +218,15 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
       width: 48px;
       height: 48px;
     }
-    .menu__img,
     .menu__city {
       display: none;
+    }
+    .menu__img {
+      top: auto;
+      bottom: 180px;
+      right: 16px;
+      width: min(36vw, 170px);
+      border-width: 5px;
     }
     .menu__sun {
       width: 110vw;

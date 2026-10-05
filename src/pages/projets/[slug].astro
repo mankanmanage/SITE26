@@ -73,7 +73,7 @@ const projectBlocks = [
       <span class="film__next-img">
         {next.cover ? <img src={next.cover} alt="" loading="lazy" /> : <span class="display">{next.client}</span>}
       </span>
-      <span class="film__next-label label--sm c-jaune">À suivre</span>
+      <span class="film__next-label label--sm c-rouge">À suivre</span>
       <span class="film__next-name">
         <strong>{next.client}</strong>
         {!next.title.startsWith('[') && <span class="italic">{next.title}</span>}
@@ -105,7 +105,7 @@ const projectBlocks = [
     <aside class="film__panel" id="le-projet" aria-label="Le projet" data-panel hidden>
       <button type="button" class="film__panel-close" data-panel-toggle aria-label="Fermer le projet">×</button>
       <div class="film__panel-head">
-        <span class="label--sm c-jaune">Le projet</span>
+        <span class="label--sm c-rouge">Le projet</span>
         <span class="italic film__panel-title">{fullTitle}</span>
       </div>
       {film.description && projectBlocks.length === 0 && <p class="film__panel-text">{film.description}</p>}
@@ -138,6 +138,7 @@ const projectBlocks = [
     min-height: 640px;
     overflow: hidden;
     background: var(--bleu);
+    color: var(--creme);
   }
   .film__media,
   .film__veil,
@@ -163,7 +164,7 @@ const projectBlocks = [
       var(--bleu);
   }
   .film__veil {
-    background: rgb(0 0 12 / 0.42);
+    background: linear-gradient(180deg, rgb(0 0 12 / 0.25), transparent 25%, transparent 50%, rgb(0 0 12 / 0.55));
     transition: background 400ms ease;
   }
   .film__player {
@@ -267,10 +268,11 @@ const projectBlocks = [
     gap: 10px;
     width: 300px;
     padding: 12px;
-    background: rgb(35 35 124 / 0.85);
+    background: rgb(255 247 243 / 0.94);
+    color: var(--noir);
   }
   .film__next:hover {
-    color: inherit;
+    color: var(--noir);
   }
   .film__next-img {
     display: flex;
@@ -368,7 +370,8 @@ const projectBlocks = [
     height: 100%;
     padding: 100px 40px 40px;
     overflow: auto;
-    background: var(--bleu);
+    background: var(--creme);
+    color: var(--noir);
     animation: panel-in 450ms var(--ease);
   }
   .film__panel[hidden] {
@@ -385,10 +388,10 @@ const projectBlocks = [
     right: 28px;
     width: 44px;
     height: 44px;
-    border: 1px solid rgb(255 247 243 / 0.5);
+    border: 1px solid rgb(0 0 12 / 0.4);
     border-radius: 50%;
     background: none;
-    color: var(--creme);
+    color: var(--noir);
     font-size: 24px;
     cursor: pointer;
   }
@@ -399,6 +402,7 @@ const projectBlocks = [
   }
   .film__panel-title {
     font-size: 34px;
+    color: var(--bleu);
     line-height: 1.1;
   }
   .film__panel-text,
@@ -411,10 +415,10 @@ const projectBlocks = [
     flex-direction: column;
     gap: 6px;
     padding-top: 16px;
-    border-top: 1px solid rgb(255 247 243 / 0.3);
+    border-top: 1px solid rgb(0 0 12 / 0.2);
   }
   .film__panel-block .label--sm {
-    color: var(--gris);
+    color: var(--rouge);
   }
   .film__gallery {
     display: grid;

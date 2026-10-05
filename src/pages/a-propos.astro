@@ -155,7 +155,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     <section class="valeurs">
       <div class="valeurs__head">
         <h2 class="display">Nous sommes</h2>
-        <span class="label c-jaune">( Survolez les cartes )</span>
+        <span class="label">( Survolez les cartes )</span>
       </div>
       <div class="valeurs__grid">
         {
@@ -163,7 +163,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
             <button type="button" class="valeur" data-reveal style={`--i:${i}`} aria-pressed="false" data-flip>
               <span class="valeur__inner">
                 <span class="valeur__face valeur__front">
-                  <span class="c-jaune valeur__n">{v.n}</span>
+                  <span class="valeur__n">{v.n}</span>
                   <span class="display valeur__title">{v.title}</span>
                   <span class="valeur__hint label--sm">Retourner ↻</span>
                 </span>
@@ -256,6 +256,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     min-height: 100svh;
     padding: 170px var(--pad) 100px;
     background: var(--rouge);
+    color: var(--creme);
   }
   .histoire__title {
     position: sticky;
@@ -293,6 +294,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     gap: 44px;
     padding: 80px var(--pad);
     background: var(--bleu);
+    color: var(--creme);
   }
   .ecoute__title {
     font-size: clamp(24px, 3.2vw, 46px);
@@ -488,7 +490,8 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     flex-direction: column;
     gap: 56px;
     padding: 100px var(--pad);
-    background: var(--bleu);
+    background: var(--orange);
+    color: var(--creme);
   }
   .valeurs__head {
     display: flex;
@@ -572,6 +575,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     min-height: 80svh;
     padding: 100px var(--pad);
     background: var(--rouge);
+    color: var(--creme);
   }
   .mission__text {
     max-width: 1180px;
@@ -686,6 +690,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     padding: 56px var(--pad);
     overflow: hidden;
     background: var(--bleu);
+    color: var(--creme);
   }
   .suite:hover {
     color: var(--creme);
@@ -696,18 +701,25 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.5;
+    opacity: 0.9;
     transition:
       opacity 500ms var(--ease),
       transform 900ms var(--ease);
   }
+  .suite::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgb(0 0 12 / 0.55), rgb(0 0 12 / 0.1) 70%);
+  }
   .suite:hover img {
-    opacity: 0.65;
+    opacity: 1;
     transform: scale(1.04);
   }
   .suite__txt,
   .suite__cta {
     position: relative;
+    z-index: 1;
   }
   .suite__txt {
     display: flex;
@@ -734,6 +746,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     min-height: 420px;
     padding: 80px var(--pad);
     background: var(--rouge);
+    color: var(--creme);
   }
   .final__title {
     font-size: clamp(56px, 7.6vw, 110px);

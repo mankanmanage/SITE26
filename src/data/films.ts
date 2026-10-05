@@ -44,6 +44,8 @@ export interface Film {
   gallery?: { src: string; alt: string }[];
 }
 
+// L'ordre ci-dessous est l'ordre d'affichage (accueil, carrousel, page Projets) :
+// projets clients d'abord, puis productions internes.
 export const films: Film[] = [
   {
     slug: 'paps-soda-le-frigo',
@@ -77,6 +79,47 @@ export const films: Film[] = [
       'Une approche poétique et sensorielle, attentive aux mains, aux matières et aux rituels qui entourent l’encens.',
   },
   {
+    slug: 'leila',
+    client: 'Leila',
+    title: 'Film artistique pour un vernissage',
+    type: 'film',
+    internal: false,
+    vertical: true,
+    cover: '/images/films/leila.jpg',
+    video: '/videos/leila.mp4',
+    preview: '/videos/leila-extrait.mp4',
+    tags: ['Film artistique', 'Éducation'],
+    description:
+      'Une vidéo artistique autour de la scolarisation des filles, conçue pour accompagner le vernissage de Leila. Un prolongement de son propos, qui invite à réfléchir à la place de l’éducation dans la vie et l’avenir des jeunes filles.',
+    brief:
+      'Accompagner le vernissage avec une création audiovisuelle en résonance avec le thème de la scolarisation des filles.',
+    response:
+      'Aborder le sujet par une écriture sensible et artistique, pour ouvrir la réflexion et nourrir le dialogue avec le public.',
+  },
+  {
+    slug: 'mobilite-verte-lancement',
+    client: 'Mobilité Verte',
+    title: 'Lancement',
+    type: 'campagne',
+    internal: false,
+    featured: true,
+    cover: '/images/films/mobilite-verte-lancement.jpg',
+    video: '/videos/mobilite-verte-lancement.mp4',
+    preview: '/videos/mobilite-verte-lancement-extrait.mp4',
+    tags: ['Campagne'],
+    description: 'Communication autour des engins électriques et de leurs usages à Bamako.',
+  },
+  {
+    slug: 'paps-soda-ramadan',
+    client: 'Pap’s Soda',
+    title: 'Ramadan',
+    type: 'pub',
+    internal: false,
+    cover: '/images/films/paps-soda-ramadan.jpg',
+    video: '/videos/paps-soda-ramadan.mp4',
+    preview: '/videos/paps-soda-ramadan-extrait.mp4',
+  },
+  {
     slug: 'mankan-22-septembre',
     client: 'MANKAN',
     title: '66 ans. Et toujours à raconter.',
@@ -101,29 +144,6 @@ export const films: Film[] = [
     video: '/videos/mankan-campagne-decembre.mp4',
     preview: '/videos/mankan-campagne-decembre-extrait.mp4',
     tags: ['Campagne', 'Lancement'],
-  },
-  {
-    slug: 'mobilite-verte-lancement',
-    client: 'Mobilité Verte',
-    title: 'Lancement',
-    type: 'campagne',
-    internal: false,
-    featured: true,
-    cover: '/images/films/mobilite-verte-lancement.jpg',
-    video: '/videos/mobilite-verte-lancement.mp4',
-    preview: '/videos/mobilite-verte-lancement-extrait.mp4',
-    tags: ['Campagne'],
-    description: 'Communication autour des engins électriques et de leurs usages à Bamako.',
-  },
-  {
-    slug: 'paps-soda-ramadan',
-    client: 'Pap’s Soda',
-    title: 'Ramadan',
-    type: 'pub',
-    internal: false,
-    cover: '/images/films/paps-soda-ramadan.jpg',
-    video: '/videos/paps-soda-ramadan.mp4',
-    preview: '/videos/paps-soda-ramadan-extrait.mp4',
   },
   {
     slug: 'awale',
@@ -172,24 +192,6 @@ export const films: Film[] = [
     tags: ['Film', 'Narration'],
     description:
       'Un film qui déroule la natte comme on déroule une mémoire : lentement, avec respect.',
-  },
-  {
-    slug: 'leila',
-    client: 'Leila',
-    title: 'Film artistique pour un vernissage',
-    type: 'film',
-    internal: false,
-    vertical: true,
-    cover: '/images/films/leila.jpg',
-    video: '/videos/leila.mp4',
-    preview: '/videos/leila-extrait.mp4',
-    tags: ['Film artistique', 'Éducation'],
-    description:
-      'Une vidéo artistique autour de la scolarisation des filles, conçue pour accompagner le vernissage de Leila. Un prolongement de son propos, qui invite à réfléchir à la place de l’éducation dans la vie et l’avenir des jeunes filles.',
-    brief:
-      'Accompagner le vernissage avec une création audiovisuelle en résonance avec le thème de la scolarisation des filles.',
-    response:
-      'Aborder le sujet par une écriture sensible et artistique, pour ouvrir la réflexion et nourrir le dialogue avec le public.',
   },
 ];
 

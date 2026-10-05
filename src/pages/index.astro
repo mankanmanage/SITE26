@@ -105,6 +105,15 @@ const manifestoTiles = [
           </a>
         ))
       }
+      <img
+        class="manifeste__bouche"
+        src="/images/illustrations/mankan-parle-pour-vous.webp"
+        alt="Collage : une bouche ouverte d’où sort « Mankan parle pour vous »"
+        width="900"
+        height="975"
+        loading="lazy"
+        data-reveal
+      />
       <h2 class="manifeste__title display" data-reveal>
         ON FAIT<br /><span class="c-rouge">DU BRUIT</span><br />POUR VOUS
       </h2>
@@ -132,7 +141,7 @@ const manifestoTiles = [
     <section class="recits" aria-labelledby="recits-titre">
       <div class="recits__head">
         <div>
-          <span class="label c-jaune">( Projets à la une )</span>
+          <span class="label c-rouge">( Projets à la une )</span>
           <h2 id="recits-titre" class="display recits__title" data-reveal>Nos récits</h2>
         </div>
         <div class="recits__nav">
@@ -258,7 +267,7 @@ const manifestoTiles = [
 
     <!-- ============ 6. APPEL À L'ACTION ============ -->
     <section class="cta">
-      <img class="cta__illus" src="/images/illustrations/mankan-parle-pour-vous.webp" alt="Illustration : une bouche ouverte d’où sort « Mankan parle pour vous »" loading="lazy" />
+      <img class="cta__illus" src="/images/illustrations/vos-messages-amplifies.webp" alt="Illustration : un mégaphone, « Mankan amplifie vos messages »" loading="lazy" />
       <p class="italic cta__q" data-reveal>Vous avez une histoire à raconter&nbsp;?</p>
       <h2 class="display cta__title" data-reveal style="--i:1">ON A LA VOIX.</h2>
       <div class="cta__actions" data-reveal style="--i:2">
@@ -279,6 +288,7 @@ const manifestoTiles = [
     min-height: 560px;
     overflow: hidden;
     background: var(--bleu);
+    color: var(--creme);
   }
   .hero__media,
   .hero__slide,
@@ -300,7 +310,7 @@ const manifestoTiles = [
     object-fit: cover;
   }
   .hero__veil {
-    background: linear-gradient(180deg, rgb(0 0 12 / 0.35), transparent 30%, transparent 70%, rgb(0 0 12 / 0.45));
+    background: linear-gradient(180deg, rgb(0 0 12 / 0.18), transparent 22%, transparent 78%, rgb(0 0 12 / 0.25));
   }
   .hero__logo,
   .hero__sound,
@@ -466,7 +476,7 @@ const manifestoTiles = [
   /* ---------- MANIFESTE ---------- */
   .manifeste {
     position: relative;
-    min-height: 900px;
+    min-height: 1040px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -494,6 +504,14 @@ const manifestoTiles = [
     line-height: 1.02;
     letter-spacing: 0.04em;
     text-align: center;
+  }
+  .manifeste__bouche {
+    position: relative;
+    z-index: 1;
+    width: clamp(220px, 24vw, 340px);
+    height: auto;
+    margin-bottom: -12px;
+    mix-blend-mode: multiply;
   }
   .manifeste__note {
     position: absolute;
@@ -584,8 +602,8 @@ const manifestoTiles = [
     rotate: 3deg;
   }
   .m-img--6 {
-    right: 27%;
-    bottom: 60px;
+    left: 22%;
+    top: 400px;
     width: 150px;
     height: 190px;
     rotate: -3deg;
@@ -630,6 +648,8 @@ const manifestoTiles = [
     gap: 48px;
     padding: 110px 0;
     overflow: hidden;
+    background: var(--creme);
+    color: var(--noir);
   }
   .recits__head {
     display: flex;
@@ -646,6 +666,7 @@ const manifestoTiles = [
   }
   .recits__title {
     font-size: clamp(64px, 7.6vw, 110px);
+    color: var(--bleu);
   }
   .recits__nav {
     display: flex;
@@ -659,10 +680,10 @@ const manifestoTiles = [
   .recits__arrow {
     width: 56px;
     height: 56px;
-    border: 1px solid rgb(255 247 243 / 0.6);
+    border: 1px solid rgb(0 0 12 / 0.5);
     border-radius: 50%;
     background: none;
-    color: var(--creme);
+    color: var(--noir);
     font-size: 22px;
     cursor: pointer;
     transition:
@@ -785,6 +806,10 @@ const manifestoTiles = [
   .recits__all {
     align-self: center;
   }
+  .recits__all:hover {
+    background: var(--bleu);
+    color: var(--creme);
+  }
   .recit__tags {
     display: flex;
     flex-wrap: wrap;
@@ -901,6 +926,7 @@ const manifestoTiles = [
     gap: 44px;
     padding: 100px var(--pad);
     background: var(--rouge);
+    color: var(--creme);
   }
   .verbes__head {
     display: flex;
@@ -1082,8 +1108,8 @@ const manifestoTiles = [
     .m-img--6 {
       display: none;
     }
-    .manifeste__title {
-      margin-top: 90px;
+    .manifeste__bouche {
+      margin-top: 110px;
     }
     .manifeste__note {
       bottom: 40px;
