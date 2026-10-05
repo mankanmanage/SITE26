@@ -117,6 +117,86 @@ function initHero() {
   }, DURATION);
 }
 
+/* ---------- Carrousel « Nos récits » ---------- */
+function initCarousel() {
+  const track = document.querySelector<HTMLElement>('[data-carousel]');
+  if (!track) return;
+  const slides = [...track.querySelectorAll<HTMLElement>('.slide')];
+  const count = document.querySelector<HTMLElement>('[data-carousel-count]');
+  const total = pad(slides.length);
+
+  const currentIndex = () => {
+    const left = track.scrollLeft;
+    let best = 0;
+    slides.forEach((s, i) => {
+      if (Math.abs(s.offsetLeft - track.offsetLeft - left) < Math.abs(slides[best].offsetLeft - track.offsetLeft - left)) best = i;
+    });
+    return best;
+  };
+  const goTo = (i: number) => {
+    const target = slides[(i + slides.length) % slides.length];
+    track.scrollTo({ left: target.offsetLeft - track.offsetLeft - parseFloat(getComputedStyle(track).paddingLeft), behavior: reduceMotion ? 'auto' : 'smooth' });
+  };
+  document.querySelector('[data-carousel-prev]')?.addEventListener('click', () => goTo(currentIndex() - 1));
+  document.querySelector('[data-carousel-next]')?.addEventListener('click', () => goTo(currentIndex() + 1));
+  track.addEventListener(
+    'scroll',
+    () => {
+      if (count) count.textContent = `${pad(currentIndex() + 1)} / ${total}`;
+    },
+    { passive: true },
+  );
+
+  // Glisser à la souris
+  let startX = 0;
+  let startScroll = 0;
+  let down = false;
+  track.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    down = true;
+    startX = e.clientX;
+    startScroll = track.scrollLeft;
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!down) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 6) track.classList.add('is-dragging');
+    if (track.classList.contains('is-dragging')) track.scrollLeft = startScroll - dx;
+  });
+  window.addEventListener('pointerup', () => {
+    down = false;
+    window.setTimeout(() => track.classList.remove('is-dragging'), 0);
+  });
+
+  // L'extrait se lance au survol
+  if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+    slides.forEach((slide) => {
+      const video = slide.querySelector('video');
+      if (!video) return;
+      slide.addEventListener('mouseenter', () => {
+        if (!video.src && video.dataset.src) video.src = video.dataset.src;
+        video.play().then(() => slide.classList.add('is-playing')).catch(() => {});
+      });
+      slide.addEventListener('mouseleave', () => {
+        video.pause();
+        slide.classList.remove('is-playing');
+      });
+    });
+  }
+
+  // Fenêtres de descriptif : lancer / arrêter l'extrait
+  document.querySelectorAll<HTMLDialogElement>('.recit-dialog').forEach((dialog) => {
+    const video = dialog.querySelector('video');
+    new MutationObserver(() => {
+      if (!video) return;
+      if (dialog.open) {
+        if (!video.src && video.dataset.src) video.src = video.dataset.src;
+        if (!reduceMotion) video.play().catch(() => {});
+      } else video.pause();
+    }).observe(dialog, { attributes: true, attributeFilter: ['open'] });
+  });
+}
+
 /* ---------- Menu « 3 traits » ---------- */
 function initMenu() {
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
@@ -494,6 +574,7 @@ initIntro();
 initReveal();
 initParallax();
 initHero();
+initCarousel();
 initMenu();
 initReel();
 initFilmPage();

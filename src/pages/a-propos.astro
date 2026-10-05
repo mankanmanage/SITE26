@@ -18,10 +18,10 @@ const story = [
 // Panneaux qui défilent à l'horizontale (repris de la maquette Canva).
 // Images provisoires : à remplacer par les illustrations de la charte.
 const panels = [
-  { title: 'On parle fort', text: 'Uniquement pour vous, à travers nos campagnes.', img: '/images/films/paps-soda.jpg', bg: 'rouge' },
-  { title: 'On rêve loin', text: 'Oui, même les idées les plus folles sont réalisables. En rendant l’imaginaire réel.', img: '/images/films/serie-orange.jpg', bg: 'bleu' },
-  { title: 'On cherche', text: 'Storytelling et recherche culturelle : nous fouillons les récits, les gestes et les mémoires avant de créer.', img: '/images/films/homme-djembe.jpg', bg: 'orange' },
-  { title: 'On est authentique', text: 'Enracinés et fiers.', img: '/images/films/mariee-voile-blanc.jpg', bg: 'rouge' },
+  { title: 'On parle fort', text: 'Uniquement pour vous, à travers nos campagnes.', img: '/images/illustrations/megaphone.webp', illus: true, bg: 'rouge' },
+  { title: 'On rêve loin', text: 'Oui, même les idées les plus folles sont réalisables. En rendant l’imaginaire réel.', img: '/images/illustrations/chiwara.webp', illus: true, bg: 'bleu' },
+  { title: 'On cherche', text: 'Storytelling et recherche culturelle : nous fouillons les récits, les gestes et les mémoires avant de créer.', img: '/images/illustrations/djembe.webp', illus: true, bg: 'orange' },
+  { title: 'On est authentique', text: 'Enracinés et fiers.', img: '/images/photos/femme-indigo.jpg', illus: false, bg: 'rouge' },
 ];
 
 const values = [
@@ -113,7 +113,7 @@ const missionAccents = ['visible', 'audible', 'impactant'];
                 <span class="panel__n label">{pad(i + 1)} / {pad(panels.length)}</span>
                 <h2 class="display shadow-noir panel__title">{p.title}</h2>
                 <p class="serif panel__text">{p.text}</p>
-                <img class="panel__img" src={p.img} alt="" loading="lazy" />
+                <img class={`panel__img${p.illus ? ' panel__img--illus' : ''}`} src={p.img} alt="" loading="lazy" />
               </article>
             ))
           }
@@ -454,6 +454,11 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     border: 8px solid var(--creme);
     rotate: 3deg;
     transition: rotate 600ms var(--ease);
+  }
+  .panel__img--illus {
+    object-fit: contain;
+    padding: 28px;
+    background: var(--creme);
   }
   .panel:nth-child(even) .panel__img {
     rotate: -3deg;

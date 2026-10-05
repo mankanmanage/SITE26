@@ -91,6 +91,18 @@ export const films: Film[] = [
       'Film de marque autour de l’indépendance du Mali et de la transmission culturelle.',
   },
   {
+    slug: 'mankan-campagne-decembre',
+    client: 'MANKAN',
+    title: 'Campagne de décembre — Lancement',
+    type: 'campagne',
+    internal: true,
+    vertical: true,
+    cover: '/images/films/mankan-campagne-decembre.jpg',
+    video: '/videos/mankan-campagne-decembre.mp4',
+    preview: '/videos/mankan-campagne-decembre-extrait.mp4',
+    tags: ['Campagne', 'Lancement'],
+  },
+  {
     slug: 'mobilite-verte-lancement',
     client: 'Mobilité Verte',
     title: 'Lancement',
