@@ -41,7 +41,7 @@ const manifestoTiles = [
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
   <script is:inline slot="head">
     try {
-      if (sessionStorage.getItem('mankan-intro') || matchMedia('(prefers-reduced-motion: reduce)').matches)
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches)
         document.documentElement.classList.add('no-intro');
     } catch (e) {}
   </script>
@@ -81,7 +81,7 @@ const manifestoTiles = [
 
       <a class="hero__scroll" href="#decouvrir">( Défiler )<span class="bob"></span></a>
 
-      <!-- Intro : logo animé puis rideau (une fois par visite) -->
+      <!-- Intro : logo animé puis rideau, avant la lecture des films -->
       <div class="intro" data-intro aria-hidden="true">
         <div class="intro__logo">
           <span class="intro__sun"></span>

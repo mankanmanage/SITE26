@@ -54,20 +54,22 @@ function initParallax() {
   update();
 }
 
-/* ---------- Intro (logo animé + rideau), une fois par visite ---------- */
+/* ---------- Intro (logo animé + rideau) à chaque arrivée sur l'accueil ---------- */
+// Les films du hero ne démarrent qu'une fois le rideau levé.
+let introDone: Promise<void> = Promise.resolve();
 function initIntro() {
   const intro = document.querySelector<HTMLElement>('[data-intro]');
   if (!intro || document.documentElement.classList.contains('no-intro')) return;
-  try {
-    sessionStorage.setItem('mankan-intro', '1');
-  } catch {
-    /* navigation privée */
-  }
-  const done = () => intro.remove();
-  intro.addEventListener('animationend', (e) => {
-    if (e.animationName.includes('curtain')) done();
+  introDone = new Promise((resolve) => {
+    const done = () => {
+      intro.remove();
+      resolve();
+    };
+    intro.addEventListener('animationend', (e) => {
+      if (e.animationName.includes('curtain')) done();
+    });
+    intro.addEventListener('click', done);
   });
-  intro.addEventListener('click', done);
 }
 
 /* ---------- Hero : les films s'enchaînent en plein écran ---------- */
@@ -110,11 +112,14 @@ function initHero() {
     if (video) video.muted = !sound;
   });
 
-  show(0);
-  if (reduceMotion || slides.length < 2) return;
-  setInterval(() => {
-    if (!document.hidden) show((current + 1) % slides.length);
-  }, DURATION);
+  slides[0]?.classList.add('is-active');
+  introDone.then(() => {
+    show(0);
+    if (reduceMotion || slides.length < 2) return;
+    setInterval(() => {
+      if (!document.hidden) show((current + 1) % slides.length);
+    }, DURATION);
+  });
 }
 
 /* ---------- Carrousel « Nos récits » ---------- */
