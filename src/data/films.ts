@@ -29,6 +29,9 @@ export interface Film {
   cover?: string;
   coverAlt?: string;
   preview?: string;
+  /** Extrait recadré dans l'autre format (Higgsfield) : affiché quand l'écran ne correspond
+   *  pas au format du film, ex. version verticale d'un film horizontal sur téléphone. */
+  previewAlt?: string;
   video?: string;
   /** Vidéo au format téléphone (9:16) : affichée en priorité sur mobile. */
   vertical?: boolean;

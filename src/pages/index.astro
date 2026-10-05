@@ -57,10 +57,19 @@ const manifestoTiles = [
       <div class="hero__media" aria-hidden="true">
         {
           heroFilms.map((f, i) => (
-            <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide={i} data-orient={f.vertical ? 'vertical' : 'horizontal'}>
+            <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide={i} data-orient={f.previewAlt ? 'both' : f.vertical ? 'vertical' : 'horizontal'}>
               {f.preview && f.cover && <img class="hero__bg" src={f.cover} alt="" loading="lazy" />}
               {f.preview ? (
-                <video muted loop playsinline preload="none" poster={f.cover} data-src={f.preview} />
+                <video
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  poster={f.cover}
+                  data-src={f.preview}
+                  data-src-alt={f.previewAlt}
+                  data-alt-when={f.vertical ? 'landscape' : 'portrait'}
+                />
               ) : f.cover ? (
                 <img class="zoom" src={f.cover} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
               ) : (

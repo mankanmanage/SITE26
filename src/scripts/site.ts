@@ -93,7 +93,12 @@ function initHero() {
       const video = s.querySelector('video');
       if (!video) return;
       if (on) {
-        if (!video.src && video.dataset.src) video.src = video.dataset.src;
+        if (!video.src && video.dataset.src) {
+          // Version recadrée (autre format) quand l'écran ne correspond pas au format du film.
+          const alt = video.dataset.srcAlt;
+          const useAlt = alt && window.matchMedia(`(orientation: ${video.dataset.altWhen})`).matches;
+          video.src = useAlt ? alt : video.dataset.src;
+        }
         video.muted = !sound;
         video.play().catch(() => {});
       } else {
