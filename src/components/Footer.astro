@@ -24,30 +24,8 @@ const year = new Date().getFullYear();
   <div class="footer__bottom label--sm">
     <span>© {year} {site.name}</span>
     <span>{site.signature}</span>
-    <button type="button" class="footer__legal" data-open-dialog="mentions-legales">Mentions légales</button>
+    <a class="footer__legal" href="/mentions-legales/">Mentions légales</a>
   </div>
-
-  <dialog id="mentions-legales" class="legal" aria-labelledby="legal-titre">
-    <button type="button" class="legal__close" data-close-dialog aria-label="Fermer">×</button>
-    <h2 id="legal-titre" class="display">Mentions légales</h2>
-    <h3>Éditeur</h3>
-    <p>
-      MANKAN COMMUNICATION SARL — siège social : {site.address}, {site.country}.<br />
-      RCCM : MA.BKO.2024.B.9938 · NIF : 4240-91-94-22-34-41-6M<br />
-      Directrice de la publication : Aïssatou Sidibé, Co-CEO<br />
-      Contact : <a href={`mailto:${site.email}`}>{site.email}</a> · {site.phone}
-    </p>
-    <h3>Hébergement</h3>
-    <p>LWS (Ligne Web Services).<!-- À compléter : coordonnées complètes de l'hébergeur. --></p>
-    <h3>Données personnelles</h3>
-    <p>
-      Les informations envoyées via le formulaire servent uniquement à répondre à votre demande. Elles
-      ne sont ni vendues ni transmises à des tiers. Pour toute demande de suppression :
-      <a href={`mailto:${site.email}`}>{site.email}</a>.
-    </p>
-    <h3>Propriété intellectuelle</h3>
-    <p>Les textes, images, films et logos de ce site appartiennent à {site.name} ou à ses clients.</p>
-  </dialog>
 </footer>
 
 <style>
@@ -101,62 +79,7 @@ const year = new Date().getFullYear();
     color: var(--gris-2);
     letter-spacing: 0.12em;
   }
-  .footer__legal {
-    padding: 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    font: inherit;
-    letter-spacing: inherit;
-    text-transform: inherit;
-    cursor: pointer;
-  }
   .footer__legal:hover {
     color: var(--jaune);
-  }
-
-  .legal {
-    width: min(720px, calc(100vw - 32px));
-    max-height: calc(100dvh - 32px);
-    padding: clamp(24px, 5vw, 56px);
-    border: 0;
-    background: var(--creme);
-    color: var(--noir);
-    font-size: 16px;
-  }
-  .legal::backdrop {
-    background: rgb(0 0 12 / 0.8);
-  }
-  .legal h2 {
-    margin-bottom: 24px;
-    font-size: 48px;
-    color: var(--rouge);
-  }
-  .legal h3 {
-    margin: 24px 0 6px;
-    font-size: 13px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--rouge);
-  }
-  .legal a {
-    text-decoration: underline;
-  }
-  .legal a:hover {
-    color: var(--rouge);
-  }
-  .legal__close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--noir);
-    border-radius: 50%;
-    background: none;
-    color: var(--noir);
-    font-size: 26px;
-    line-height: 1;
-    cursor: pointer;
   }
 </style>

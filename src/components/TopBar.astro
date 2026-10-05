@@ -1,9 +1,11 @@
 ---
 // Logo centré en haut des pages intérieures (le menu est le bouton « 3 traits » à gauche).
+// tone="bleu" : logo bleu pour les pages sur fond crème.
+const { tone = 'creme' } = Astro.props as { tone?: 'creme' | 'bleu' };
 ---
 
 <div class="topbar">
   <a class="topbar__logo" href="/" aria-label="MANKAN — accueil">
-    <img src="/images/logo/mankan-logo-creme.png" alt="MANKAN communication" width="160" height="82" />
+    <img src={`/images/logo/mankan-logo-${tone}.png`} alt="MANKAN communication" width="160" height="82" />
   </a>
 </div>

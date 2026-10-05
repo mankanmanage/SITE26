@@ -1,0 +1,208 @@
+---
+// Texte fourni par MANKAN (Drive « MENTIONS LÉGALES »), complété.
+import Base from '../layouts/Base.astro';
+import TopBar from '../components/TopBar.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+const updated = '5 octobre 2026';
+---
+
+<Base
+  title="Mentions légales | MANKAN Communication"
+  description="Mentions légales du site de MANKAN Communication : éditeur, hébergement, propriété intellectuelle, données personnelles et cookies."
+>
+  <main id="contenu" class="legal-page">
+    <TopBar tone="bleu" />
+    <header class="legal-page__head">
+      <span class="label c-rouge">( Informations )</span>
+      <h1 class="display">Mentions légales</h1>
+    </header>
+
+    <div class="legal-page__body">
+      <section>
+        <h2>Éditeur du site</h2>
+        <p>
+          Le présent site est édité par MANKAN COMMUNICATION SARL, société à responsabilité limitée
+          immatriculée au Registre du Commerce et du Crédit Mobilier sous le numéro MA.BKO.2024.B.9932.
+        </p>
+        <p>
+          Siège social : Hamdallaye ACI 2000, Immeuble DIARRA, Avenue Cheick ZAYED, Bamako, Mali.<br />
+          Numéro d’identification fiscale : 4240-91-94-22-34-41-6M.<br />
+          Adresse électronique : <a href={`mailto:${site.email}`}>{site.email}</a>.<br />
+          Téléphone : <a href={`tel:${site.phoneHref}`}>{site.phone}</a>.<br />
+          Directrice de la publication : Aïssatou Sidibé, co-directrice générale.
+        </p>
+      </section>
+
+      <section>
+        <h2>Hébergement</h2>
+        <p>
+          Le site est hébergé par :<br />
+          Dénomination sociale : LWS — Ligne Web Services SAS.<br />
+          Adresse : 10, rue Penthièvre, 75008 Paris, France.<br />
+          Téléphone et site internet : +33 1 77 62 30 03 —
+          <a href="https://www.lws.fr" rel="noopener" target="_blank">www.lws.fr</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Propriété intellectuelle</h2>
+        <p>
+          Les textes, créations graphiques, photographies, vidéos et autres contenus présentés sur le
+          site sont protégés par les règles applicables en matière de propriété intellectuelle. Ils
+          appartiennent à MANKAN COMMUNICATION ou à leurs titulaires respectifs.
+        </p>
+        <p>
+          Sauf autorisation ou exception prévue par la loi, leur reproduction, modification, diffusion ou
+          exploitation nécessite l’accord préalable du titulaire des droits. Les marques et logos des
+          clients et partenaires restent la propriété de leurs titulaires. Leur présentation dans le
+          portfolio ne confère aucun droit d’utilisation aux visiteurs.
+        </p>
+      </section>
+
+      <section>
+        <h2>Données personnelles</h2>
+        <p>
+          MANKAN COMMUNICATION est responsable des traitements de données personnelles qu’elle met en
+          œuvre dans le cadre de ce site, conformément à la loi n°2013-015 du 21 mai 2013 portant
+          protection des données à caractère personnel en République du Mali, dans sa version modifiée.
+        </p>
+        <p>
+          Lorsque vous nous contactez, les informations que vous transmettez sont utilisées pour traiter
+          votre demande et assurer les échanges qui en découlent.
+        </p>
+        <ul>
+          <li>
+            <strong>Données collectées :</strong> les champs du formulaire de contact (nom, adresse
+            électronique, type de projet et description de votre demande). Comme pour tout site, le
+            serveur de l’hébergeur enregistre aussi des données techniques de connexion (adresse IP,
+            date et heure, pages consultées) à des fins de sécurité.
+          </li>
+          <li>
+            <strong>Destinataires :</strong> les membres de l’équipe MANKAN COMMUNICATION chargés de
+            répondre aux demandes, ainsi que notre hébergeur LWS pour l’envoi des messages et le
+            fonctionnement du site. Vos données ne sont ni vendues ni cédées à des tiers.
+          </li>
+          <li>
+            <strong>Durée de conservation :</strong> les messages reçus sont conservés trois ans à
+            compter de notre dernier échange, puis supprimés, sauf si une relation contractuelle s’engage
+            entre nous.
+          </li>
+          <li>
+            <strong>Hébergement et transferts de données hors du Mali :</strong> le site et les messages
+            transitent par les serveurs de LWS, situés en France (Union européenne), soumis au Règlement
+            général sur la protection des données (RGPD).
+          </li>
+        </ul>
+        <p>
+          Vous pouvez exercer les droits prévus par la législation applicable, notamment vos droits
+          d’accès, de rectification et d’opposition, en écrivant à
+          <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+        <p>
+          Vous pouvez également vous adresser à l’Autorité de Protection des Données à caractère
+          Personnel du Mali :
+          <a href="https://apdp.ml/" rel="noopener" target="_blank">https://apdp.ml/</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Cookies et services tiers</h2>
+        <p>
+          Ce site ne dépose aucun cookie et n’utilise aucun outil de mesure d’audience ni de publicité.
+          Les vidéos et les polices de caractères sont hébergées directement sur le site : aucun lecteur
+          externe n’est chargé lors de votre visite.
+        </p>
+        <p>
+          Les liens vers nos comptes Instagram, TikTok et Facebook ouvrent ces plateformes dans un nouvel
+          onglet ; elles appliquent alors leurs propres règles en matière de cookies et de données
+          personnelles.
+        </p>
+      </section>
+
+      <section>
+        <h2>Informations et liens externes</h2>
+        <p>
+          MANKAN COMMUNICATION veille à l’exactitude des informations publiées et peut les mettre à jour.
+          Pour signaler une erreur ou un problème technique, vous pouvez nous contacter aux coordonnées
+          indiquées ci-dessus.
+        </p>
+        <p>
+          Le site peut proposer des liens vers des plateformes tierces. Leur utilisation est soumise à
+          leurs propres conditions et politiques de confidentialité.
+        </p>
+      </section>
+
+      <section>
+        <h2>Droit applicable</h2>
+        <p>
+          Le site est soumis au droit malien, sous réserve des dispositions impératives éventuellement
+          applicables. En cas de différend, les parties peuvent rechercher une solution amiable avant de
+          saisir les juridictions compétentes.
+        </p>
+        <p class="legal-page__date">Dernière mise à jour : {updated}.</p>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .legal-page {
+    padding: 150px var(--pad) 110px;
+    background: var(--creme);
+    color: var(--noir);
+  }
+  .legal-page__head {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 56px;
+  }
+  .legal-page__head h1 {
+    font-size: clamp(52px, 7vw, 104px);
+    color: var(--bleu);
+  }
+  .legal-page__body {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    max-width: 780px;
+  }
+  .legal-page__body section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 22px;
+    border-top: 1px solid rgb(0 0 12 / 0.2);
+  }
+  .legal-page__body h2 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rouge);
+  }
+  .legal-page__body p,
+  .legal-page__body li {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  .legal-page__body ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding-left: 20px;
+  }
+  .legal-page__body a {
+    border-bottom: 1px solid currentColor;
+  }
+  .legal-page__body a:hover {
+    color: var(--rouge);
+  }
+  .legal-page__date {
+    color: var(--texte-doux);
+  }
+</style>
