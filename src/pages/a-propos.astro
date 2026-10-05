@@ -15,7 +15,7 @@ const story = [
   'C’est la manière, pour de jeunes Maliens, d’apporter leur pierre : une contribution sincère, portée par l’espoir, par l’image que nous voulons renvoyer au monde, et surtout par celle que nous voulons rendre à nous-mêmes.',
 ];
 
-// Ce qui nous anime, à côté du collage « Mankan parle pour vous ».
+// Ce qui nous anime.
 const drives = [
   { title: 'On parle fort', text: 'Uniquement pour vous, à travers nos campagnes.' },
   { title: 'On rêve loin', text: 'Même les idées les plus folles sont réalisables : nous rendons l’imaginaire réel.' },
@@ -104,15 +104,6 @@ const missionAccents = ['visible', 'audible', 'impactant'];
 
     <!-- 3. MANKAN PARLE POUR VOUS : le collage + ce qui nous anime -->
     <section class="parle" aria-label="Ce qui nous anime">
-      <figure class="parle__img" data-reveal>
-        <img
-          src="/images/illustrations/vos-messages-amplifies.webp"
-          alt="Un mégaphone : « Mankan amplifie vos messages », nous sommes les griots modernes de votre marque"
-          width="944"
-          height="1000"
-          loading="lazy"
-        />
-      </figure>
       <ol class="parle__list">
         {
           drives.map((d, i) => (
@@ -397,32 +388,19 @@ const missionAccents = ['visible', 'audible', 'impactant'];
     color: var(--rouge);
   }
 
-  /* 3. Mankan parle pour vous */
+  /* 3. Ce qui nous anime */
   .parle {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 48px 80px;
-    align-items: center;
     padding: 110px var(--pad);
     background: var(--creme);
     color: var(--noir);
   }
-  .parle__img {
-    position: sticky;
-    top: 90px;
-    align-self: start;
-    margin: 0;
-  }
-  .parle__img img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
   .parle__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 64px;
     margin: 0;
     padding: 0;
     list-style: none;
-    border-bottom: 1px solid var(--noir);
   }
   .parle__list li {
     display: flex;
@@ -777,12 +755,8 @@ const missionAccents = ['visible', 'audible', 'impactant'];
   @media (max-width: 1180px) {
     .histoire,
     .artisan,
-    .parle {
+    .parle__list {
       grid-template-columns: 1fr;
-    }
-    .parle__img {
-      position: static;
-      max-width: 560px;
     }
     .histoire__title {
       position: static;
