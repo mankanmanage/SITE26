@@ -1,5 +1,8 @@
 # Configuration Apache pour l'hébergement LWS
 
+# Page d'accueil : index.html (et non l'index.php de l'ancien WordPress)
+DirectoryIndex index.html
+
 # Forcer HTTPS et le domaine sans www
 RewriteEngine On
 RewriteCond %{HTTPS} off [OR]

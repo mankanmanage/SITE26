@@ -1,0 +1,41 @@
+# Mise en ligne du site chez LWS par FTP.
+#
+# Secrets à créer dans GitHub (Settings → Secrets and variables → Actions → New repository secret) :
+#   FTP_SERVER    ex. ftp.mankancommunication.com
+#   FTP_USERNAME  identifiant FTP LWS
+#   FTP_PASSWORD  mot de passe FTP LWS
+# Variable facultative (onglet « Variables ») :
+#   FTP_DIR       dossier du site sur le serveur, avec « / » final (par défaut : htdocs/)
+#
+# Pour l'instant, la mise en ligne se lance à la main : onglet Actions → « Mise en ligne LWS » → Run workflow.
+name: Mise en ligne LWS
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-lws
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Envoi des fichiers chez LWS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ${{ vars.FTP_DIR || 'htdocs/' }}
