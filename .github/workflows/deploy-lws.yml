@@ -8,10 +8,13 @@
 # Le compte FTP LWS s'ouvre directement dans le dossier du site (htdocs) : on envoie donc à la racine.
 # Rien n'est supprimé sur le serveur (l'ancien WordPress reste en place, sauf .htaccess remplacé).
 #
-# Lancement à la main : onglet Actions → « Mise en ligne LWS » → Run workflow.
+# Lancement automatique à chaque modification du site (et à la main : Actions → « Mise en ligne LWS » → Run workflow).
 name: Mise en ligne LWS
 
 on:
+  push:
+    branches: [claude/magical-archimedes-k2xo90]
+    paths-ignore: ['README.md', '.gitignore']
   workflow_dispatch:
 
 concurrency:
