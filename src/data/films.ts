@@ -130,6 +130,20 @@ export const films: Film[] = [
       'L’attente de la rupture du jeûne racontée à hauteur d’enfant. À travers les gestes qui précèdent le repas et la douceur du quotidien familial, le film célèbre ces moments qui nous réunissent. Une approche épurée et sensible, où PAP’S trouve sa place dans l’esprit de partage du Ramadan.',
   },
   {
+    slug: 'mankan-lancement',
+    client: 'MANKAN',
+    title: 'Film de lancement',
+    type: 'film',
+    internal: true,
+    vertical: true,
+    cover: '/images/films/mankan-lancement.jpg',
+    video: '/videos/mankan-lancement.mp4',
+    preview: '/videos/mankan-lancement-extrait.mp4',
+    tags: ['Film de marque', 'Lancement'],
+    description:
+      'Au commencement, il y avait la parole. Le film qui a lancé Mankan : des griots modernes qui font de chaque mot une racine.',
+  },
+  {
     slug: 'mankan-22-septembre',
     client: 'MANKAN',
     title: '66 ans. Et toujours à raconter.',
