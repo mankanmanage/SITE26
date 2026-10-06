@@ -125,6 +125,9 @@ export const films: Film[] = [
     video: '/videos/paps-soda-ramadan.mp4',
     preview: '/videos/paps-soda-ramadan-extrait.mp4',
     previewAlt: '/videos/paps-soda-ramadan-extrait-alt.mp4',
+    tags: ['Spot', 'Ramadan'],
+    description:
+      'L’attente de la rupture du jeûne racontée à hauteur d’enfant. À travers les gestes qui précèdent le repas et la douceur du quotidien familial, le film célèbre ces moments qui nous réunissent. Une approche épurée et sensible, où PAP’S trouve sa place dans l’esprit de partage du Ramadan.',
   },
   {
     slug: 'mankan-22-septembre',
@@ -192,7 +195,7 @@ export const films: Film[] = [
   {
     slug: 'daibin-la-natte',
     client: 'Daibin',
-    title: 'La natte',
+    title: 'L’art de raconter la vie',
     type: 'film',
     internal: true,
     vertical: true,
@@ -203,7 +206,7 @@ export const films: Film[] = [
     previewAlt: '/videos/daibin-la-natte-extrait-alt.mp4',
     tags: ['Film', 'Narration'],
     description:
-      'Un film qui déroule la natte comme on déroule une mémoire : lentement, avec respect.',
+      'Une natte, plusieurs générations, mille façons d’être ensemble. On s’y retrouve pour jouer, manger, écouter et raconter. À travers Daibin, Mankan met en lumière un objet du quotidien qui accueille nos souvenirs et fait vivre la transmission. Un récit autour du partage et de notre art de vivre.',
   },
 ];
 
