@@ -4,10 +4,11 @@
 #   FTP_SERVER    ex. ftp.mankancommunication.com
 #   FTP_USERNAME  identifiant FTP LWS
 #   FTP_PASSWORD  mot de passe FTP LWS
-# Variable facultative (onglet « Variables ») :
-#   FTP_DIR       dossier du site sur le serveur, avec « / » final (par défaut : htdocs/)
 #
-# Pour l'instant, la mise en ligne se lance à la main : onglet Actions → « Mise en ligne LWS » → Run workflow.
+# Le compte FTP LWS s'ouvre directement dans le dossier du site (htdocs) : on envoie donc à la racine.
+# Rien n'est supprimé sur le serveur (l'ancien WordPress reste en place, sauf .htaccess remplacé).
+#
+# Lancement à la main : onglet Actions → « Mise en ligne LWS » → Run workflow.
 name: Mise en ligne LWS
 
 on:
@@ -20,6 +21,15 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      # Réglages lftp : chiffrement si possible, reprise automatique en cas de coupure.
+      LFTP_SETTINGS: >-
+        set ftp:ssl-allow yes; set ssl:verify-certificate no; set ftp:passive-mode yes;
+        set net:timeout 60; set net:max-retries 10; set net:reconnect-interval-base 10;
+        set net:persist-retries 5; set cmd:fail-exit yes;
     steps:
       - uses: actions/checkout@v4
 
@@ -31,11 +41,20 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Envoi des fichiers chez LWS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ${{ vars.FTP_DIR || 'htdocs/' }}
+      - name: Installer lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      # Nettoyage du premier essai, qui avait tout envoyé dans un sous-dossier htdocs/htdocs.
+      # Sécurité : on ne supprime que si wp-config.php est bien à la racine FTP (donc la racine = le site).
+      - name: Nettoyage du premier essai (htdocs en double)
+        continue-on-error: true
+        run: |
+          lftp -c "$LFTP_SETTINGS open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\"; cls -1 wp-config.php && cls -1 htdocs/index.html && rm -r htdocs"
+
+      - name: Envoi des vidéos (seulement les nouvelles ou modifiées)
+        run: |
+          lftp -c "$LFTP_SETTINGS open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\"; mirror --reverse --ignore-time --parallel=2 --verbose=1 dist/videos videos"
+
+      - name: Envoi du reste du site
+        run: |
+          lftp -c "$LFTP_SETTINGS open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\"; mirror --reverse --parallel=3 --verbose=1 --exclude-glob videos/ dist ."
