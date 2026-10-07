@@ -189,6 +189,24 @@ export const films: Film[] = [
       'Faire des situations du quotidien le point de départ de récits où chaque geste peut révéler une leçon.',
   },
   {
+    slug: 'mankan-potiers',
+    client: 'MANKAN',
+    title: 'Les potiers — Ceux qui façonnent nos rituels',
+    type: 'film',
+    internal: true,
+    vertical: true,
+    cover: '/images/films/mankan-potiers.jpg',
+    video: '/videos/mankan-potiers.mp4',
+    preview: '/videos/mankan-potiers-extrait.mp4',
+    tags: ['Film de marque', 'Savoir-faire'],
+    description:
+      'Derrière chaque geste du quotidien, il y a des mains que l’on ne voit pas. Celles des potiers, qui façonnent la terre pour en faire les jarres, les canaris et les bols autour desquels se créent nos rituels : l’eau fraîche que l’on offre, le repas que l’on partage, le thé que l’on prépare. À travers leur savoir-faire, Mankan rend hommage à ces acteurs discrets qui donnent forme à notre manière de vivre ensemble.',
+    brief:
+      'Mettre en lumière les artisans qui se cachent derrière les objets et les rituels de notre quotidien.',
+    response:
+      'Suivre la terre, de la main du potier jusqu’au foyer, pour montrer comment un savoir-faire transmis de génération en génération fait naître les gestes qui nous rassemblent.',
+  },
+  {
     slug: 'bamako',
     client: 'MANKAN',
     title: 'Bamako — Une ville en mouvement',
