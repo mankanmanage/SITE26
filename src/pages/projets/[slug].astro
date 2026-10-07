@@ -39,7 +39,7 @@ const projectBlocks = [
       {!film.cover && !film.vimeoId && <div class="film__blank display">{film.client}</div>}
     </div>
     <div class="film__veil"></div>
-    <div class="film__player" data-player={film.vimeoId ?? ""} data-video={film.video || undefined} data-poster={film.cover || undefined} data-title={fullTitle}></div>
+    <div class="film__player" data-player={film.vimeoId ?? ""} data-video={film.video || undefined} data-video-sd={film.video?.replace(/\.mp4$/, '-sd.mp4')} data-poster={film.cover || undefined} data-title={fullTitle}></div>
 
     <!-- Barre du haut -->
     <div class="film__top">

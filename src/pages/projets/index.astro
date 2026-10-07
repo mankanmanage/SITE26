@@ -24,7 +24,16 @@ const items = films.map((f, i) => ({
           items.map((f, i) => (
             <div class={`reel__slide${i === 0 ? ' is-active' : ''}`} data-slide={i}>
               {f.preview ? (
-                <video muted loop playsinline preload="none" poster={f.cover} data-src={f.preview} />
+                <video
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  poster={f.cover}
+                  data-src={f.preview}
+                  data-src-alt={f.previewAlt}
+                  data-alt-when={f.vertical ? 'landscape' : 'portrait'}
+                />
               ) : f.cover ? (
                 <img class="zoom" src={f.cover} alt="" loading={i === 0 ? 'eager' : 'lazy'} />
               ) : f.vimeoId ? (

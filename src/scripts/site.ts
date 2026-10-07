@@ -5,6 +5,33 @@
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/* ---------- Vidéos : chargement adapté au réseau ---------- */
+// Réseau très lent ou « économie de données » : on garde les images fixes au lieu des vidéos.
+const slowNetwork = (() => {
+  const c = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  return Boolean(c && (c.saveData || /(^|-)2g$/.test(c.effectiveType ?? '')));
+})();
+// Téléphone ou réseau moyen : versions légères des films complets.
+const preferLight = (() => {
+  const c = (navigator as Navigator & { connection?: { effectiveType?: string } }).connection;
+  return window.matchMedia('(max-width: 900px)').matches || Boolean(c && c.effectiveType && c.effectiveType !== '4g');
+})();
+
+/** Adresse de l'extrait à charger (version recadrée si l'écran ne correspond pas au format du film). */
+function videoSrc(video: HTMLVideoElement) {
+  const alt = video.dataset.srcAlt;
+  const useAlt = alt && video.dataset.altWhen && window.matchMedia(`(orientation: ${video.dataset.altWhen})`).matches;
+  return (useAlt ? alt : video.dataset.src) ?? '';
+}
+/** Commence à télécharger une vidéo sans la lancer (pour qu'elle soit prête à temps). */
+function primeVideo(video: HTMLVideoElement | null | undefined) {
+  if (!video || slowNetwork || video.getAttribute('src') || !video.dataset.src) return;
+  video.preload = 'auto';
+  video.src = videoSrc(video);
+}
+/** Vrai si la vidéo peut être lue sans attendre. */
+const videoReady = (video: HTMLVideoElement | null | undefined) => !video || video.readyState >= 3;
+
 /* ---------- Apparition au défilement ---------- */
 function initReveal() {
   const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
@@ -73,45 +100,89 @@ function initIntro() {
 }
 
 /* ---------- Hero : les films s'enchaînent en plein écran ---------- */
+// Chaque extrait reste affiché DURATION ms *après* avoir réellement démarré ;
+// le suivant est préchargé pendant ce temps et on attend qu'il soit prêt avant de passer.
+// Si la lecture automatique est refusée (mode économie d'énergie, réseau trop lent),
+// on garde les images fixes avec un lent zoom : la page ne reste jamais figée.
 function initHero() {
   const hero = document.querySelector<HTMLElement>('[data-hero]');
   if (!hero) return;
-  const all = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
-  // Toutes les vidéos s'enchaînent, quel que soit leur format (voir .hero__bg).
-  const slides = all;
-  all.forEach((s) => s.classList.toggle('is-active', false));
+  const slides = [...hero.querySelectorAll<HTMLElement>('[data-slide]')];
+  slides.forEach((s) => s.classList.toggle('is-active', false));
   const soundBtn = hero.querySelector<HTMLButtonElement>('[data-sound]');
   const DURATION = 7000;
+  const MAX_WAIT = 8000;
   let current = 0;
   let sound = false;
+  let still = slowNetwork;
+  let timer = 0;
+  let token = 0;
+  const vid = (i: number) => slides[i]?.querySelector('video');
+  if (still) hero.classList.add('is-still');
+
+  const goStill = () => {
+    if (still) return;
+    still = true;
+    hero.classList.add('is-still');
+    slides.forEach((s) => s.querySelector('video')?.pause());
+  };
+
+  const schedule = (from: number) => {
+    window.clearTimeout(timer);
+    if (reduceMotion || slides.length < 2 || from !== token) return;
+    const n = (current + 1) % slides.length;
+    if (!still) primeVideo(vid(n));
+    timer = window.setTimeout(function next() {
+      if (from !== token) return;
+      if (document.hidden) {
+        timer = window.setTimeout(next, 1000);
+        return;
+      }
+      const v = vid(n);
+      if (still || videoReady(v)) return show(n);
+      // Le suivant n'est pas encore prêt : on attend qu'il le soit (au plus MAX_WAIT).
+      let done = false;
+      const go = () => {
+        if (done || from !== token) return;
+        done = true;
+        show(n);
+      };
+      v?.addEventListener('canplay', go, { once: true });
+      timer = window.setTimeout(go, MAX_WAIT);
+    }, DURATION);
+  };
 
   const show = (index: number) => {
     current = index;
+    const mine = ++token;
     slides.forEach((s, i) => {
-      const on = i === index;
-      s.classList.toggle('is-active', on);
-      const video = s.querySelector('video');
-      if (!video) return;
-      if (on) {
-        if (!video.src && video.dataset.src) {
-          // Version recadrée (autre format) quand l'écran ne correspond pas au format du film.
-          const alt = video.dataset.srcAlt;
-          const useAlt = alt && window.matchMedia(`(orientation: ${video.dataset.altWhen})`).matches;
-          video.src = useAlt ? alt : video.dataset.src;
-        }
-        video.muted = !sound;
-        video.play().catch(() => {});
-      } else {
-        video.pause();
-      }
+      s.classList.toggle('is-active', i === index);
+      if (i !== index) s.querySelector('video')?.pause();
     });
+    const video = vid(index);
+    if (!video || still) return schedule(mine);
+    primeVideo(video);
+    video.muted = !sound;
+    video.play().catch((err: DOMException) => {
+      // Lecture refusée par le téléphone (économie d'énergie…) : images fixes.
+      if (video.paused && (err?.name === 'NotAllowedError' || err?.name === 'NotSupportedError')) goStill();
+      schedule(mine);
+    });
+    if (!video.paused && videoReady(video)) schedule(mine);
+    else {
+      video.addEventListener('playing', () => schedule(mine), { once: true });
+      // Filet de sécurité : si la vidéo ne démarre jamais, on avance quand même.
+      window.setTimeout(() => {
+        if (mine === token && video.paused) schedule(mine);
+      }, MAX_WAIT);
+    }
   };
 
   const setSound = (on: boolean) => {
     sound = on;
     soundBtn?.setAttribute('aria-pressed', String(sound));
     if (soundBtn) soundBtn.textContent = sound ? '( Son activé )' : '( Son coupé )';
-    const video = slides[current]?.querySelector('video');
+    const video = vid(current);
     if (video) video.muted = !sound;
   };
   soundBtn?.addEventListener('click', () => setSound(!sound));
@@ -127,13 +198,9 @@ function initHero() {
   }
 
   slides[0]?.classList.add('is-active');
-  introDone.then(() => {
-    show(0);
-    if (reduceMotion || slides.length < 2) return;
-    setInterval(() => {
-      if (!document.hidden) show((current + 1) % slides.length);
-    }, DURATION);
-  });
+  // Le premier extrait se télécharge pendant l'animation du logo.
+  primeVideo(vid(0));
+  introDone.then(() => show(0));
 }
 
 /* ---------- Carrousel « Nos récits » ---------- */
@@ -255,6 +322,9 @@ function initReel() {
   let current = 0;
   let t = 0;
   let hover = false;
+  let still = slowNetwork;
+  if (still) reel.classList.add('is-still');
+  const vid = (i: number) => slides.find((s) => Number(s.dataset.slide) === i)?.querySelector('video');
 
   const visibleRows = () => rows.filter((r) => !r.hidden);
 
@@ -272,8 +342,14 @@ function initReel() {
       const video = s.querySelector('video');
       if (!video) return;
       if (on) {
-        if (!video.src && video.dataset.src) video.src = video.dataset.src;
-        video.play().catch(() => {});
+        if (still) return;
+        primeVideo(video);
+        video.play().catch((err: DOMException) => {
+          if (video.paused && (err?.name === 'NotAllowedError' || err?.name === 'NotSupportedError')) {
+            still = true;
+            reel.classList.add('is-still');
+          }
+        });
       } else video.pause();
     });
     const a = rows[index]?.querySelector<HTMLAnchorElement>('a');
@@ -328,10 +404,25 @@ function initReel() {
     });
   });
 
+  // Lance le premier extrait dès l'arrivée sur la page.
+  show(0);
+
   if (reduceMotion) return;
+  let waited = 0;
   setInterval(() => {
     if (document.hidden) return;
+    // Le temps ne compte que si l'extrait joue vraiment (sinon on attend qu'il charge, au plus 8 s).
+    const v = vid(current);
+    if (!still && v && (v.paused || !videoReady(v)) && waited++ < 8) return;
+    waited = 0;
     t = Math.min(t + 1, DURATION);
+    // Précharge l'extrait suivant quelques secondes avant d'y passer.
+    if (t === DURATION - 3 && !still) {
+      const list = visibleRows();
+      const pos = list.findIndex((r) => Number(r.dataset.row) === current);
+      const nextRow = list[(pos + 1) % list.length];
+      if (nextRow) primeVideo(vid(Number(nextRow.dataset.row)));
+    }
     if (timecode) timecode.textContent = `00:00:${pad(t)}`;
     rows[current]?.style.setProperty('--progress', `${Math.round((t / DURATION) * 100)}%`);
     if (t >= DURATION && !hover) {
@@ -359,7 +450,7 @@ function initFilmPage() {
     // Film hébergé sur le site (LWS)
     if (player.dataset.video) {
       const video = document.createElement('video');
-      video.src = player.dataset.video;
+      video.src = preferLight && player.dataset.videoSd ? player.dataset.videoSd : player.dataset.video;
       if (player.dataset.poster) video.poster = player.dataset.poster;
       video.controls = true;
       video.autoplay = true;

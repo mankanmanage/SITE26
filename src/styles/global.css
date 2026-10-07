@@ -303,6 +303,10 @@ p {
 .zoom {
   animation: zoom 14s ease-in-out infinite alternate;
 }
+/* Vidéos en pause forcée (réseau lent, économie d'énergie) : l'image fixe bouge doucement. */
+.is-still .is-active video {
+  animation: zoom 14s ease-in-out infinite alternate;
+}
 @keyframes zoom {
   to {
     transform: scale(1.07);
