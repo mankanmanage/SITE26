@@ -245,6 +245,7 @@ function initReel() {
   const rows = [...reel.querySelectorAll<HTMLElement>('[data-row]')];
   const strip = reel.querySelector<HTMLElement>('[data-strip]');
   const link = reel.querySelector<HTMLAnchorElement>('[data-now-link]');
+  const hit = reel.querySelector<HTMLAnchorElement>('[data-now-hit]');
   const client = reel.querySelector<HTMLElement>('[data-now-client]');
   const title = reel.querySelector<HTMLElement>('[data-now-title]');
   const type = reel.querySelector<HTMLElement>('[data-now-type]');
@@ -277,6 +278,7 @@ function initReel() {
     });
     const a = rows[index]?.querySelector<HTMLAnchorElement>('a');
     if (a) {
+      if (hit) hit.href = a.href;
       reel.classList.add('is-switching');
       window.setTimeout(() => {
         if (link) link.href = a.href;

@@ -37,6 +37,8 @@ const items = films.map((f, i) => ({
         }
         <div class="reel__veil"></div>
       </div>
+      <!-- Toute l'image est cliquable : ouvre le projet affiché -->
+      <a class="reel__hit" href={`/projets/${items[0].slug}/`} data-now-hit tabindex="-1" aria-hidden="true"></a>
 
       <a class="reel__logo" href="/" aria-label="MANKAN — accueil"><LogoMark /></a>
 
@@ -143,6 +145,12 @@ const items = films.map((f, i) => ({
   .reel__veil {
     position: absolute;
     inset: 0;
+  }
+  .reel__hit {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    cursor: pointer;
   }
   .reel__slide {
     opacity: 0;
