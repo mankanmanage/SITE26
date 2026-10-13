@@ -15,10 +15,65 @@ interface Props {
   description: string;
   image?: string;
   bodyClass?: string;
+  /** Données structurées propres à la page (schema.org), ajoutées à celles de l'agence. */
+  jsonLd?: Record<string, unknown>[];
+  /** Page à ne pas proposer dans Google (ex. 404). */
+  noindex?: boolean;
 }
 
-const { title, description, image = '/images/logo/mankan-logo-bleu.png', bodyClass } = Astro.props;
+const { title, description, image = '/images/logo/mankan-logo-bleu.png', bodyClass, jsonLd = [], noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+
+// Fiche de l'agence pour Google (nom, adresse, contact, réseaux) : aide à apparaître
+// dans les recherches locales du type « agence de communication Bamako ».
+const agency = {
+  '@type': ['Organization', 'ProfessionalService'],
+  '@id': `${site.url}/#agence`,
+  name: site.name,
+  alternateName: ['MANKAN', 'Mankan Communication', 'Mankan'],
+  url: `${site.url}/`,
+  logo: `${site.url}/images/logo/mankan-logo-bleu.png`,
+  image: `${site.url}/images/films/paps-soda-le-frigo.jpg`,
+  description:
+    'Agence de communication culturelle et de production à Bamako, Mali : films, spots publicitaires, campagnes 360°, stratégie de marque, branding et réseaux sociaux.',
+  slogan: 'Les griots modernes de votre marque',
+  email: site.email,
+  telephone: site.phoneHref,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Hamdallaye ACI 2000, Immeuble DIARRA, Avenue Cheick Zayed',
+    addressLocality: 'Bamako',
+    addressCountry: 'ML',
+  },
+  areaServed: [
+    { '@type': 'Country', name: 'Mali' },
+    { '@type': 'Place', name: 'Afrique de l’Ouest' },
+  ],
+  knowsLanguage: ['fr', 'bm'],
+  knowsAbout: [
+    'Agence de communication',
+    'Production audiovisuelle',
+    'Spot publicitaire',
+    'Film institutionnel',
+    'Storytelling',
+    'Stratégie de marque',
+    'Branding',
+    'Identité visuelle',
+    'Campagne 360°',
+    'Réseaux sociaux',
+  ],
+  sameAs: site.social.map((s) => s.url),
+};
+const website = {
+  '@type': 'WebSite',
+  '@id': `${site.url}/#site`,
+  url: `${site.url}/`,
+  name: site.name,
+  inLanguage: 'fr',
+  publisher: { '@id': agency['@id'] },
+};
+const structured = JSON.stringify({ '@context': 'https://schema.org', '@graph': [agency, website, ...jsonLd] }).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -28,6 +83,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#00000C" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
@@ -41,7 +97,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="geo.region" content="ML-BKO" />
+    <meta name="geo.placename" content="Bamako" />
+    <script type="application/ld+json" set:html={structured} />
 
     <script is:inline>
       document.documentElement.classList.add('js');

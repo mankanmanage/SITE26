@@ -117,7 +117,7 @@ const items = films.map((f, i) => ({
               <a href={`/projets/${f.slug}/`}>
                 <span class="all__media">
                   {f.cover ? (
-                    <img src={f.cover} alt={f.coverAlt ?? ''} loading="lazy" />
+                    <img src={f.cover} alt={f.coverAlt ?? `${f.client} — ${f.title}`} loading="lazy" />
                   ) : f.vimeoId ? (
                     <img data-vimeo-thumb={f.vimeoId} alt="" hidden />
                   ) : null}

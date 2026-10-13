@@ -36,7 +36,10 @@ export interface Film {
   /** Vidéo au format téléphone (9:16) : affichée en priorité sur mobile. */
   vertical?: boolean;
   vimeoId?: string;
+  /** Durée du film complet, format ISO 8601 (ex. 'PT1M21S' = 1 min 21 s). Sert au référencement Google. */
   duration?: string;
+  /** Date de mise en ligne du film (AAAA-MM-JJ). Sert au référencement Google. */
+  published?: string;
   tags?: string[];
   description?: string;
   brief?: string;
@@ -59,6 +62,8 @@ export const films: Film[] = [
     featured: true,
     cover: '/images/films/paps-soda-le-frigo.jpg',
     video: '/videos/paps-soda-le-frigo.mp4',
+    duration: 'PT1M21S',
+    published: '2026-10-05',
     preview: '/videos/paps-soda-le-frigo-extrait.mp4',
     previewAlt: '/videos/paps-soda-le-frigo-extrait-alt.mp4',
     tags: ['Spot', 'Direction artistique', 'Production'],
@@ -74,6 +79,8 @@ export const films: Film[] = [
     featured: true,
     cover: '/images/films/sanu-edito.jpg',
     video: '/videos/sanu-edito.mp4',
+    duration: 'PT1M35S',
+    published: '2026-10-05',
     preview: '/videos/sanu-edito-extrait.mp4',
     previewAlt: '/videos/sanu-edito-extrait-alt.mp4',
     tags: ['Film éditorial', 'Direction artistique'],
@@ -92,6 +99,8 @@ export const films: Film[] = [
     vertical: true,
     cover: '/images/films/leila.jpg',
     video: '/videos/leila.mp4',
+    duration: 'PT16S',
+    published: '2026-10-05',
     preview: '/videos/leila-extrait.mp4',
     tags: ['Film artistique', 'Éducation'],
     description:
@@ -110,6 +119,8 @@ export const films: Film[] = [
     featured: true,
     cover: '/images/films/mobilite-verte-lancement.jpg',
     video: '/videos/mobilite-verte-lancement.mp4',
+    duration: 'PT1M28S',
+    published: '2026-10-05',
     preview: '/videos/mobilite-verte-lancement-extrait.mp4',
     previewAlt: '/videos/mobilite-verte-lancement-extrait-alt.mp4',
     tags: ['Campagne'],
@@ -123,6 +134,8 @@ export const films: Film[] = [
     internal: false,
     cover: '/images/films/paps-soda-ramadan.jpg',
     video: '/videos/paps-soda-ramadan.mp4',
+    duration: 'PT40S',
+    published: '2026-10-05',
     preview: '/videos/paps-soda-ramadan-extrait.mp4',
     previewAlt: '/videos/paps-soda-ramadan-extrait-alt.mp4',
     tags: ['Spot', 'Ramadan'],
@@ -138,6 +151,8 @@ export const films: Film[] = [
     vertical: true,
     cover: '/images/films/mankan-lancement.jpg',
     video: '/videos/mankan-lancement.mp4',
+    duration: 'PT1M2S',
+    published: '2026-10-06',
     preview: '/videos/mankan-lancement-extrait.mp4',
     tags: ['Film de marque', 'Lancement'],
     description:
@@ -152,6 +167,8 @@ export const films: Film[] = [
     featured: true,
     cover: '/images/films/mankan-22-septembre.jpg',
     video: '/videos/mankan-22-septembre.mp4',
+    duration: 'PT1M6S',
+    published: '2026-10-05',
     preview: '/videos/mankan-22-septembre-extrait.mp4',
     previewAlt: '/videos/mankan-22-septembre-extrait-alt.mp4',
     tags: ['Film de marque', 'Écriture', 'Réalisation'],
@@ -167,6 +184,8 @@ export const films: Film[] = [
     vertical: true,
     cover: '/images/films/mankan-campagne-decembre.jpg',
     video: '/videos/mankan-campagne-decembre.mp4',
+    duration: 'PT1M11S',
+    published: '2026-10-05',
     preview: '/videos/mankan-campagne-decembre-extrait.mp4',
     previewAlt: '/videos/mankan-campagne-decembre-extrait-alt.mp4',
     tags: ['Campagne', 'Lancement'],
@@ -179,6 +198,8 @@ export const films: Film[] = [
     internal: true,
     cover: '/images/films/awale.jpg',
     video: '/videos/awale.mp4',
+    duration: 'PT37S',
+    published: '2026-10-05',
     preview: '/videos/awale-extrait.mp4',
     previewAlt: '/videos/awale-extrait-alt.mp4',
     tags: ['Campagne interne', 'Storytelling'],
@@ -197,6 +218,8 @@ export const films: Film[] = [
     vertical: true,
     cover: '/images/films/mankan-potiers.jpg',
     video: '/videos/mankan-potiers.mp4',
+    duration: 'PT53S',
+    published: '2026-10-07',
     preview: '/videos/mankan-potiers-extrait.mp4',
     tags: ['Film de marque', 'Savoir-faire'],
     description:
@@ -215,6 +238,8 @@ export const films: Film[] = [
     vertical: true,
     cover: '/images/films/bamako.jpg',
     video: '/videos/bamako.mp4',
+    duration: 'PT43S',
+    published: '2026-10-05',
     preview: '/videos/bamako-extrait.mp4',
     previewAlt: '/videos/bamako-extrait-alt.mp4',
     tags: ['Film', 'Storytelling'],
@@ -234,6 +259,8 @@ export const films: Film[] = [
     cover: '/images/films/daibin-la-natte.jpg',
     coverAlt: 'Vue du dessus : des enfants assis sur une natte rayée',
     video: '/videos/daibin-la-natte.mp4',
+    duration: 'PT37S',
+    published: '2026-10-05',
     preview: '/videos/daibin-la-natte-extrait.mp4',
     previewAlt: '/videos/daibin-la-natte-extrait-alt.mp4',
     tags: ['Film', 'Narration'],

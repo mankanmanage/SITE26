@@ -14,8 +14,25 @@ RewriteRule ^projects/?$ https://mankancommunication.com/projets/ [L,R=301]
 RewriteRule ^portfolio/.*$ https://mankancommunication.com/projets/ [L,R=301]
 RewriteRule ^films/(.*)$ https://mankancommunication.com/projets/$1 [L,R=301]
 RewriteRule ^about/?$ https://mankancommunication.com/a-propos/ [L,R=301]
+RewriteRule ^(conditions-utilisations|politique-de-confidentialite)/?$ https://mankancommunication.com/mentions-legales/ [L,R=301]
+
+# Dossiers sans « / » final : redirection directe en https (évite un détour par http)
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.+[^/])$ https://mankancommunication.com/$1/ [L,R=301]
+
+# Pages de l'ancien WordPress qui n'existent plus (articles de démonstration, maintenance) :
+# « 410 Gone » indique à Google de les retirer de ses résultats.
+RewriteRule ^(bonjour-tout-le-monde|spotlight-equinox-collection-by-shane-griffin|random-explorations-with-cinema-4d-and-redshift|visually-identity-and-branding-for-uk-restaurant|duis-tristique-condimentum-2|blog-post-with-image|meet-the-new-web-design-trends|motion-design|minimalistic-design|clean-web-design|quote-post|maintenance-mode|sample-page|feed|comments/feed|category/.*|tag/.*|author/.*)/?$ - [G,L]
+RewriteRule ^(wp-sitemap.*\.xml|sitemap_index\.xml|.*-sitemap\.xml)$ - [G,L]
+
+# Ancien WordPress : interface et API fermées au public (le site actuel ne s'en sert pas)
+RewriteRule ^(wp-admin|wp-includes|wp-json)(/.*)?$ - [G,L]
+RewriteRule ^(xmlrpc|wp-login|wp-signup|wp-trackback|wp-cron|wp-comments-post|wp-links-opml|wp-mail|wp-activate)\.php$ - [G,L]
+RewriteCond %{QUERY_STRING} (^|&)(rest_route|p|page_id|s|cat|author|feed)= [NC]
+RewriteRule ^(index\.php)?$ https://mankancommunication.com/? [L,R=301]
 
 ErrorDocument 404 /404.html
+ErrorDocument 410 /404.html
 
 # Cache navigateur
 <IfModule mod_expires.c>

@@ -24,12 +24,48 @@ const projectBlocks = [
   { title: 'Notre réponse', text: film.response },
   { title: 'Le résultat', text: film.result },
 ].filter((b) => b.text);
+
+// Titre Google : sans répéter « MANKAN » pour nos propres productions.
+const seoName = hasTitle ? (film.internal ? film.title : fullTitle) : fullTitle;
+const seoTitle = `${seoName} — ${typeLabel} | MANKAN, agence de communication à Bamako`;
+const seoDescription =
+  film.description ??
+  `${fullTitle} : ${typeLabel.toLowerCase()} réalisé par MANKAN, agence de communication culturelle et de production à Bamako, Mali.`;
+const pageUrl = new URL(`/projets/${film.slug}/`, Astro.site).href;
+const abs = (path: string) => new URL(path, Astro.site).href;
+const jsonLd: Record<string, unknown>[] = [
+  {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: abs('/') },
+      { '@type': 'ListItem', position: 2, name: 'Projets', item: abs('/projets/') },
+      { '@type': 'ListItem', position: 3, name: fullTitle, item: pageUrl },
+    ],
+  },
+];
+if (film.video && film.cover) {
+  jsonLd.push({
+    '@type': 'VideoObject',
+    name: fullTitle,
+    description: seoDescription,
+    thumbnailUrl: abs(film.cover),
+    contentUrl: abs(film.video),
+    ...(film.published && { uploadDate: `${film.published}T12:00:00+00:00` }),
+    ...(film.duration && { duration: film.duration }),
+    inLanguage: 'fr',
+    keywords: [typeLabel, ...(film.tags ?? []), 'Bamako', 'Mali'].join(', '),
+    url: pageUrl,
+    productionCompany: { '@id': 'https://mankancommunication.com/#agence' },
+    publisher: { '@id': 'https://mankancommunication.com/#agence' },
+  });
+}
 ---
 
 <Base
-  title={`${fullTitle} | Projets MANKAN, Bamako`}
-  description={film.description ?? `${fullTitle} — ${typeLabel.toLowerCase()} réalisé par MANKAN, agence de communication culturelle et de production à Bamako.`}
+  title={seoTitle}
+  description={seoDescription}
   image={film.cover}
+  jsonLd={jsonLd}
   bodyClass="page-film"
 >
   <main id="contenu" class="film" data-film>
@@ -84,7 +120,7 @@ const projectBlocks = [
     <div class="film__info">
       <div class="film__heading">
         <span class="film__client">{film.client}</span>
-        <h1 class="italic">{hasTitle ? film.title : typeLabel}</h1>
+        <h1 class="italic"><span class="visually-hidden">{film.client} — </span>{hasTitle ? film.title : typeLabel}</h1>
         {film.description && <p class="serif">{film.description}</p>}
       </div>
       {
