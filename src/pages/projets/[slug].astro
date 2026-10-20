@@ -25,12 +25,25 @@ const projectBlocks = [
   { title: 'Le résultat', text: film.result },
 ].filter((b) => b.text);
 
-// Titre Google : sans répéter « MANKAN » pour nos propres productions.
-const seoName = hasTitle ? (film.internal ? film.title : fullTitle) : fullTitle;
-const seoTitle = `${seoName} — ${typeLabel} | MANKAN, agence de communication à Bamako`;
+// Titre Google : sans répéter « MANKAN » quand c'est le client (le nom figure déjà en fin de titre).
+const seoName = hasTitle && film.client !== 'MANKAN' ? fullTitle : hasTitle ? film.title : fullTitle;
+const seoTitle = `${seoName} — ${typeLabel} | MANKAN, Bamako`;
 const seoDescription =
   film.description ??
-  `${fullTitle} : ${typeLabel.toLowerCase()} réalisé par MANKAN, agence de communication culturelle et de production à Bamako, Mali.`;
+  `${seoName} (${typeLabel.toLowerCase()}), une réalisation de MANKAN, agence de communication culturelle et de production à Bamako, Mali.`;
+// Google coupe les descriptions vers 160 caractères : on garde les premières phrases entières.
+const shorten = (text: string, max = 160) => {
+  if (text.length <= max) return text;
+  const sentences = text.match(/[^.!?…]+[.!?…]+/g) ?? [];
+  let out = '';
+  for (const s of sentences) {
+    if ((out + s).trim().length > max) break;
+    out += s;
+  }
+  if (out.trim().length >= 110) return out.trim();
+  return text.slice(0, max - 1).replace(/[\s,;:—–-]+\S*$/, '') + '…';
+};
+const metaDescription = shorten(seoDescription);
 const pageUrl = new URL(`/projets/${film.slug}/`, Astro.site).href;
 const abs = (path: string) => new URL(path, Astro.site).href;
 const jsonLd: Record<string, unknown>[] = [
@@ -63,7 +76,7 @@ if (film.video && film.cover) {
 
 <Base
   title={seoTitle}
-  description={seoDescription}
+  description={metaDescription}
   image={film.cover}
   jsonLd={jsonLd}
   bodyClass="page-film"
