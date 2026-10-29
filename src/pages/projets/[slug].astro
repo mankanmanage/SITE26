@@ -83,7 +83,9 @@ if (film.video && film.cover) {
 >
   <main id="contenu" class="film" data-film>
     <div class="film__media" aria-hidden="true">
-      {film.cover && <img src={film.cover} alt="" />}
+      {/* Le film lui-même (sans préchargement) avec son image en affiche : Google y reconnaît une page de lecture vidéo. */}
+      {film.cover && film.video && <video src={film.video} poster={film.cover} preload="none" muted playsinline title={fullTitle} />}
+      {film.cover && !film.video && <img src={film.cover} alt="" />}
       {!film.cover && film.vimeoId && <img data-vimeo-thumb={film.vimeoId} alt="" hidden />}
       {!film.cover && !film.vimeoId && <div class="film__blank display">{film.client}</div>}
     </div>
@@ -195,7 +197,8 @@ if (film.video && film.cover) {
     position: absolute;
     inset: 0;
   }
-  .film__media img {
+  .film__media img,
+  .film__media video {
     width: 100%;
     height: 100%;
     object-fit: cover;
