@@ -22,7 +22,7 @@ export const clients = [
   'Matrix',
   'Mobilité Verte',
   'Sanu',
-  'HAMINA1FILS',
+  'Hamnia&fils',
   'Afrisends',
   'Sitilog',
   'BEC Group',
