@@ -5,17 +5,6 @@ import LogoMark from '../components/LogoMark.astro';
 import { site, clients, verbs } from '../data/site';
 import { films, filmTypes, pad } from '../data/films';
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'ProfessionalService',
-  name: site.name,
-  url: site.url,
-  email: site.email,
-  telephone: site.phone,
-  slogan: site.signature,
-  address: { '@type': 'PostalAddress', streetAddress: 'Hamdallaye ACI 2000', addressLocality: 'Bamako', addressCountry: 'ML' },
-  sameAs: site.social.map((s) => s.url),
-};
 
 // Accueil : uniquement les images / vidéos des films, sans titres.
 const heroFilms = films.filter((f) => f.preview || f.cover || f.vimeoId);
@@ -42,7 +31,6 @@ const manifestoTiles = [
   description="MANKAN, agence de communication culturelle et de production à Bamako : films, spots publicitaires, campagnes 360° et branding. Les griots modernes de votre marque."
   image="/images/films/paps-soda-le-frigo.jpg"
 >
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
   <script is:inline slot="head">
     try {
       if (matchMedia('(prefers-reduced-motion: reduce)').matches)
