@@ -8,6 +8,7 @@ import '@fontsource/eb-garamond/400-italic.css';
 import '@fontsource/eb-garamond/500-italic.css';
 import '../styles/global.css';
 import SiteNav from '../components/SiteNav.astro';
+import ChatButton from '../components/ChatButton.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -120,6 +121,7 @@ const structured = JSON.stringify({ '@context': 'https://schema.org', '@graph': 
       <img src="/images/logo/rayons-curseur.png" alt="" width="48" height="43" />
     </div>
     <slot />
+    <ChatButton />
     <script>
       import '../scripts/site.ts';
     </script>
