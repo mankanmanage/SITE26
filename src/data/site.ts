@@ -6,8 +6,8 @@ export const site = {
   email: 'team@mankancommunication.com',
   phone: '+223 77 09 14 09',
   phoneHref: '+22377091409',
-  /** Lien WhatsApp Business (bouton de discussion sur toutes les pages). */
-  whatsapp: 'https://wa.me/message/MNTNUQKRFZSXB1',
+  /** Ouvre directement la discussion WhatsApp avec ce numéro, message déjà écrit (bouton sur toutes les pages). */
+  whatsapp: `https://wa.me/22377091409?text=${encodeURIComponent('Bonjour MANKAN, j’aimerais discuter d’un projet.')}`,
   address: 'Hamdallaye ACI 2000, Bamako',
   country: 'Mali',
   signature: 'bɛ ka ye, bɛ ka fɔ',
