@@ -40,7 +40,7 @@ export const verbs = [
     n: '02',
     bm: 'bɛ ka fɔ',
     fr: 'Faire entendre',
-    text: 'Storytelling, films et spots, campagnes 360°, réseaux sociaux',
+    text: 'Storytelling, marketing culturel, films et spots, campagnes',
   },
 ];
 
@@ -50,10 +50,10 @@ export const expertises = [
   { title: 'Direction artistique & identité visuelle', text: 'Logos, chartes graphiques et univers visuels qui vous ressemblent.' },
   { title: 'Films, spots & mini-documentaires', text: 'De l’écriture au tournage et au montage, à Bamako et au-delà.' },
   { title: 'Contenus créatifs & narration', text: 'Photos, textes et formats courts pour faire vivre votre histoire.' },
-  { title: 'Communication digitale & réseaux sociaux', text: 'Lignes éditoriales, calendriers et animation de vos communautés.' },
-  { title: 'Campagnes publicitaires', text: 'Campagnes 360° pensées pour vos publics, du terrain au digital.' },
+  { title: 'Marketing culturel', text: 'Faire de la culture un levier pour votre marque : des codes, des récits et des gestes qui parlent vraiment à vos publics.' },
+  { title: 'Campagnes publicitaires', text: 'Campagnes 360° pensées pour vos publics, du terrain à l’écran.' },
   { title: 'Terrain & lieux de communication', text: 'Activations, événements et présence là où vivent vos publics.' },
-  { title: 'Conseil & projets spéciaux', text: 'ONG, institutions et projets sur mesure.' },
+  { title: 'Consulting & projets spéciaux', text: 'Conseil stratégique pour les marques, les ONG et les institutions, et projets sur mesure.' },
 ];
 
 /** Manifeste audio (page À propos). Laisser vide pour masquer la section. */
